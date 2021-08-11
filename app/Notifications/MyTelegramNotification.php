@@ -70,7 +70,7 @@ class MyTelegramNotification extends Notification
                 'parse_mode' => 'HTML',
                 'disable_web_page_preview' => true,
                 'keyboard' => [['Здравствуй бот', 'Как меня зовут ?'], ['Случайное число', 'Удалить кнопки']],
-                'reply_markups' => $this->getKeyBoard([[["text" => "Голосовать"], ["text" => "Помощь"]]]),
+                'reply_markup' => $this->getKeyBoard([[["text" => "Голосовать"], ["text" => "Помощь"]]]),
                 'chat_id' => $notifiable->chat_id,
                 'text' =>
                     "<a href='{$this->issue->issue_url}'>{$this->issue->key}</a>" . "\r\n" .
