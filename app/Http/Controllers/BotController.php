@@ -57,7 +57,7 @@ class BotController extends BaseController
         //print_r($json->issue);
         if ($json->webhookEvent=='worklog_created')
         {
-            $issue_id=$json->issueId;
+            $issue_id=$json['issueId'];
         }
         else {
             $issue_id=$json->issue->id;
