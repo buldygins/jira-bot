@@ -18,9 +18,10 @@ class MyUpdateHandler extends UpdateHandler
         $update = $this->update;
         $bot = $this->bot;
 
-        // chat_id => $this->update->message->chat->id
+        $chat_id = $this->update->message->chat->id;
+
         $this->sendMessage([
-            'text' => 'Hello, World!'
+            'text' => 'Hello, World!'. $chat_id,
         ]);
     }
 }
