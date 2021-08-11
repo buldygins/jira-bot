@@ -19,6 +19,7 @@ class CreateSubscribersTable extends Migration
             $table->string('fio')->default('Не известно')->comment('ФИО');
             $table->string('id_position')->default(1)->comment('Позиция');
             $table->boolean('is_active')->default(true)->comment('Включен');
+            $table->boolean('waited_command')->nullable()->comment('Ожидаем ввода для команды');
             $table->timestamps();
         });
 

@@ -13,9 +13,9 @@ class SetPositionCommand extends CommandHandler
     public function handle()
     {
         $chat_id = $this->update->message->chat->id;
-//        Subscriber::query()
-//            ->where('chat_id', '=', $chat_id)
-//            ->update(['is_active' => false]);
+        Subscriber::query()
+            ->where('chat_id', '=', $chat_id)
+            ->update(['waited_command' => self::class]);
 
         $this->sendMessage([
             'text' => 'Задайте свою должность ' //. $chat_id,
