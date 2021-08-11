@@ -14,7 +14,7 @@ class ListCommand extends CommandHandler
     {
 
         $r=$this->getLocalCommands();
-        $commandList=var_export($r[0]->properties, true);
+        $commandList=var_export($r[0]['properties'], true);
 
 //        $commands = [
 //            'start' => 'Подписка на бота',
