@@ -14,11 +14,6 @@ class MyUpdateHandler extends UpdateHandler
         return isset($update->message); // handle regular messages (example)
     }
 
-    public function __call($name, $arguments)
-    {
-        return false;
-    }
-
     public function start()
     {
         $chat_id = $this->update->message->chat->id;
