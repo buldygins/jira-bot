@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\TelegramNotification;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -48,6 +49,7 @@ class BotController extends BaseController
         $f2 = var_export($jsonData, true);
         file_put_contents('3.txt', $f2);
 //----------
-        print_r($json);
+        print_r($json->issue->key);
+
     }
 }
