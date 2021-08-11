@@ -14,18 +14,18 @@ class MyUpdateHandler extends UpdateHandler
         return isset($update->message); // handle regular messages (example)
     }
 
-    public function start()
-    {
-        $chat_id = $this->update->message->chat->id;
-        Subscriber::query()
-            ->where('chat_id', '=', $chat_id)
-            ->update(['is_active' => true]);
-
-        $this->sendMessage([
-            'text' => 'Вы подписаны' //. $chat_id,
-        ]);
-        return true;
-    }
+//    public function start()
+//    {
+//        $chat_id = $this->update->message->chat->id;
+//        Subscriber::query()
+//            ->where('chat_id', '=', $chat_id)
+//            ->update(['is_active' => true]);
+//
+//        $this->sendMessage([
+//            'text' => 'Вы подписаны' //. $chat_id,
+//        ]);
+//        return true;
+//    }
 
     public function stop()
     {
