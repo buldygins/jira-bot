@@ -10,7 +10,13 @@ cp .env.example .env
 Заполнить в нем ID бота и ID Jira 
 ```
 make start
+```
+Входим внутрь контейнера
+```
 make app
+```
+внутри контейнера:
+```
 php artisan migrate
 php artisan telebot:webhook --setup 
 ```
