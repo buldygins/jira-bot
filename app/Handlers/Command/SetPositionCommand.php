@@ -19,7 +19,8 @@ class SetPositionCommand extends CommandHandler
             ->first();
 
 
-        $sub->update(['waited_command' => 'pos']);
+        $sub->waited_command='SetPositionCommand';
+            $sub->save();
 
 
         $this->sendMessage([
