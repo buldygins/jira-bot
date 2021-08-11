@@ -63,7 +63,7 @@ class MyUpdateHandler extends UpdateHandler
     {
         $fn = str_replace('/', '', $cmd);
         try {
-            $this->$fn();
+            return $this->$fn();
         }
         catch (\Exception $e)
         {
