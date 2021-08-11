@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Notification;
 use WeStacks\TeleBot\TeleBot;
 use WeStacks\TeleBot\Objects\User;
 
@@ -50,6 +51,7 @@ class BotController extends BaseController
         file_put_contents('3.txt', $f2);
 //----------
         print_r($json->issue->key);
+        Notification::send('1111@mail.ru', new TelegramNotification());
 
     }
 }
