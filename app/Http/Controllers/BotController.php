@@ -52,7 +52,7 @@ class BotController extends BaseController
         $f2 = var_export($jsonData, true);
         file_put_contents('3.txt', $f2);
 //----------
-        print_r($json->issue->key);
+        print_r($json->issue);
         $issue=JiraIssue::query()->firstOrCreate(['key'=>$json->issue->key]);
         Notification::send($issue, new MyTelegramNotification());
 
