@@ -62,14 +62,7 @@ class MyUpdateHandler extends UpdateHandler
     public function command($cmd)
     {
         $fn = str_replace('/', '', $cmd);
-        try {
-            return $this->$fn();
-        }
-        catch (\Exception $e)
-        {
-            return false;
-        }
-
+        return $this->$fn();
     }
 
     public function handle()
