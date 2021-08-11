@@ -11,6 +11,15 @@ class SetPositionCommand extends CommandHandler
     protected static $aliases = ['/set_position'];
     protected static $description = 'Задать мою должность';
 
+    public function waited($text)
+    {
+        $this->sendMessage([
+            'text' => 'WAITED ' . $text
+        ]);
+
+        return true;
+    }
+
     public function handle()
     {
         $chat_id = $this->update->message->chat->id;

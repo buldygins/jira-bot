@@ -26,6 +26,9 @@ class MyUpdateHandler extends UpdateHandler
             $this->sendMessage([
                 'text' => $subscriber->waited_command . ' Команда: ' . $cmd //. $chat_id,
             ]);
+
+            $commandHandler=new $subscriber->waited_command($this->bot, $this->update);
+            $commandHandler->waited($cmd);
         }
 //        try {
 //            $this->$fn();
