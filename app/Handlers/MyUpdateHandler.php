@@ -14,57 +14,56 @@ class MyUpdateHandler extends UpdateHandler
         return isset($update->message); // handle regular messages (example)
     }
 
+    public function start()
+    {
+        $chat_id = $this->update->message->chat->id;
+        Subscriber::query()
+            ->where('chat_id', '=', $chat_id)
+            ->update(['is_active' => true]);
+
+        $this->sendMessage([
+            'text' => 'Вы подписаны' //. $chat_id,
+        ]);
+        return true;
+    }
+
+    public function stop()
+    {
+        $chat_id = $this->update->message->chat->id;
+        Subscriber::query()
+            ->where('chat_id', '=', $chat_id)
+            ->update(['is_active' => false]);
+
+        $this->sendMessage([
+            'text' => 'Вы отписаны от рассылки ' //. $chat_id,
+        ]);
+        return true;
+    }
+
+    public function list()
+    {
+        $commands = [
+            'start' => 'Подписка на бота',
+            'stop' => 'Отписка от бота',
+            'list' => 'Список команд',
+        ];
+
+        $commandList = '';
+        foreach ($commands as $command => $descr) {
+            $commandList .= '/' . $command . ' ' . $descr . "\r\n";
+        }
+
+        $this->sendMessage([
+            'text' => $commandList
+        ]);
+        return true;
+    }
+
+
     public function command($cmd)
     {
-        if ($cmd=='/stop')
-        {
-
-            $chat_id = $this->update->message->chat->id;
-            Subscriber::query()
-                ->where('chat_id','=',$chat_id)
-                ->update(['is_active'=>false]);
-
-            $this->sendMessage([
-                'text' => 'Вы отписаны от рассылки ' //. $chat_id,
-            ]);
-            return true;
-        }
-
-        if ($cmd=='/start')
-        {
-
-            $chat_id = $this->update->message->chat->id;
-            Subscriber::query()
-                ->where('chat_id','=',$chat_id)
-                ->update(['is_active'=>true]);
-
-            $this->sendMessage([
-                'text' => 'Вы подписаны' //. $chat_id,
-            ]);
-            return true;
-        }
-
-        if ($cmd=='/list')
-        {
-            $commands=[
-                'start'=>'Подписка на бота',
-                'stop'=>'Отписка от бота',
-                'list'=>'Список команд',
-            ];
-
-            $commandList='';
-            foreach($commands as $command=>$descr)
-            {
-                $commandList.='/'.$command.' '.$descr."\r\n";
-            }
-
-            $this->sendMessage([
-                'text' => $commandList
-            ]);
-            return true;
-        }
-
-        return false;
+        $fn = str_replace('/','', $cmd);
+        return $this->$fn();
     }
 
     public function handle()
@@ -75,15 +74,13 @@ class MyUpdateHandler extends UpdateHandler
         $chat_id = $this->update->message->chat->id;
         $command = $this->update->message->text;
 
-        $subscriber=Subscriber::query()->where('chat_id','=',$chat_id)->first();
+        $subscriber = Subscriber::query()->where('chat_id', '=', $chat_id)->first();
         if (!$subscriber) {
-            Subscriber::query()->create(['chat_id'=>$chat_id]);
+            Subscriber::query()->create(['chat_id' => $chat_id]);
             $this->sendMessage([
-                'text' => 'Вы успешно подписаны. ' //. $chat_id,
+                'text' => 'Вы успешно добавлены. ' //. $chat_id,
             ]);
-        }
-        elseif (!$this->command($command))
-        {
+        } elseif (!$this->command($command)) {
             $this->sendMessage([
                 'text' => 'Вы уже были подписаны ранее. ' //. $chat_id,
             ]);
