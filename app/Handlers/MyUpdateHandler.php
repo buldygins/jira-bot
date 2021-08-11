@@ -61,6 +61,9 @@ class MyUpdateHandler extends UpdateHandler
 
     public function command($cmd)
     {
+        $this->sendMessage([
+            'text' => 'Команда: '.$cmd //. $chat_id,
+        ]);
         $fn = str_replace('/', '', $cmd);
         return $this->$fn();
     }
