@@ -19,16 +19,6 @@ class ListCommand extends CommandHandler
             $item=$obj->toArray();
             $commandList .= $item['command'] . ' ' . $item['description'] . "\r\n";
         }
-//        $commands = [
-//            'start' => 'Подписка на бота',
-//            'stop' => 'Отписка от бота',
-//            'list' => 'Список команд',
-//        ];
-//
-//        $commandList = '';
-//        foreach ($commands as $command => $descr) {
-//            $commandList .= '/' . $command . ' ' . $descr . "\r\n";
-//        }
 
         $this->sendMessage([
             'text' => $commandList
