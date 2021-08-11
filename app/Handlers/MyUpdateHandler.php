@@ -22,9 +22,9 @@ class MyUpdateHandler extends UpdateHandler
         $chat_id = $this->update->message->chat->id;
 
         $subscriber=Subscriber::query()->where('chat_id','=',$chat_id)->first();
-        if (!$subscriber) {
-            Subscriber::query()->create(['chat_id'=>$chat_id]);
-        }
+//        if (!$subscriber) {
+//            Subscriber::query()->create(['chat_id'=>$chat_id]);
+//        }
 
         $this->sendMessage([
             'text' => 'Вы успешно подписаны. '. $chat_id,
