@@ -12,16 +12,20 @@ class ListCommand extends CommandHandler
 
     public function handle()
     {
-        $commands = [
-            'start' => 'Подписка на бота',
-            'stop' => 'Отписка от бота',
-            'list' => 'Список команд',
-        ];
 
-        $commandList = '';
-        foreach ($commands as $command => $descr) {
-            $commandList .= '/' . $command . ' ' . $descr . "\r\n";
-        }
+        $r=$this->getLocalCommands();
+        $commandList=var_export($r, true);
+
+//        $commands = [
+//            'start' => 'Подписка на бота',
+//            'stop' => 'Отписка от бота',
+//            'list' => 'Список команд',
+//        ];
+//
+//        $commandList = '';
+//        foreach ($commands as $command => $descr) {
+//            $commandList .= '/' . $command . ' ' . $descr . "\r\n";
+//        }
 
         $this->sendMessage([
             'text' => $commandList
