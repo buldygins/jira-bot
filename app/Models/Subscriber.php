@@ -9,4 +9,5 @@ use Illuminate\Notifications\Notifiable;
 class Subscriber extends Model
 {
     use HasFactory, Notifiable;
+    protected $guarded=['id'];
 }
