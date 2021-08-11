@@ -18,7 +18,7 @@ class MyTelegramNotification extends Notification
         return (new TelegramNotification)->bot('bot')
             ->sendMessage([
                 'chat_id' => $notifiable->telegram_chat_id,
-                'text'    => $notifiable->issue_url."\r\n".$notifiable->summary,
+                'text'    => $notifiable->issue_url."\r\n".$notifiable->webhookEvent."\r\n".$notifiable->summary,
             ]);
     }
 }
