@@ -35,15 +35,16 @@ class MyTelegramNotification extends Notification
         ]);
 
         $keyboard=[];
+        $keyboard_opt=[];
         if(empty($keyboard_opt)) {
             $keyboard_opt[0] = 'keyboard';
-//            $keyboard_opt[1] = false;
-//            $keyboard_opt[2] = true;
+            $keyboard_opt[1] = false;
+            $keyboard_opt[2] = true;
         }
         $options = [
-            $keyboard_opt[0]    => $keyboard,
-//            'one_time_keyboard' => $keyboard_opt[1],
-//            'resize_keyboard'   => $keyboard_opt[2],
+            $keyboard_opt[0]    => 'keyboard',
+            'one_time_keyboard' => $keyboard_opt[1],
+            'resize_keyboard'   => $keyboard_opt[2],
         ];
         $replyMarkups   = json_encode($options);
 
@@ -51,7 +52,7 @@ class MyTelegramNotification extends Notification
             ->sendMessage([
                 'parse_mode' => 'HTML',
                 'disable_web_page_preview' => true,
-                'reply_markups' => ['keyboard'=>['uuuu']],
+                'reply_markups' => $replyMarkups,
                 'chat_id' => $notifiable->chat_id,
                 'text' =>
                     "<a href='{$this->issue->issue_url}'>{$this->issue->key}</a>" . "\r\n" .
