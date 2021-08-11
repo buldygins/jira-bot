@@ -65,8 +65,8 @@ class MyUpdateHandler extends UpdateHandler
             'text' => 'Команда: '.$cmd //. $chat_id,
         ]);
         $fn = str_replace('/', '', $cmd);
-        //return $this->$fn();
-        return true;
+        return $this->$fn();
+        //return true;
     }
 
     public function handle()
