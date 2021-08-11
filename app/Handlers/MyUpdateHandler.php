@@ -2,6 +2,7 @@
 
 namespace App\Handlers;
 
+use App\Handlers\Command\SetPositionCommand;
 use App\Models\Subscriber;
 use WeStacks\TeleBot\Interfaces\UpdateHandler;
 use WeStacks\TeleBot\Objects\Update;
@@ -27,8 +28,11 @@ class MyUpdateHandler extends UpdateHandler
                 'text' => $subscriber->waited_command . ' Команда: ' . $cmd //. $chat_id,
             ]);
 
-            $commandHandler=new $subscriber->waited_command($this->bot, $this->update);
-            $commandHandler->waited($cmd);
+            if ($subscriber->waited_command=='SetPositionCommand') {
+
+                $commandHandler = new SetPositionCommand($this->bot, $this->update);
+                $commandHandler->waited($cmd);
+            }
         }
 //        try {
 //            $this->$fn();
