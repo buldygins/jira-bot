@@ -15,7 +15,8 @@ class ListCommand extends CommandHandler
 
         $r=$this->getLocalCommands();
         $commandList = '';
-        foreach($r as $item) {
+        foreach($r as $obj) {
+            $item=$obj->toArray();
             $commandList .= $item['command'] . ' ' . $item['description'] . "\r\n";
         }
 //        $commands = [
