@@ -16,10 +16,16 @@ class MyUpdateHandler extends UpdateHandler
 
     public function command($cmd)
     {
+
+        $fn = str_replace('/', '', $cmd);
+        if ($fn != $cmd) {
+            return true;
+        }
+
         $this->sendMessage([
-            'text' => 'Команда: '.$cmd //. $chat_id,
+            'text' => 'Команда: ' . $cmd //. $chat_id,
         ]);
-//        $fn = str_replace('/', '', $cmd);
+
 //        try {
 //            $this->$fn();
 //        } catch (\Exception $exception) {
