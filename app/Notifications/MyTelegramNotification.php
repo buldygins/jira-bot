@@ -5,7 +5,7 @@ namespace App\Notifications;
 use Illuminate\Notifications\Notification;
 use WeStacks\TeleBot\Laravel\TelegramNotification;
 
-class TelegramNotification extends Notification
+class MyTelegramNotification extends Notification
 {
     public function via($notifiable)
     {
