@@ -18,11 +18,11 @@ class MyTelegramNotification extends Notification
         return (new TelegramNotification)->bot('bot')
             ->sendMessage([
                 'chat_id' => $notifiable->telegram_chat_id,
-                'text'    => 'Hello, from Laravel\'s notifications!'
-            ])
-            ->sendMessage([
-                'chat_id' => $notifiable->telegram_chat_id,
-                'text'    => 'Second message'
+                'text'    => $notifiable->key,
             ]);
+//            ->sendMessage([
+//                'chat_id' => $notifiable->telegram_chat_id,
+//                'text'    => 'Second message'
+//            ]);
     }
 }
