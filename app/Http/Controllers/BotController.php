@@ -69,6 +69,8 @@ class BotController extends BaseController
         $issue=JiraIssue::query()->where('issue_id','=',$issue_id)->first();
 
         if (!$issue) {
+            if ($json->webhookEvent=='worklog_created') {continue;}
+
             $issue = JiraIssue::query()->create(
                 [
                     'key' => $json->issue->key,
