@@ -46,6 +46,8 @@ return [
 
             'handlers' => [
                 \App\Handlers\Command\StartCommand::class,
+                \App\Handlers\Command\StopCommand::class,
+                \App\Handlers\Command\ListCommand::class,
                 \App\Handlers\MyUpdateHandler::class,
             ]
         ],

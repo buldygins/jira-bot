@@ -13,33 +13,6 @@ class MyUpdateHandler extends UpdateHandler
     {
         return isset($update->message); // handle regular messages (example)
     }
-
-//    public function start()
-//    {
-//        $chat_id = $this->update->message->chat->id;
-//        Subscriber::query()
-//            ->where('chat_id', '=', $chat_id)
-//            ->update(['is_active' => true]);
-//
-//        $this->sendMessage([
-//            'text' => 'Вы подписаны' //. $chat_id,
-//        ]);
-//        return true;
-//    }
-
-    public function stop()
-    {
-        $chat_id = $this->update->message->chat->id;
-        Subscriber::query()
-            ->where('chat_id', '=', $chat_id)
-            ->update(['is_active' => false]);
-
-        $this->sendMessage([
-            'text' => 'Вы отписаны от рассылки ' //. $chat_id,
-        ]);
-        return true;
-    }
-
     public function list()
     {
         $commands = [
@@ -90,8 +63,6 @@ class MyUpdateHandler extends UpdateHandler
             $this->sendMessage([
                 'text' => 'Вы успешно добавлены. ' //. $chat_id,
             ]);
-        } else {
-           // $this->command($command);
         }
     }
 }
