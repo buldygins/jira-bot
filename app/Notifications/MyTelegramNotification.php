@@ -37,13 +37,13 @@ class MyTelegramNotification extends Notification
         $keyboard=[];
         if(empty($keyboard_opt)) {
             $keyboard_opt[0] = 'keyboard';
-            $keyboard_opt[1] = false;
-            $keyboard_opt[2] = true;
+//            $keyboard_opt[1] = false;
+//            $keyboard_opt[2] = true;
         }
         $options = [
             $keyboard_opt[0]    => $keyboard,
-            'one_time_keyboard' => $keyboard_opt[1],
-            'resize_keyboard'   => $keyboard_opt[2],
+//            'one_time_keyboard' => $keyboard_opt[1],
+//            'resize_keyboard'   => $keyboard_opt[2],
         ];
         $replyMarkups   = json_encode($options);
 
