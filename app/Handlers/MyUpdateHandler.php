@@ -18,6 +18,12 @@ class MyUpdateHandler extends UpdateHandler
     {
         if ($cmd=='stop')
         {
+
+            $chat_id = $this->update->message->chat->id;
+            Subscriber::query()
+                ->where('chat_id','=',$chat_id)
+                ->update(['is_active'=>false]);
+
             $this->sendMessage([
                 'text' => 'Вы отписаны от рассылки ' //. $chat_id,
             ]);
