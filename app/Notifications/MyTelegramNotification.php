@@ -27,7 +27,7 @@ class MyTelegramNotification extends Notification
     public function toTelegram($notifiable)
     {
         $notifiable->telegram_chat_id = env('TELEGRAM_DEFAULT_CHAT_ID');
-        $this->issue->update(['event_processed'=>$this->issue->event_created]);
+        // $this->issue->update(['event_processed'=>$this->issue->event_created]);
         return (new TelegramNotification)->bot('bot')
             ->sendMessage([
                 'chat_id' => $notifiable->telegram_chat_id,
