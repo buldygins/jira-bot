@@ -44,6 +44,18 @@ class MyUpdateHandler extends UpdateHandler
             return true;
         }
 
+        if ($cmd=='/list')
+        {
+            $this->sendMessage([
+                'text' => 'Список команд:
+                /start - Подписка на бота
+                /stop - Отписка от бота
+                /list - Список команд
+                '
+            ]);
+            return true;
+        }
+
         return false;
     }
 
