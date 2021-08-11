@@ -17,15 +17,17 @@ class SetPositionCommand extends CommandHandler
             'text' => 'WAITED ' . $text
         ]);
 
+        $sub = Subscriber::query()
+            ->where('chat_id', '=', $this->update->message->chat->id)
+            ->update(['waited_command'=>null]);
+
         return true;
     }
 
     public function handle()
     {
-        $chat_id = $this->update->message->chat->id;
-
         $sub = Subscriber::query()
-            ->where('chat_id', '=', $chat_id)
+            ->where('chat_id', '=', $this->update->message->chat->id)
             ->update(['waited_command'=>'SetPositionCommand']);
 
         $this->sendMessage([

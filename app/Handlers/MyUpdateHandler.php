@@ -29,7 +29,6 @@ class MyUpdateHandler extends UpdateHandler
             ]);
 
             if ($subscriber->waited_command=='SetPositionCommand') {
-
                 $commandHandler = new SetPositionCommand($this->bot, $this->update);
                 $commandHandler->waited($cmd);
             }
