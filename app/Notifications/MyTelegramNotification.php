@@ -28,6 +28,9 @@ class MyTelegramNotification extends Notification
     {
         $notifiable->telegram_chat_id = env('TELEGRAM_DEFAULT_CHAT_ID');
         // $this->issue->update(['event_processed'=>$this->issue->event_created]);
+        JiraIssue::query()->where('id','=',$this->issue->id)->update([
+            'event_processed'=>$this->issue->event_created
+        ]);
         return (new TelegramNotification)->bot('bot')
             ->sendMessage([
                 'chat_id' => $notifiable->telegram_chat_id,
