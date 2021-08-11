@@ -71,7 +71,7 @@ class BotController extends BaseController
                 ]);
         }
         else {
-            $issue->query()->where('issue_id', '=', $json->issue->id)
+            $issue=$issue->query()->where('issue_id', '=', $json->issue->id)
                 ->update([
                     'key' => $json->issue->key,
                     'issue_id' => $json->issue->id,
