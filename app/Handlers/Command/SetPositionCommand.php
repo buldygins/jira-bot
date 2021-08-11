@@ -13,6 +13,7 @@ class SetPositionCommand extends CommandHandler
     public function handle()
     {
         $chat_id = $this->update->message->chat->id;
+
         Subscriber::query()
             ->where('chat_id', '=', $chat_id)
             ->update(['waited_command' => 'SetPositionCommand']);
