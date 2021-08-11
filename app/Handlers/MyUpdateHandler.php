@@ -79,12 +79,8 @@ class MyUpdateHandler extends UpdateHandler
             $this->sendMessage([
                 'text' => 'Вы успешно добавлены. ' //. $chat_id,
             ]);
-        } elseif (!$this->command($command)) {
-            $this->sendMessage([
-                'text' => 'Вы уже были подписаны ранее. ' //. $chat_id,
-            ]);
+        } else {
+            $this->command($command);
         }
-
-
     }
 }
