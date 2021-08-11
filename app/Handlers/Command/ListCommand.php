@@ -12,13 +12,19 @@ class ListCommand extends CommandHandler
 
     public function handle()
     {
-        $chat_id = $this->update->message->chat->id;
-        Subscriber::query()
-            ->where('chat_id', '=', $chat_id)
-            ->update(['is_active' => false]);
+        $commands = [
+            'start' => 'Подписка на бота',
+            'stop' => 'Отписка от бота',
+            'list' => 'Список команд',
+        ];
+
+        $commandList = '';
+        foreach ($commands as $command => $descr) {
+            $commandList .= '/' . $command . ' ' . $descr . "\r\n";
+        }
 
         $this->sendMessage([
-            'text' => 'Вы отписаны от рассылки ' //. $chat_id,
+            'text' => $commandList
         ]);
         return true;
     }

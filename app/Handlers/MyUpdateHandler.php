@@ -13,24 +13,6 @@ class MyUpdateHandler extends UpdateHandler
     {
         return isset($update->message); // handle regular messages (example)
     }
-    public function list()
-    {
-        $commands = [
-            'start' => 'Подписка на бота',
-            'stop' => 'Отписка от бота',
-            'list' => 'Список команд',
-        ];
-
-        $commandList = '';
-        foreach ($commands as $command => $descr) {
-            $commandList .= '/' . $command . ' ' . $descr . "\r\n";
-        }
-
-        $this->sendMessage([
-            'text' => $commandList
-        ]);
-        return true;
-    }
 
     public function command($cmd)
     {
