@@ -58,6 +58,7 @@ class BotController extends BaseController
         $issue=JiraIssue::query()->firstOrCreate(
             [
                 'key'=>$json->issue->key,
+                'issue_url'=>$json->issue->self,
                 'summary'=>$json->issue->fields->summary,
             ]);
         Notification::send($issue, new MyTelegramNotification());
