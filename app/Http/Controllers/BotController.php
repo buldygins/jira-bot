@@ -58,7 +58,7 @@ class BotController extends BaseController
         $issue = JiraIssue::query()->updateOrCreate(
             [
                 'key' => $json->issue->key,
-                'issue_url' => 'https://kliewnti.atlassian.net/browse/' . $json->issue->key,
+                'issue_url' => 'https://klienti.atlassian.net/browse/' . $json->issue->key,
                 'summary' => $json->issue->fields->summary,
             ],
             [
