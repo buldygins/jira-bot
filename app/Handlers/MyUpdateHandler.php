@@ -14,6 +14,11 @@ class MyUpdateHandler extends UpdateHandler
         return isset($update->message); // handle regular messages (example)
     }
 
+    public function __invoke()
+    {
+        return false;
+    }
+
     public function start()
     {
         $chat_id = $this->update->message->chat->id;
@@ -63,8 +68,7 @@ class MyUpdateHandler extends UpdateHandler
     public function command($cmd)
     {
         $fn = str_replace('/', '', $cmd);
-
-        return method_exists($this, $fn) ? $this->$fn() : false;
+        return $this->$fn();
     }
 
     public function handle()
