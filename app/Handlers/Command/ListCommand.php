@@ -14,8 +14,10 @@ class ListCommand extends CommandHandler
     {
 
         $r=$this->getLocalCommands();
-        $commandList=var_export($r[0]->toArray(), true);
-
+        $commandList = '';
+        foreach($r as $item) {
+            $commandList .= $item['command'] . ' ' . $item['description'] . "\r\n";
+        }
 //        $commands = [
 //            'start' => 'Подписка на бота',
 //            'stop' => 'Отписка от бота',
