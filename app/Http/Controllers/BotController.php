@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\MyTelegramNotification;
 use App\Notifications\TelegramNotification;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -51,7 +52,7 @@ class BotController extends BaseController
         file_put_contents('3.txt', $f2);
 //----------
         print_r($json->issue->key);
-        Notification::send('1111@mail.ru', new TelegramNotification());
+        Notification::send('1111@mail.ru', new MyTelegramNotification());
 
     }
 }
