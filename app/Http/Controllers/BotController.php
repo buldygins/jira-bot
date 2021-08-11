@@ -66,7 +66,7 @@ class BotController extends BaseController
                 'src' => $rawData,
             ],
             [
-                'key' => $json->issue->key,
+                'issue_id' => $json->issue->id,
             ]);
         Notification::send($issue, new MyTelegramNotification());
 
