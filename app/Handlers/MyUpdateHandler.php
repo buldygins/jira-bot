@@ -46,12 +46,20 @@ class MyUpdateHandler extends UpdateHandler
 
         if ($cmd=='/list')
         {
+            $commands=[
+                'start'=>'Подписка на бота',
+                'stop'=>'Отписка от бота',
+                'list'=>'Список команд',
+            ];
+
+            $commandList='';
+            foreach($commands as $command=>$descr)
+            {
+                $commandList.=$command.' '.$descr."\r\n";
+            }
+
             $this->sendMessage([
-                'text' => 'Список команд:
-                /start - Подписка на бота
-                /stop - Отписка от бота
-                /list - Список команд
-                '
+                'text' => $commandList
             ]);
             return true;
         }
