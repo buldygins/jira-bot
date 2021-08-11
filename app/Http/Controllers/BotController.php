@@ -78,16 +78,18 @@ class BotController extends BaseController
                 ]);
         }
         else {
-            $issue->query()->where('issue_id', '=', $json->issue->id)
-                ->update([
-                    'key' => $json->issue->key,
-                    'issue_id' => $issue_id,
-                    //'updateAuthor' => $json->updateAuthor,
-                    'webhookEvent' => $json->webhookEvent,
-                    'issue_url' => env('JIRA_URL') . 'browse/' . $json->issue->key,
-                    'summary' => ($json->webhookEvent=='worklog_created') ? $issue->summary : $json->issue->fields->summary,
-                    'src' => $rawData,
-                ]);
+           {
+                $issue->query()->where('issue_id', '=', $issue_id)
+                    ->update([
+                        'key' => $json->issue->key,
+                        'issue_id' => $issue_id,
+                        //'updateAuthor' => $json->updateAuthor,
+                        'webhookEvent' => $json->webhookEvent,
+                        'issue_url' => env('JIRA_URL') . 'browse/' . $json->issue->key,
+                        'summary' => ($json->webhookEvent == 'worklog_created') ? $issue->summary : $json->issue->fields->summary,
+                        'src' => $rawData,
+                    ]);
+            }
         }
 
         $issue=JiraIssue::query()->where('issue_id','=',$issue_id)->first();
