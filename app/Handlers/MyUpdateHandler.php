@@ -21,7 +21,7 @@ class MyUpdateHandler extends UpdateHandler
         $chat_id = $this->update->message->chat->id;
 
         $this->sendMessage([
-            'text' => 'Hello, World!'. $chat_id,
+            'text' => 'Hello, World! '. $chat_id,
         ]);
     }
 }
