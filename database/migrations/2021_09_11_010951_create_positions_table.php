@@ -1,7 +1,9 @@
 <?php
 
+use Database\Seeders\PositionSeeder;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 
 class CreatePositionsTable extends Migration
@@ -18,6 +20,8 @@ class CreatePositionsTable extends Migration
             $table->string('name')->default('Руководитель')->comment('Название позиции');
             $table->timestamps();
         });
+
+        Artisan::call('db:seed',['class'=> PositionSeeder::class]);
     }
 
     /**
