@@ -37,6 +37,15 @@ class MyTelegramNotification extends Notification
             ->sendMessage([
                 'parse_mode' => 'HTML',
                 'disable_web_page_preview' => true,
+                'reply_markup' => ['keyboard'=>
+                [
+                    [
+                        'one'
+                    ],[
+                        'two'
+                    ],
+                ]
+                ],
                 'chat_id' => $notifiable->chat_id,
                 'text' =>
                     "<a href='{$this->issue->issue_url}'>{$this->issue->key}</a>" . "\r\n" .
