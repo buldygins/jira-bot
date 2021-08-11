@@ -16,18 +16,18 @@ class MyUpdateHandler extends UpdateHandler
 
     public function command($cmd)
     {
-//        $this->sendMessage([
-//            'text' => 'Команда: '.$cmd //. $chat_id,
-//        ]);
-        $fn = str_replace('/', '', $cmd);
-        try {
-            $this->$fn();
-        } catch (\Exception $exception) {
-            $this->sendMessage([
-                'text' => 'Увы, такой команды нет: '.$cmd
-            ]);
-
-        }
+        $this->sendMessage([
+            'text' => 'Команда: '.$cmd //. $chat_id,
+        ]);
+//        $fn = str_replace('/', '', $cmd);
+//        try {
+//            $this->$fn();
+//        } catch (\Exception $exception) {
+//            $this->sendMessage([
+//                'text' => 'Увы, такой команды нет: '.$cmd
+//            ]);
+//
+//        }
         return true;
     }
 
@@ -46,5 +46,7 @@ class MyUpdateHandler extends UpdateHandler
                 'text' => 'Вы успешно добавлены. ' //. $chat_id,
             ]);
         }
+
+        $this->command($command);
     }
 }
