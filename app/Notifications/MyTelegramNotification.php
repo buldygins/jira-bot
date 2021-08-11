@@ -24,6 +24,24 @@ class MyTelegramNotification extends Notification
         return ['telegram'];
     }
 
+    private function getInlineKeyBoard($data)
+    {
+        $inlineKeyboard = array(
+            "inline_keyboard" => $data,
+        );
+        return json_encode($inlineKeyboard);
+    }
+
+    private function getKeyBoard($data)
+    {
+        $keyboard = array(
+            "keyboard" => $data,
+            "one_time_keyboard" => false,
+            "resize_keyboard" => true
+        );
+        return json_encode($keyboard);
+    }
+
     public function toTelegram($notifiable)
     {
         if (!$notifiable->chat_id) {
@@ -52,7 +70,7 @@ class MyTelegramNotification extends Notification
                 'parse_mode' => 'HTML',
                 'disable_web_page_preview' => true,
                 'keyboard' => [['Здравствуй бот', 'Как меня зовут ?'], ['Случайное число', 'Удалить кнопки']],
-                'reply_markups' => $replyMarkups,
+                'reply_markups' => $this->getKeyBoard([[["text" => "Голосовать"], ["text" => "Помощь"]]]),
                 'chat_id' => $notifiable->chat_id,
                 'text' =>
                     "<a href='{$this->issue->issue_url}'>{$this->issue->key}</a>" . "\r\n" .
