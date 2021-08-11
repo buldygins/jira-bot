@@ -61,15 +61,15 @@ class MyUpdateHandler extends UpdateHandler
 
     public function command($cmd)
     {
-        $this->sendMessage([
-            'text' => 'Команда: '.$cmd //. $chat_id,
-        ]);
+//        $this->sendMessage([
+//            'text' => 'Команда: '.$cmd //. $chat_id,
+//        ]);
         $fn = str_replace('/', '', $cmd);
         try {
             $this->$fn();
         } catch (\Exception $exception) {
             $this->sendMessage([
-                'text' => 'не выполнена: '.$cmd
+                'text' => 'Увы, такой команды нет: '.$cmd
             ]);
 
         }
