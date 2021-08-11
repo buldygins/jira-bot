@@ -16,6 +16,8 @@ class CreateSubscribersTable extends Migration
         Schema::create('subscribers', function (Blueprint $table) {
             $table->id();
             $table->string('chat_id')->comment('ID чата');
+            $table->string('fio')->default('Не известно')->comment('ФИО');
+            $table->string('id_position')->default(1)->comment('Позиция');
             $table->boolean('is_active')->default(true)->comment('Включен');
             $table->timestamps();
         });
