@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JiraIssue;
 use App\Notifications\MyTelegramNotification;
 use App\Notifications\TelegramNotification;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -56,7 +57,7 @@ class BotController extends BaseController
         $f2 = var_export($jsonData, true);
         file_put_contents('3.txt', $f2);
 //----------
-        dd($json);
+        //dd($json);
         if ($json->webhookEvent=='worklog_created')
         {
             $issue_id=$json->worklog->issueId;
@@ -72,6 +73,7 @@ class BotController extends BaseController
                 [
                     'key' => $json->issue->key,
                     'issue_id' => $issue_id,
+                    'event_created' => Carbon::createFromTimestamp($json->timestamp)->toDateTimeString(),
                     //'updateAuthor' => $json->updateAuthor,
                     'webhookEvent' => $json->webhookEvent,
                     'issue_url' => env('JIRA_URL') . 'browse/' . $json->issue->key,
@@ -86,6 +88,7 @@ class BotController extends BaseController
                     ->update([
                         'key' => $issue->key,
                         'issue_id' => $issue_id,
+                        'event_created' => Carbon::createFromTimestamp($json->timestamp)->toDateTimeString(),
                         //'updateAuthor' => $json->updateAuthor,
                         'webhookEvent' => $json->webhookEvent,
                         'src' => $rawData,
@@ -96,6 +99,7 @@ class BotController extends BaseController
                     ->update([
                         'key' => $json->issue->key,
                         'issue_id' => $issue_id,
+                        'event_created' => Carbon::createFromTimestamp($json->timestamp)->toDateTimeString(),
                         //'updateAuthor' => $json->updateAuthor,
                         'webhookEvent' => $json->webhookEvent,
                         'issue_url' => env('JIRA_URL') . 'browse/' . $json->issue->key,
@@ -107,7 +111,7 @@ class BotController extends BaseController
 
         $issue=JiraIssue::query()->where('issue_id','=',$issue_id)->first();
 
-        Notification::send($issue, new MyTelegramNotification());
+        Notification::send($issue, new MyTelegramNotification($issue));
 
     }
 }
