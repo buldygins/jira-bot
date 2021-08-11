@@ -22,6 +22,8 @@ class CreateJiraIssuesTable extends Migration
             $table->string('webhookEvent')->nullable()->comment('Событие');
             $table->string('updateAuthor')->nullable()->comment('Автор события');
             $table->dateTime('added')->nullable()->comment('дата добавления задачи');
+            $table->dateTime('event_created')->nullable()->comment('дата когда прилетело событие');
+            $table->dateTime('event_processed')->nullable()->comment('дата последнего обработанного события');
             $table->dateTime('started')->nullable()->comment('дата взятия в работу задачи');
             $table->dateTime('ended')->nullable()->comment('дата окончания работы по задаче');
             $table->jsonb('src')->nullable()->comment('исходник события');
