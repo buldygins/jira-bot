@@ -14,12 +14,26 @@ class MyUpdateHandler extends UpdateHandler
         return isset($update->message); // handle regular messages (example)
     }
 
+    public function command($cmd)
+    {
+        if ($cmd=='stop')
+        {
+            $this->sendMessage([
+                'text' => 'Вы отписаны от рассылки ' //. $chat_id,
+            ]);
+            return true;
+        }
+
+        return false;
+    }
+
     public function handle()
     {
         $update = $this->update;
         $bot = $this->bot;
 
         $chat_id = $this->update->message->chat->id;
+        $command = $this->update->message->text;
 
         $subscriber=Subscriber::query()->where('chat_id','=',$chat_id)->first();
         if (!$subscriber) {
@@ -28,7 +42,8 @@ class MyUpdateHandler extends UpdateHandler
                 'text' => 'Вы успешно подписаны. ' //. $chat_id,
             ]);
         }
-        else{
+        elseif (!$this->command($command))
+        {
             $this->sendMessage([
                 'text' => 'Вы уже были подписаны ранее. ' //. $chat_id,
             ]);
