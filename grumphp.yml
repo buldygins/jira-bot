@@ -1,0 +1,86 @@
+grumphp:
+  stop_on_failure: true
+  ascii:
+    failed: ~
+    succeeded: ~
+  process_timeout: 600
+  parallel:
+    enabled: true
+    max_workers: 32
+  fixer:
+    enabled: true
+    fix_by_default: true
+
+  tasks:
+    git_branch_name:
+      whitelist:
+        - /^(bugfix|feature|hotfix|release)\/(HUN|RR)-\d+(-[a-z0-9-]+)?$/
+      blacklist:
+        - develop
+        - master
+      additional_modifiers: ''
+      allow_detached_head: false
+
+    git_commit_message:
+      allow_empty_message: false
+      enforce_capitalized_subject: false
+      enforce_no_subject_punctuations: false
+      enforce_no_subject_trailing_period: true
+      enforce_single_lined_subject: true
+      type_scope_conventions: []
+      max_body_width: 72
+      max_subject_width: 60
+      matchers:
+        Must starts with JIRA issue number and contains subject: /^(HUN|RR)-\d+ .+$/
+      case_insensitive: false
+      multiline: true
+      additional_modifiers: ''
+
+    composer:
+      file: ./composer.json
+      no_check_all: false
+      no_check_lock: false
+      no_check_publish: false
+      no_local_repository: false
+      with_dependencies: false
+      strict: false
+
+    file_size:
+      max_size: 2M
+
+    git_blacklist:
+      keywords:
+        - "die("
+        - "var_dump("
+        - "var_export("
+        - "dd("
+        - "print_r("
+        - "print("
+        - "dump("
+        - "exit;"
+      whitelist_patterns: []
+      triggered_by:
+        - php
+      regexp_type: G
+      match_word: true
+
+    phpcsfixer:
+      allow_risky: true
+      using_cache: true
+      cache_file: .php_cs.cache
+      config: .php_cs.dist
+      config_contains_finder: true
+      verbose: false
+      diff: true
+
+    deptrac:
+      depfile: depfile.yaml
+
+#    psalm:
+#      config: psalm.xml
+#      ignore_patterns: []
+#      no_cache: false
+#      report: ~
+#      output_format: null
+#      threads: 1
+#      show_info: false

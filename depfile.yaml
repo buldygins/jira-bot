@@ -1,0 +1,137 @@
+paths:
+  - ./app
+
+skip_violations:
+  App\Models\User\User:
+    - App\Notifications\User\ResetPassword
+    - App\Services\Country\FindService
+  App\Models\Candidate\Candidate:
+    - App\Services\Country\FindService
+
+layers:
+  - name: Cast
+    collectors:
+      - type: directory
+        regex: app/Casts/.*
+  - name: Command
+    collectors:
+      - type: directory
+        regex: app/Console/Commands/.*
+  - name: Event
+    collectors:
+      - type: directory
+        regex: app/Events/.*
+  - name: Exception
+    collectors:
+      - type: bool
+        must:
+          - type: directory
+            regex: app/Exceptions/.*
+        must_not:
+            - type: className
+              regex: Handler
+  - name: Controller
+    collectors:
+      - type: directory
+        regex: app/Http/Controllers/.*
+  - name: Request
+    collectors:
+      - type: directory
+        regex: app/Http/Requests/.*
+  - name: Resource
+    collectors:
+      - type: directory
+        regex: app/Http/Resources/.*
+  - name: Job
+    collectors:
+      - type: directory
+        regex: app/Jobs/.*
+  - name: Listener
+    collectors:
+      - type: directory
+        regex: app/Listeners/.*
+  - name: Model
+    collectors:
+      - type: directory
+        regex: app/Models/.*
+  - name: Notification
+    collectors:
+      - type: directory
+        regex: app/Notifications/.*
+  - name: Observer
+    collectors:
+      - type: directory
+        regex: app/Observers/.*
+  - name: Policy
+    collectors:
+      - type: directory
+        regex: app/Policies/.*
+  - name: Provider
+    collectors:
+      - type: directory
+        regex: app/Providers/.*
+  - name: Rule
+    collectors:
+      - type: directory
+        regex: app/Rules/.*
+  - name: Service
+    collectors:
+      - type: directory
+        regex: app/Services/.*
+
+ruleset:
+  Cast: ~
+  Command:
+    - Service
+    - Exception
+  Event:
+    - Model
+    - Resource
+  Exception: ~
+  Controller:
+    - Request
+    - Model
+    - Resource
+    - Service
+    - Exception
+  Request:
+    - Rule
+    - Model
+  Resource:
+    - Model
+    - Resource
+  Job:
+    - Model
+    - Service
+  Listener:
+    - Event
+    - Service
+    - Notification
+    - Model
+  Model:
+    - Cast
+    - Service
+  Notification:
+    - Model
+    - Notification
+  Observer:
+    - Model
+    - Service
+  Policy:
+    - Model
+  Provider:
+    - Observer
+    - Policy
+    - Event
+    - Listener
+    - Model
+    - Service
+  Rule:
+    - Model
+  Service:
+    - Model
+    - Service
+    - Job
+    - Event
+    - Notification
+    - Exception

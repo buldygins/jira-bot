@@ -1,0 +1,79 @@
+version: '3.6'
+
+services:
+  nginx:
+    image: nginx:1.15.1-alpine
+    ports:
+      - 80:80
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
+      - ../../:/var/www/html
+    depends_on:
+      - swoole
+      - laravel_echo_server
+
+  swoole:
+    build:
+      context: ./
+      dockerfile: swoole.Dockerfile
+    volumes:
+      - ../../:/var/www/html
+    depends_on:
+      - db
+      - redis
+
+  db:
+    build:
+      context: ./
+      dockerfile: db.Dockerfile
+    environment:
+      POSTGRES_DB: '${DB_DATABASE}'
+      POSTGRES_USER: "${DB_USERNAME}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    ports:
+      - 55432:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  db_testing:
+    build:
+      context: ./
+      dockerfile: db.Dockerfile
+    environment:
+      POSTGRES_DB: '${DB_TESTING_DATABASE}'
+      POSTGRES_USER: "${DB_TESTING_USERNAME}"
+      POSTGRES_PASSWORD: "${DB_TESTING_PASSWORD}"
+    ports:
+      - 55433:5432
+    volumes:
+      - db_testing:/var/lib/postgresql/data
+
+  mailcatcher:
+    image: schickling/mailcatcher:latest
+    ports:
+      - 1080:1080
+
+  redis:
+    image: redis:5.0-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis:/data
+
+  laravel_echo_server:
+    build:
+      context: ./
+      dockerfile: laravel-echo-server.Dockerfile
+    ports:
+      - 6001:6001
+    volumes:
+      - ../../laravel-echo-server.json:/home/laravel-echo-server/laravel-echo-server.json
+    depends_on:
+      - swoole
+
+volumes:
+  db:
+  db_testing:
+  redis:
