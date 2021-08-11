@@ -14,7 +14,7 @@ class MyUpdateHandler extends UpdateHandler
         return isset($update->message); // handle regular messages (example)
     }
 
-    public function __invoke()
+    public function __call(string $name, array $arguments)
     {
         return false;
     }
