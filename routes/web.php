@@ -20,3 +20,4 @@ Route::get('/', function () {
 Route::get('/bot', 'App\Http\Controllers\BotController@index');
     //->name('companies.integrations.register')
     //->middleware('recaptcha')
+Route::match(['GET','POST'], '/jira', 'App\Http\Controllers\BotController@jira');
