@@ -9,4 +9,6 @@ use Illuminate\Notifications\Notifiable;
 class JiraIssue extends Model
 {
     use HasFactory, Notifiable;
+
+    protected $guarded = ['id'];
 }
