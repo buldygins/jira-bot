@@ -56,10 +56,10 @@ class BotController extends BaseController
         $f2 = var_export($jsonData, true);
         file_put_contents('3.txt', $f2);
 //----------
-        dd($json);
+        //dd($json);
         if ($json->webhookEvent=='worklog_created')
         {
-            $issue_id=$json['issueId'];
+            $issue_id=$json->worklog->issueId;
         }
         else {
             $issue_id=$json->issue->id;
