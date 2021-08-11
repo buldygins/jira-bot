@@ -47,6 +47,6 @@ class MyUpdateHandler extends UpdateHandler
             ]);
         }
 
-        //$this->command($command);
+        $this->command($command);
     }
 }
