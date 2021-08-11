@@ -6,7 +6,7 @@ use WeStacks\TeleBot\Interfaces\UpdateHandler;
 use WeStacks\TeleBot\Objects\Update;
 use WeStacks\TeleBot\TeleBot;
 
-class TelegramUpdateHandler extends UpdateHandler
+class MyUpdateHandler extends UpdateHandler
 {
     public static function trigger(Update $update, TeleBot $bot): bool
     {

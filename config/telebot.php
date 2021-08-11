@@ -45,8 +45,7 @@ return [
             ],
 
             'handlers' => [
-                \App\Handlers\TelegramUpdateHandler::class,
-                $handler
+                \App\Handlers\MyUpdateHandler::class,
             ]
         ],
 
