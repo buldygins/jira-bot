@@ -78,7 +78,18 @@ class BotController extends BaseController
                 ]);
         }
         else {
-           {
+            if ($json->webhookEvent=='worklog_created')
+            {
+                $issue->query()->where('issue_id', '=', $issue_id)
+                    ->update([
+                        'key' => $json->issue->key,
+                        'issue_id' => $issue_id,
+                        //'updateAuthor' => $json->updateAuthor,
+                        'webhookEvent' => $json->webhookEvent,
+                        'src' => $rawData,
+                    ]);
+            }
+            else {
                 $issue->query()->where('issue_id', '=', $issue_id)
                     ->update([
                         'key' => $json->issue->key,
