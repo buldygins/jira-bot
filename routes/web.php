@@ -18,5 +18,6 @@ Route::get('/', function () {
 });
 
 Route::get('/bot', 'App\Http\Controllers\BotController@index');
+Route::get('/jira', 'App\Http\Controllers\BotController@jira');
     //->name('companies.integrations.register')
     //->middleware('recaptcha')
