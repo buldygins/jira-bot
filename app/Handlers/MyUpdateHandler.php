@@ -16,7 +16,7 @@ class MyUpdateHandler extends UpdateHandler
 
     public function command($cmd)
     {
-        if ($cmd=='stop')
+        if ($cmd=='/stop')
         {
 
             $chat_id = $this->update->message->chat->id;
@@ -30,7 +30,7 @@ class MyUpdateHandler extends UpdateHandler
             return true;
         }
 
-        if ($cmd=='start')
+        if ($cmd=='/start')
         {
 
             $chat_id = $this->update->message->chat->id;
