@@ -55,7 +55,7 @@ class MyUpdateHandler extends UpdateHandler
             $commandList='';
             foreach($commands as $command=>$descr)
             {
-                $commandList.=$command.' '.$descr."\r\n";
+                $commandList.='/'.$command.' '.$descr."\r\n";
             }
 
             $this->sendMessage([
