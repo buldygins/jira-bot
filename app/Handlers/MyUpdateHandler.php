@@ -65,7 +65,14 @@ class MyUpdateHandler extends UpdateHandler
             'text' => 'Команда: '.$cmd //. $chat_id,
         ]);
         $fn = str_replace('/', '', $cmd);
-        $this->$fn();
+        try {
+            $this->$fn();
+        } catch (\Exception $exception) {
+            $this->sendMessage([
+                'text' => 'не выполнена: '.$cmd
+            ]);
+
+        }
         return true;
     }
 
