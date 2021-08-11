@@ -84,7 +84,7 @@ class BotController extends BaseController
             {
                 $issue->query()->where('issue_id', '=', $issue_id)
                     ->update([
-                        'key' => $json->issue->key,
+                        'key' => $issue->key,
                         'issue_id' => $issue_id,
                         //'updateAuthor' => $json->updateAuthor,
                         'webhookEvent' => $json->webhookEvent,
