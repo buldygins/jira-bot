@@ -3,6 +3,7 @@
 namespace App\Handlers\Command;
 
 use App\Models\Subscriber;
+use Illuminate\Support\Facades\DB;
 use WeStacks\TeleBot\Handlers\CommandHandler;
 
 class SetPositionCommand extends CommandHandler
@@ -19,6 +20,9 @@ class SetPositionCommand extends CommandHandler
             ->first();
 
 
+        DB::table('subscribers')
+            ->where('chat_id', '=', $chat_id)
+            ->update(['waited_command'=>'oooo']);
 //        $sub->waited_command = 'SetPositionCommand';
 //        $sub->save();
 
