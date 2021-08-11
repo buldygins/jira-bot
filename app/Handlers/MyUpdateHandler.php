@@ -25,12 +25,12 @@ class MyUpdateHandler extends UpdateHandler
         if (!$subscriber) {
             Subscriber::query()->create(['chat_id'=>$chat_id]);
             $this->sendMessage([
-                'text' => 'Вы успешно подписаны. '. $chat_id,
+                'text' => 'Вы успешно подписаны. ' //. $chat_id,
             ]);
         }
         else{
             $this->sendMessage([
-                'text' => 'Вы уже были подписаны ранее. '. $chat_id,
+                'text' => 'Вы уже были подписаны ранее. ' //. $chat_id,
             ]);
         }
 
