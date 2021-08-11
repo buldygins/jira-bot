@@ -8,7 +8,7 @@ use WeStacks\TeleBot\Handlers\CommandHandler;
 class ListCommand extends CommandHandler
 {
     protected static $aliases = [ '/list'];
-    protected static $description = 'Отправьте "/list" чтобы посмотреть список команд бота';
+    protected static $description = 'Список команд';
 
     public function handle()
     {

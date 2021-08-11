@@ -21,6 +21,7 @@ make app
 ```
 php artisan migrate
 php artisan telebot:webhook --setup 
+php artisan telebot:commands --setup 
 ```
 Вебхук Жиры нужно направить 
 https://domain/jira
