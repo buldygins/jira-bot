@@ -52,25 +52,21 @@ class MyTelegramNotification extends Notification
             'event_processed' => $this->issue->event_created
         ]);
 
-        $keyboard = [];
-        $keyboard_opt = [];
-        $options = [
-            'keyboard' => [
-                [
-                    ['text' => '5555']
-                ]
-            ],
-            'one_time_keyboard' => false,
-            'resize_keyboard' => true,
-        ];
-        $replyMarkups = json_encode($options);
+        $keyboard = array(
+            array(
+                array('text'=>':like:','callback_data'=>'{"action":"like","count":0,"text":":like:"}'),
+                array('text'=>':joy:','callback_data'=>'{"action":"joy","count":0,"text":":joy:"}'),
+                array('text'=>':hushed:','callback_data'=>'{"action":"hushed","count":0,"text":":hushed:"}'),
+                array('text'=>':cry:','callback_data'=>'{"action":"cry","count":0,"text":":cry:"}'),
+                array('text'=>':rage:','callback_data'=>'{"action":"rage","count":0,"text":":rage:"}')
+            )
+        );
 
         return (new TelegramNotification)->bot('bot')
             ->sendMessage([
                 'parse_mode' => 'HTML',
                 'disable_web_page_preview' => true,
-                'keyboard' => [['Здравствуй бот', 'Как меня зовут ?'], ['Случайное число', 'Удалить кнопки']],
-                'reply_markup' => $this->getKeyBoard([[["text" => "Голосовать"], ["text" => "Помощь"]]]),
+                'reply_markup' => json_encode(array('inline_keyboard' => $keyboard)),
                 'chat_id' => $notifiable->chat_id,
                 'text' =>
                     "<a href='{$this->issue->issue_url}'>{$this->issue->key}</a>" . "\r\n" .
