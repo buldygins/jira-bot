@@ -62,6 +62,14 @@ return [
             'level' => env('LOG_LEVEL', 'critical'),
         ],
 
+        'telegram' => [
+            'driver'    => 'custom',
+            'via'       => \WeStacks\TeleBot\Laravel\Log\TelegramLogger::class,
+            'level'     => 'debug',
+            'bot'       => 'bot',
+            'chat_id'   => env('TELEGRAM_LOG_CHAT_ID') // Any chat where bot can write messages.
+        ],
+
         'papertrail' => [
             'driver' => 'monolog',
             'level' => env('LOG_LEVEL', 'debug'),
