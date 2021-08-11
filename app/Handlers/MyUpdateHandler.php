@@ -14,7 +14,7 @@ class MyUpdateHandler extends UpdateHandler
         return isset($update->message); // handle regular messages (example)
     }
 
-    public function command($cmd)
+    public function command($cmd, Subscriber $subscriber)
     {
 
         $fn = str_replace('/', '', $cmd);
@@ -22,10 +22,11 @@ class MyUpdateHandler extends UpdateHandler
             return true;
         }
 
-        $this->sendMessage([
-            'text' => 'Команда: ' . $cmd //. $chat_id,
-        ]);
-
+        if (!is_null($subscriber->waited_command)) {
+            $this->sendMessage([
+                'text' => $subscriber->waited_command . ' Команда: ' . $cmd //. $chat_id,
+            ]);
+        }
 //        try {
 //            $this->$fn();
 //        } catch (\Exception $exception) {
@@ -53,6 +54,6 @@ class MyUpdateHandler extends UpdateHandler
             ]);
         }
 
-        $this->command($command);
+        $this->command($command, $subscriber);
     }
 }
