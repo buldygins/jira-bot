@@ -16,6 +16,7 @@ class CreateJiraIssuesTable extends Migration
         Schema::create('jira_issues', function (Blueprint $table) {
             $table->id();
             $table->string('key')->comment('Jira issue key');
+            $table->string('summary')->nullable()->comment('Название задачи');
             $table->dateTime('added')->nullable()->comment('дата добавления задачи');
             $table->dateTime('started')->nullable()->comment('дата взятия в работу задачи');
             $table->dateTime('ended')->nullable()->comment('дата окончания работы по задаче');
