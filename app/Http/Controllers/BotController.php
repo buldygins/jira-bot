@@ -58,6 +58,7 @@ class BotController extends BaseController
         $issue = JiraIssue::query()->updateOrCreate(
             [
                 'key' => $json->issue->key,
+                'issue_id' => $json->issue->id,
                 //'updateAuthor' => $json->updateAuthor,
                 'webhookEvent' => $json->webhookEvent,
                 'issue_url' => env('JIRA_URL').'browse/' . $json->issue->key,
