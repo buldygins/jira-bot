@@ -45,8 +45,9 @@ return [
             ],
 
             'handlers' => [
-                // Your update handlers
-            ],
+                \App\Handlers\TelegramUpdateHandler::class,
+                $handler
+            ]
         ],
 
         // 'second_bot' => [
