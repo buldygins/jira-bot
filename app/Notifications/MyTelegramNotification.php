@@ -26,15 +26,20 @@ class MyTelegramNotification extends Notification
 
     public function toTelegram($notifiable)
     {
-        $notifiable->telegram_chat_id = env('TELEGRAM_DEFAULT_CHAT_ID');
+        if (!$notifiable->chat_id) {
+            $notifiable->chat_id = env('TELEGRAM_DEFAULT_CHAT_ID');
+        }
         // $this->issue->update(['event_processed'=>$this->issue->event_created]);
         JiraIssue::query()->where('id','=',$this->issue->id)->update([
             'event_processed'=>$this->issue->event_created
         ]);
         return (new TelegramNotification)->bot('bot')
             ->sendMessage([
-                'chat_id' => $notifiable->telegram_chat_id,
-                'text' => $notifiable->issue_url . "\r\n" . $notifiable->webhookEvent . "\r\n" . $notifiable->summary,
+                'chat_id' => $notifiable->chat_id,
+                'text' =>
+                    $this->issue->issue_url . "\r\n" .
+                    $this->issue->webhookEvent . "\r\n" .
+                    $this->issue->summary,
             ]);
     }
 }

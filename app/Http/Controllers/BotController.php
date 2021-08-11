@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JiraIssue;
+use App\Models\Subscriber;
 use App\Notifications\MyTelegramNotification;
 use App\Notifications\TelegramNotification;
 use Carbon\Carbon;
@@ -111,11 +112,15 @@ class BotController extends BaseController
             }
         }
 
+
+
         $issue=JiraIssue::query()->where('issue_id','=',$issue_id)->first();
 
         if ($issue->event_created!=$issue->event_processed) {
-            Notification::send($issue, new MyTelegramNotification($issue));
+            $subscribers=Subscriber::all();
+            foreach($subscribers as $subscriber) {
+                Notification::send($subscriber, new MyTelegramNotification($issue));
+            }
         }
-
     }
 }
