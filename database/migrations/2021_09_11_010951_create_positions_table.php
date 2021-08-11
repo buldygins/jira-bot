@@ -18,8 +18,6 @@ class CreatePositionsTable extends Migration
             $table->string('name')->default('Руководитель')->comment('Название позиции');
             $table->timestamps();
         });
-
-
     }
 
     /**
