@@ -52,6 +52,7 @@ class MyTelegramNotification extends Notification
             ->sendMessage([
                 'parse_mode' => 'HTML',
                 'disable_web_page_preview' => true,
+                'keyboard'=>[['Здравствуй бот', 'Как меня зовут ?'], ['Случайное число', 'Удалить кнопки']],
                 'reply_markups' => $replyMarkups,
                 'chat_id' => $notifiable->chat_id,
                 'text' =>
