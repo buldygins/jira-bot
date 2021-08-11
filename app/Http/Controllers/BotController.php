@@ -55,14 +55,21 @@ class BotController extends BaseController
         file_put_contents('3.txt', $f2);
 //----------
         //print_r($json->issue);
+        if ($json->webhookEvent=='worklog_created')
+        {
+            $issue_id=$json->issueId;
+        }
+        else {
+            $issue_id=$json->issue->id;
+        }
 
-        $issue=JiraIssue::query()->where('issue_id','=',$json->issue->id)->first();
+        $issue=JiraIssue::query()->where('issue_id','=',$issue_id)->first();
 
         if (!$issue) {
             $issue = JiraIssue::query()->create(
                 [
                     'key' => $json->issue->key,
-                    'issue_id' => $json->issue->id,
+                    'issue_id' => $issue_id,
                     //'updateAuthor' => $json->updateAuthor,
                     'webhookEvent' => $json->webhookEvent,
                     'issue_url' => env('JIRA_URL') . 'browse/' . $json->issue->key,
@@ -74,16 +81,16 @@ class BotController extends BaseController
             $issue->query()->where('issue_id', '=', $json->issue->id)
                 ->update([
                     'key' => $json->issue->key,
-                    'issue_id' => $json->issue->id,
+                    'issue_id' => $issue_id,
                     //'updateAuthor' => $json->updateAuthor,
                     'webhookEvent' => $json->webhookEvent,
                     'issue_url' => env('JIRA_URL') . 'browse/' . $json->issue->key,
-                    'summary' => $json->issue->fields->summary,
+                    'summary' => ($json->webhookEvent=='worklog_created') ? $issue->summary : $json->issue->fields->summary,
                     'src' => $rawData,
                 ]);
         }
 
-        $issue=JiraIssue::query()->where('issue_id','=',$json->issue->id)->first();
+        $issue=JiraIssue::query()->where('issue_id','=',$issue_id)->first();
 
         Notification::send($issue, new MyTelegramNotification());
 
