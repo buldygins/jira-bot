@@ -71,7 +71,7 @@ class BotController extends BaseController
                 ]);
         }
         else {
-            $issue=$issue->query()->where('issue_id', '=', $json->issue->id)
+            $issue->query()->where('issue_id', '=', $json->issue->id)
                 ->update([
                     'key' => $json->issue->key,
                     'issue_id' => $json->issue->id,
@@ -82,6 +82,8 @@ class BotController extends BaseController
                     'src' => $rawData,
                 ]);
         }
+
+        $issue=JiraIssue::query()->where('issue_id','=',$json->issue->id)->first();
 
         Notification::send($issue, new MyTelegramNotification());
 
