@@ -30,26 +30,28 @@ class MyTelegramNotification extends Notification
             $notifiable->chat_id = env('TELEGRAM_DEFAULT_CHAT_ID');
         }
         // $this->issue->update(['event_processed'=>$this->issue->event_created]);
-        JiraIssue::query()->where('id','=',$this->issue->id)->update([
-            'event_processed'=>$this->issue->event_created
+        JiraIssue::query()->where('id', '=', $this->issue->id)->update([
+            'event_processed' => $this->issue->event_created
         ]);
 
-        $keyboard=[];
-        $keyboard_opt=[];
+        $keyboard = [];
+        $keyboard_opt = [];
         $options = [
             'keyboard' => [
-                ['text'=>'5555']
+                [
+                    ['text' => '5555']
+                ]
             ],
             'one_time_keyboard' => false,
-            'resize_keyboard'   => true,
+            'resize_keyboard' => true,
         ];
-        $replyMarkups   = json_encode($options);
+        $replyMarkups = json_encode($options);
 
         return (new TelegramNotification)->bot('bot')
             ->sendMessage([
                 'parse_mode' => 'HTML',
                 'disable_web_page_preview' => true,
-                'keyboard'=>[['Здравствуй бот', 'Как меня зовут ?'], ['Случайное число', 'Удалить кнопки']],
+                'keyboard' => [['Здравствуй бот', 'Как меня зовут ?'], ['Случайное число', 'Удалить кнопки']],
                 'reply_markup' => $replyMarkups,
                 'chat_id' => $notifiable->chat_id,
                 'text' =>
