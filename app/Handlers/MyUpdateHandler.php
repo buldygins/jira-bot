@@ -91,7 +91,7 @@ class MyUpdateHandler extends UpdateHandler
                 'text' => 'Вы успешно добавлены. ' //. $chat_id,
             ]);
         } else {
-            $this->command($command);
+           // $this->command($command);
         }
     }
 }
