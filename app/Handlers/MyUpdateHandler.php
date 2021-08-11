@@ -59,13 +59,6 @@ class MyUpdateHandler extends UpdateHandler
         return true;
     }
 
-
-    public function command($cmd)
-    {
-        $fn = str_replace('/', '', $cmd);
-        return $this->$fn();
-    }
-
     public function handle()
     {
         $update = $this->update;
@@ -73,6 +66,7 @@ class MyUpdateHandler extends UpdateHandler
 
         $chat_id = $this->update->message->chat->id;
         $command = $this->update->message->text;
+        $fn = str_replace('/', '', $command);
 
         $subscriber = Subscriber::query()->where('chat_id', '=', $chat_id)->first();
         if (!$subscriber) {
@@ -80,7 +74,7 @@ class MyUpdateHandler extends UpdateHandler
             $this->sendMessage([
                 'text' => 'Вы успешно добавлены. ' //. $chat_id,
             ]);
-        } elseif (!$this->command($command)) {
+        } elseif (!$this->$fn()) {
             $this->sendMessage([
                 'text' => 'Вы уже были подписаны ранее. ' //. $chat_id,
             ]);
