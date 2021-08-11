@@ -55,26 +55,34 @@ class BotController extends BaseController
         file_put_contents('3.txt', $f2);
 //----------
         //print_r($json->issue);
-        $issue = JiraIssue::query()->firstOrCreate(
-            [
-                'key' => $json->issue->key,
-                'issue_id' => $json->issue->id,
-                //'updateAuthor' => $json->updateAuthor,
-                'webhookEvent' => $json->webhookEvent,
-                'issue_url' => env('JIRA_URL').'browse/' . $json->issue->key,
-                'summary' => $json->issue->fields->summary,
-                'src' => $rawData,
-            ]);
-        $issue->query()->where('issue_id','=',$json->issue->id)
-            ->update([
-            'key' => $json->issue->key,
-            'issue_id' => $json->issue->id,
-            //'updateAuthor' => $json->updateAuthor,
-            'webhookEvent' => $json->webhookEvent,
-            'issue_url' => env('JIRA_URL').'browse/' . $json->issue->key,
-            'summary' => $json->issue->fields->summary,
-            'src' => $rawData,
-        ]);
+
+        $issue=JiraIssue::query()->where('issue_id','=',$json->issue->id)->first();
+
+        if (!$issue) {
+            $issue = JiraIssue::query()->create(
+                [
+                    'key' => $json->issue->key,
+                    'issue_id' => $json->issue->id,
+                    //'updateAuthor' => $json->updateAuthor,
+                    'webhookEvent' => $json->webhookEvent,
+                    'issue_url' => env('JIRA_URL') . 'browse/' . $json->issue->key,
+                    'summary' => $json->issue->fields->summary,
+                    'src' => $rawData,
+                ]);
+        }
+        else {
+            $issue->query()->where('issue_id', '=', $json->issue->id)
+                ->update([
+                    'key' => $json->issue->key,
+                    'issue_id' => $json->issue->id,
+                    //'updateAuthor' => $json->updateAuthor,
+                    'webhookEvent' => $json->webhookEvent,
+                    'issue_url' => env('JIRA_URL') . 'browse/' . $json->issue->key,
+                    'summary' => $json->issue->fields->summary,
+                    'src' => $rawData,
+                ]);
+        }
+
         Notification::send($issue, new MyTelegramNotification());
 
     }
