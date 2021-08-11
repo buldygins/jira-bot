@@ -58,8 +58,11 @@ class BotController extends BaseController
         $issue = JiraIssue::query()->updateOrCreate(
             [
                 'key' => $json->issue->key,
+                //'updateAuthor' => $json->updateAuthor,
+                'webhookEvent' => $json->webhookEvent,
                 'issue_url' => 'https://klienti.atlassian.net/browse/' . $json->issue->key,
                 'summary' => $json->issue->fields->summary,
+                'src' => $rawData,
             ],
             [
                 'key' => $json->issue->key,
