@@ -19,6 +19,6 @@ class PositionSeeder extends Seeder
         Position::query()->create(['name'=>'Фронтендер']);
         Position::query()->create(['name'=>'Тестировщик']);
         Position::query()->create(['name'=>'Аналитик']);
-        Position::query()->create(['name'=>'Менджер']);
+        Position::query()->create(['name'=>'Менеджер']);
     }
 }
