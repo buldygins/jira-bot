@@ -16,14 +16,15 @@ class SetPositionCommand extends CommandHandler
 
         $sub=Subscriber::query()
             ->where('chat_id', '=', $chat_id)
-            ->first();
+            ->first()->toArray();
 
 
-        $sub->update(['waited_command' => 'SetPositionCommand']);
+        //$sub->update(['waited_command' => 'SetPositionCommand']);
 
 
         $this->sendMessage([
-            'text' => 'Задайте свою должность '. $chat_id,
+            'text' => 'Задайте свою должность '. var_export($sub)
+            //$chat_id,
         ]);
         return true;
     }
