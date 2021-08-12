@@ -62,6 +62,9 @@ class BotController extends BaseController
         file_put_contents('3.txt', $f2);
 //----------
 
+        $webhook_parts=explode('_',$json->webhookEvent);
+
+
 
         //dd($json);
         if ($json->webhookEvent == 'worklog_created') {
@@ -71,35 +74,38 @@ class BotController extends BaseController
         }
 
         $log_message = '';
-        $comment_message = "Комментарий #" . $json->comment->id . ' {action} ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
-            "------\r\n".$json->comment->body;
+        if ($webhook_parts[0]=='comment') {
+            $comment_message = "Комментарий #" . $json->comment->id . ' {action} ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
+                "------\r\n" . $json->comment->body;
 
-        if ($json->webhookEvent == 'comment_created') {
-            $log_message = str_replace('{action}','был добавлен', $comment_message);
+            if ($json->webhookEvent == 'comment_created') {
+                $log_message = str_replace('{action}', 'был добавлен', $comment_message);
+            }
+
+            if ($json->webhookEvent == 'comment_updated') {
+                $log_message = str_replace('{action}', 'был изменен', $comment_message);
+            }
+
+            if ($json->webhookEvent == 'comment_deleted') {
+                $log_message = str_replace('{action}', 'был удален', $comment_message);
+            }
         }
 
-        if ($json->webhookEvent == 'comment_updated') {
-            $log_message = str_replace('{action}','был изменен', $comment_message);
-        }
-
-        if ($json->webhookEvent == 'comment_deleted') {
-            $log_message = str_replace('{action}','был удален', $comment_message);
-        }
-
-        $task_message = "Задача #" . $json->issue->key . ' {action} ' . $json->user->displayName ; //. "\r\n\r\n"
+        if ($webhook_parts[0]=='jira:issue') {
+            $task_message = "Задача #" . $json->issue->key . ' {action} ' . $json->user->displayName; //. "\r\n\r\n"
             //"------\r\n".$json->comment->body;
 
-        if ($json->webhookEvent == 'jira:issue_created') {
-            $log_message = str_replace('{action}','была создана', $task_message);
-        }
+            if ($json->webhookEvent == 'jira:issue_created') {
+                $log_message = str_replace('{action}', 'была создана', $task_message);
+            }
 
-        if ($json->webhookEvent == 'jira:issue_updated') {
-            $log_message = str_replace('{action}','была изменена', $task_message);
+            if ($json->webhookEvent == 'jira:issue_updated') {
+                $log_message = str_replace('{action}', 'была изменена', $task_message);
+            }
+            if ($json->webhookEvent == 'jira:issue_deleted') {
+                $log_message = str_replace('{action}', 'была удалена', $task_message);
+            }
         }
-        if ($json->webhookEvent == 'jira:issue_deleted') {
-            $log_message = str_replace('{action}','была удалена', $task_message);
-        }
-
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
 
         if (!$issue) {
