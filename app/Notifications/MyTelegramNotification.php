@@ -76,7 +76,8 @@ class MyTelegramNotification extends Notification
                 'text' =>
                     "<a href='{$this->issue->issue_url}'>{$this->issue->key}</a>" .
                     $this->issue->summary . "\r\n" .
-                    $this->issue->webhookEvent . "\r\n".
+                    //$this->issue->webhookEvent .
+                    "\r\n".
                     $this->message
             ]);
     }
