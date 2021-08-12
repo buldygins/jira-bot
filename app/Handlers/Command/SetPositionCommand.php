@@ -46,7 +46,7 @@ class SetPositionCommand extends CommandHandler
         $this->sendMessage([
             'text' => 'Задайте свою должность ',
             'chat_id'=>$this->update->message->chat->id,
-            'reply_markup'=>$reply_markup
+            // 'reply_markup'=>$reply_markup
             //$chat_id,
         ]);
         return true;
