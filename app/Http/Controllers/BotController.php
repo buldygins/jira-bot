@@ -117,26 +117,30 @@ class BotController extends BaseController
 //                return false;
 //            }
 
+            if (isset($json->issue->key)) {$issue_key=$json->issue->key;} else {$issue_key="NOT-01";}
+
             $issue = JiraIssue::query()->create(
                 [
-                    'key' => $json->issue->key ?? null ,
+                    'key' => $issue_key,
                     'issue_id' => $issue_id,
                     'event_created' => Carbon::createFromTimestamp($json->timestamp)->toDateTimeString(),
                     //'updateAuthor' => $json->updateAuthor,
                     'webhookEvent' => $json->webhookEvent,
-                    //'issue_url' => ($json->issue) ? env('JIRA_URL') . 'browse/' . $json->issue->key : null,
+                    'issue_url' => env('JIRA_URL') . 'browse/' . $issue_key,
                     'summary' => $json->issue->fields->summary ?? null,
                     'src' => $rawData,
                 ]);
 
             Log::create([
                 'issue_id' => $issue_id,
-                'issue_key' => $issue->key ?? null,
+                'issue_key' => $issue_key,
                 'webhook_event' => $json->webhookEvent,
                 'name' => $log_message,
                 'src' => $rawData,
             ]);
-        } else {
+        }
+        else
+            {
 
             Log::create([
                 'issue_id' => $issue_id,
@@ -162,7 +166,6 @@ class BotController extends BaseController
             }
             $issue->save();
         }
-
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
 
