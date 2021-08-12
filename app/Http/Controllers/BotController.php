@@ -64,10 +64,9 @@ class BotController extends BaseController
         file_put_contents('3.txt', $f2);
 //----------
 
+        dd($json);
         $webhook_parts = explode('_', $json->webhookEvent);
 
-
-        //dd($json);
         if ($json->webhookEvent == 'worklog_created') {
             $issue_id = $json->worklog->issueId;
         } else {
