@@ -17,7 +17,7 @@ class CreateSubscribersTable extends Migration
             $table->id();
             $table->string('chat_id')->comment('ID чата');
             $table->string('fio')->default('Не известно')->comment('ФИО');
-            $table->string('id_position')->default(1)->comment('Позиция');
+            $table->string('id_position')->default(0)->comment('Позиция');
             $table->boolean('is_active')->default(true)->comment('Включен');
             $table->string('waited_command')->nullable()->comment('Ожидаем ввода для команды');
             $table->timestamps();

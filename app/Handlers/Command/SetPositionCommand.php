@@ -14,8 +14,12 @@ class SetPositionCommand extends CommandHandler
 
     public function answer($text)
     {
+        Subscriber::query()
+            ->where('chat_id', '=', $this->update->message->chat->id)
+            ->update(['id_position'=>Position::find($text)->id]);
+
         $this->sendMessage([
-            'text' => 'ANSWER ' . Position::find($text)->name,
+            'text' => Position::find($text)->name,
         ]);
     }
 
