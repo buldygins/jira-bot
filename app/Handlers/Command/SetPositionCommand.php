@@ -43,8 +43,8 @@ class SetPositionCommand extends CommandHandler
             "resize_keyboard"=>true
         ]);
 
-        $list1="/set_position 1 Фронт
-        /set_position 2 Бэк";
+        $list1="/set_position_1 Фронт
+        /set_position_2 Бэк";
 
         $this->sendMessage([
             'text' => "Задайте свою должность \r\n".$list1,
