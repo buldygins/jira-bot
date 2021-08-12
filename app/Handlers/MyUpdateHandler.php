@@ -34,7 +34,7 @@ class MyUpdateHandler extends UpdateHandler
                         'text' => ' Команда: ' . $item['command'] .' id '. $cmd2,
                     ]);
 
-                    if ($item['command'] == 'set_position') {
+                    if ($item['command'] == '/set_position') {
                         $commandHandler = new SetPositionCommand($this->bot, $this->update);
                         $commandHandler->answer($cmd2);
 
