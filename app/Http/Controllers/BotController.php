@@ -67,7 +67,7 @@ class BotController extends BaseController
 
 
 
-        dd($json);
+        //dd($json);
         if ($json->webhookEvent == 'worklog_created') {
             $issue_id = $json->worklog->issueId;
         } else {
@@ -76,18 +76,18 @@ class BotController extends BaseController
 
         $log_message = '';
         if ($webhook_parts[0]=='worklog') {
-            $comment_message = "Запись о работе #" . $json->worklog->id . ' {action} ' . $json->worklog->updateAuthor->displayName . "\r\n\r\n" .
-                "------\r\n" . $json->worklog->body;
+            $comment_message = "Запись о работе #" . $json->worklog->id . ' {action} ' . $json->worklog->author->displayName . " " .
+                Carbon::createFromTimeString($json->worklog->created)->toDateTimeString(). ' '.$json->worklog->timeSpent;
 
-            if ($json->webhookEvent == 'comment_created') {
+            if ($json->webhookEvent == 'worklog_created') {
                 $log_message = str_replace('{action}', 'был добавлен', $comment_message);
             }
 
-            if ($json->webhookEvent == 'comment_updated') {
+            if ($json->webhookEvent == 'worklog_updated') {
                 $log_message = str_replace('{action}', 'был изменен', $comment_message);
             }
 
-            if ($json->webhookEvent == 'comment_deleted') {
+            if ($json->webhookEvent == 'worklog_deleted') {
                 $log_message = str_replace('{action}', 'был удален', $comment_message);
             }
         }
