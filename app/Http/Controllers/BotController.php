@@ -110,7 +110,9 @@ class BotController extends BaseController
 
         if ($webhook_parts[0] == 'jira:issue') {
             $issue_id = $json->issue->id;
-            $task_message = "Задача {action} {$json->user->displayName}.\n Исполнитель: {$json->issue->fields->assignee->displayName}.\nСтатус: {$json->issue->fields->status->name}"; //. "\r\n\r\n"
+            $assignee = $json->issue->fields->assignee->displayName ?? 'ERR';
+            $status_name = $json->issue->fields->status->name ?? 'ERR';
+            $task_message = "Задача {action} {$json->user->displayName}.\n Исполнитель: {$assignee}.\nСтатус: {$status_name}"; //. "\r\n\r\n"
             //"------\r\n".$json->comment->body;
 
             if ($json->webhookEvent == 'jira:issue_created') {
@@ -130,8 +132,6 @@ class BotController extends BaseController
         }
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
-
-        //dd($log_message_header);
 
         if (!$issue) {
 //            if ($json->webhookEvent == 'worklog_created') {
@@ -191,7 +191,7 @@ class BotController extends BaseController
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
         //dd($issue);
-        
+
         if ($issue->event_created != $issue->event_processed) {
             $subscribers = Subscriber::where('is_active', '=', true)->get();
             foreach ($subscribers as $subscriber) {
