@@ -188,6 +188,7 @@ class BotController extends BaseController
         }
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
+        dd($issue);
 
         if ($issue->event_created != $issue->event_processed) {
             $subscribers = Subscriber::where('is_active', '=', true)->get();
