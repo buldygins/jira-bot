@@ -74,8 +74,8 @@ class MyTelegramNotification extends Notification
                 //'reply_markup' => json_encode(array('inline_keyboard' => $keyboard)),
                 'chat_id' => $notifiable->chat_id,
                 'text' =>
-                    "<a href='{$this->issue->issue_url}'>{$this->issue->key}</a>" .
-                    $this->issue->summary . "\r\n" .
+                    "<a href='{$this->issue->issue_url}'>{$this->issue->key}</a> <nobr> " .
+                    $this->issue->summary . "</nobr>\r\n" .
                     //$this->issue->webhookEvent .
                     "\r\n".
                     $this->message
