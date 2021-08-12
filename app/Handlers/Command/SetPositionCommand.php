@@ -33,8 +33,20 @@ class SetPositionCommand extends CommandHandler
             ->where('chat_id', '=', $this->update->message->chat->id)
             ->update(['waited_command'=>'SetPositionCommand']);
 
+        $keyboard = [
+            [ "Кнопка 1" ],
+            [ "Кнопка 2" ],
+            [ "Кнопка 3" ]
+        ];
+        $reply_markup = json_encode([
+            "keyboard"=>$keyboard,
+            "resize_keyboard"=>true
+        ]);
+
         $this->sendMessage([
-            'text' => 'Задайте свою должность ' //. $sub->id
+            'text' => 'Задайте свою должность ',
+            'chat_id'=>$this->update->message->chat->id,
+            'reply_markup'=>$reply_markup
             //$chat_id,
         ]);
         return true;
