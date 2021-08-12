@@ -124,7 +124,7 @@ class BotController extends BaseController
                     'event_created' => Carbon::createFromTimestamp($json->timestamp)->toDateTimeString(),
                     //'updateAuthor' => $json->updateAuthor,
                     'webhookEvent' => $json->webhookEvent,
-                    'issue_url' => ($json->issue) ? env('JIRA_URL') . 'browse/' . $json->issue->key : null,
+                    //'issue_url' => ($json->issue) ? env('JIRA_URL') . 'browse/' . $json->issue->key : null,
                     'summary' => $json->issue->fields->summary ?? null,
                     'src' => $rawData,
                 ]);
