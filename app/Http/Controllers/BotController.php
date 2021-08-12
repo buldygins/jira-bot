@@ -63,8 +63,7 @@ class BotController extends BaseController
         file_put_contents('3.txt', $f2);
 //----------
 
-        $webhook_parts=explode('_',$json->webhookEvent);
-
+        $webhook_parts = explode('_', $json->webhookEvent);
 
 
         //dd($json);
@@ -75,11 +74,11 @@ class BotController extends BaseController
         }
 
         $log_message = '';
-        if ($webhook_parts[0]=='worklog') {
+        if ($webhook_parts[0] == 'worklog') {
 //            $worklog_message = "Запись о работе #" . $json->worklog->id . ' {action} ' . $json->worklog->author->displayName . " " .
 //                Carbon::createFromTimeString($json->worklog->created)->toDateTimeString(). ' '.$json->worklog->timeSpent;
 
-            $worklog_message = $json->worklog->author->displayName. ' {action} запись о работе '. $json->worklog->timeSpent. " " .
+            $worklog_message = $json->worklog->author->displayName . ' {action} запись о работе ' . $json->worklog->timeSpent . " " .
                 Carbon::createFromTimeString($json->worklog->created)->toDateString();
 
             if ($json->webhookEvent == 'worklog_created') {
@@ -95,7 +94,7 @@ class BotController extends BaseController
             }
         }
 
-        if ($webhook_parts[0]=='comment') {
+        if ($webhook_parts[0] == 'comment') {
             $comment_message = "Комментарий #" . $json->comment->id . ' {action} ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
                 "------\r\n" . $json->comment->body;
 
@@ -112,8 +111,8 @@ class BotController extends BaseController
             }
         }
 
-        if ($webhook_parts[0]=='jira:issue') {
-            $task_message = "Задача {action} " .$json->user->displayName; //. "\r\n\r\n"
+        if ($webhook_parts[0] == 'jira:issue') {
+            $task_message = "Задача {action} " . $json->user->displayName; //. "\r\n\r\n"
             //"------\r\n".$json->comment->body;
 
             if ($json->webhookEvent == 'jira:issue_created') {
@@ -137,7 +136,11 @@ class BotController extends BaseController
 //                return false;
 //            }
 
-            if (isset($json->issue->key)) {$issue_key=$json->issue->key;} else {$issue_key="NOT-01";}
+            if (isset($json->issue->key)) {
+                $issue_key = $json->issue->key;
+            } else {
+                $issue_key = "NOT-01";
+            }
 
             $issue = JiraIssue::query()->create(
                 [
@@ -158,9 +161,7 @@ class BotController extends BaseController
                 'name' => $log_message,
                 'src' => $rawData,
             ]);
-        }
-        else
-            {
+        } else {
 
             Log::create([
                 'issue_id' => $issue_id,
@@ -170,20 +171,17 @@ class BotController extends BaseController
                 'src' => $rawData,
             ]);
 
-            if ($json->webhookEvent == 'worklog_created') {
-                $issue->issue_id = $issue_id;
-                $issue->event_created = Carbon::createFromTimestamp($json->timestamp)->toDateTimeString();
-                $issue->webhookEvent = $json->webhookEvent;
-                $issue->src = $rawData;
-            } else {
+            $issue->issue_id = $issue_id;
+            $issue->event_created = Carbon::createFromTimestamp($json->timestamp)->toDateTimeString();
+            $issue->webhookEvent = $json->webhookEvent;
+            $issue->src = $rawData;
+
+            if ($webhook_parts[0] != 'worklog') {
                 $issue->key = $json->issue->key;
-                $issue->issue_id = $issue_id;
-                $issue->event_created = Carbon::createFromTimestamp($json->timestamp)->toDateTimeString();
-                $issue->webhookEvent = $json->webhookEvent;
                 $issue->issue_url = env('JIRA_URL') . 'browse/' . $json->issue->key;
                 $issue->summary = $json->issue->fields->summary;
-                $issue->src = $rawData;
             }
+
             $issue->save();
         }
 
