@@ -19,10 +19,14 @@ make app
 ```
 внутри контейнера:
 ```
-php artisan migrate
-php artisan telebot:webhook --setup 
+php artisan migrate 
 php artisan telebot:commands --setup 
 ```
+Дальше нужно включить вебхук Телеграама ``` php artisan telebot:webhook --setup```,
+для этого нужен домен с SSL сертификатом, 
+
+либо запустить лонг-поллинг ``` php artisan telebot:polling```
+
 Вебхук Жиры нужно направить 
 https://domain/jira
 
