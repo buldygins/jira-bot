@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JiraIssue;
+use App\Models\Log;
 use App\Models\Subscriber;
 use App\Notifications\MyTelegramNotification;
 use App\Notifications\TelegramNotification;
@@ -83,33 +84,38 @@ class BotController extends BaseController
                     'summary' => $json->issue->fields->summary,
                     'src' => $rawData,
                 ]);
+
+            Log::create([
+                'issue_id'=>$issue_id,
+                'issue_key'=>$issue->key,
+                'webhook_event'=>$json->webhookEvent,
+            ]);
         }
         else {
+
+            Log::create([
+                'issue_id'=>$issue_id,
+                'issue_key'=>$issue->key,
+                'webhook_event'=>$json->webhookEvent,
+            ]);
+
             if ($json->webhookEvent=='worklog_created')
             {
-                $issue->query()->where('issue_id', '=', $issue_id)
-                    ->update([
-                        'key' => $issue->key,
-                        'issue_id' => $issue_id,
-                        'event_created' => Carbon::createFromTimestamp($json->timestamp)->toDateTimeString(),
-                        //'updateAuthor' => $json->updateAuthor,
-                        'webhookEvent' => $json->webhookEvent,
-                        'src' => $rawData,
-                    ]);
+                $issue->issue_id=$issue_id;
+                $issue->event_created=Carbon::createFromTimestamp($json->timestamp)->toDateTimeString();
+                $issue->webhookEvent=$json->webhookEvent;
+                $issue->src=$rawData;
             }
             else {
-                $issue->query()->where('issue_id', '=', $issue_id)
-                    ->update([
-                        'key' => $json->issue->key,
-                        'issue_id' => $issue_id,
-                        'event_created' => Carbon::createFromTimestamp($json->timestamp)->toDateTimeString(),
-                        //'updateAuthor' => $json->updateAuthor,
-                        'webhookEvent' => $json->webhookEvent,
-                        'issue_url' => env('JIRA_URL') . 'browse/' . $json->issue->key,
-                        'summary' => ($json->webhookEvent == 'worklog_created') ? $issue->summary : $json->issue->fields->summary,
-                        'src' => $rawData,
-                    ]);
+                $issue->key=$json->issue->key;
+                $issue->issue_id=$issue_id;
+                $issue->event_created=Carbon::createFromTimestamp($json->timestamp)->toDateTimeString();
+                $issue->webhookEvent=$json->webhookEvent;
+                $issue->issue_url=env('JIRA_URL') . 'browse/' . $json->issue->key;
+                $issue->summary=$json->issue->fields->summary;
+                $issue->src=$rawData;
             }
+            $issue->save();
         }
 
 
