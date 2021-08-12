@@ -2,6 +2,7 @@
 
 namespace App\Handlers\Command;
 
+use App\Models\Position;
 use App\Models\Subscriber;
 use Illuminate\Support\Facades\DB;
 use WeStacks\TeleBot\Handlers\CommandHandler;
@@ -50,8 +51,12 @@ class SetPositionCommand extends CommandHandler
             "resize_keyboard"=>true
         ]);
 
-        $list1="/set_position_1 Фронт
-        /set_position_2 Бэк";
+        $list1='';
+        $positions=Position::query()->get();
+        foreach($positions as $position)
+        {
+            $list1.="/set_position_".$position->id.' '.$position->name."\r\n";
+        }
 
         $this->sendMessage([
             'text' => "Задайте свою должность \r\n".$list1,
