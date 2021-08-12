@@ -76,19 +76,22 @@ class BotController extends BaseController
 
         $log_message = '';
         if ($webhook_parts[0]=='worklog') {
-            $comment_message = "Запись о работе #" . $json->worklog->id . ' {action} ' . $json->worklog->author->displayName . " " .
-                Carbon::createFromTimeString($json->worklog->created)->toDateTimeString(). ' '.$json->worklog->timeSpent;
+//            $worklog_message = "Запись о работе #" . $json->worklog->id . ' {action} ' . $json->worklog->author->displayName . " " .
+//                Carbon::createFromTimeString($json->worklog->created)->toDateTimeString(). ' '.$json->worklog->timeSpent;
+
+            $worklog_message = $json->worklog->author->displayName. ' {action} запись о работе' . $json->worklog->timeSpent. " " .
+                Carbon::createFromTimeString($json->worklog->created)->toDateString();
 
             if ($json->webhookEvent == 'worklog_created') {
-                $log_message = str_replace('{action}', 'был добавлен', $comment_message);
+                $log_message = str_replace('{action}', 'был добавлен', $worklog_message);
             }
 
             if ($json->webhookEvent == 'worklog_updated') {
-                $log_message = str_replace('{action}', 'был изменен', $comment_message);
+                $log_message = str_replace('{action}', 'был изменен', $worklog_message);
             }
 
             if ($json->webhookEvent == 'worklog_deleted') {
-                $log_message = str_replace('{action}', 'был удален', $comment_message);
+                $log_message = str_replace('{action}', 'был удален', $worklog_message);
             }
         }
 
