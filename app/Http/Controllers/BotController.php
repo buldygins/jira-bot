@@ -68,14 +68,9 @@ class BotController extends BaseController
         //dd($json);
         $webhook_parts = explode('_', $json->webhookEvent);
 
-        if ($json->webhookEvent == 'worklog_created') {
-            $issue_id = $json->worklog->issueId;
-        } else {
-            $issue_id = $json->issue->id;
-        }
-
         $log_message = '';
         if ($webhook_parts[0] == 'worklog') {
+            $issue_id = $json->worklog->issueId;
 //            $worklog_message = "Запись о работе #" . $json->worklog->id . ' {action} ' . $json->worklog->author->displayName . " " .
 //                Carbon::createFromTimeString($json->worklog->created)->toDateTimeString(). ' '.$json->worklog->timeSpent;
 
@@ -96,6 +91,7 @@ class BotController extends BaseController
         }
 
         if ($webhook_parts[0] == 'comment') {
+            $issue_id = $json->issue->id;
             $comment_message = "Комментарий #" . $json->comment->id . ' {action} ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
                 "------\r\n" . $json->comment->body;
 
@@ -113,6 +109,7 @@ class BotController extends BaseController
         }
 
         if ($webhook_parts[0] == 'jira:issue') {
+            $issue_id = $json->issue->id;
             $task_message = "Задача {action} " . $json->user->displayName; //. "\r\n\r\n"
             //"------\r\n".$json->comment->body;
 
