@@ -18,7 +18,7 @@ class MyTelegramNotification extends Notification
      */
     private $message;
 
-    public function __construct(JiraIssue $issue, string $message='')
+    public function __construct(JiraIssue $issue, string $message = '')
     {
         $this->issue = $issue;
         $this->message = $message;
@@ -59,11 +59,11 @@ class MyTelegramNotification extends Notification
 
         $keyboard = array(
             array(
-                array('text'=>':like:','callback_data'=>'{"action":"like","count":0,"text":":like:"}'),
-                array('text'=>':joy:','callback_data'=>'{"action":"joy","count":0,"text":":joy:"}'),
-                array('text'=>':hushed:','callback_data'=>'{"action":"hushed","count":0,"text":":hushed:"}'),
-                array('text'=>':cry:','callback_data'=>'{"action":"cry","count":0,"text":":cry:"}'),
-                array('text'=>':rage:','callback_data'=>'{"action":"rage","count":0,"text":":rage:"}')
+                array('text' => ':like:', 'callback_data' => '{"action":"like","count":0,"text":":like:"}'),
+                array('text' => ':joy:', 'callback_data' => '{"action":"joy","count":0,"text":":joy:"}'),
+                array('text' => ':hushed:', 'callback_data' => '{"action":"hushed","count":0,"text":":hushed:"}'),
+                array('text' => ':cry:', 'callback_data' => '{"action":"cry","count":0,"text":":cry:"}'),
+                array('text' => ':rage:', 'callback_data' => '{"action":"rage","count":0,"text":":rage:"}')
             )
         );
 
@@ -73,12 +73,15 @@ class MyTelegramNotification extends Notification
                 'disable_web_page_preview' => true,
                 //'reply_markup' => json_encode(array('inline_keyboard' => $keyboard)),
                 'chat_id' => $notifiable->chat_id,
-                'text' =>
-                    "<a href='{$this->issue->issue_url}' style='margin-right: 5px;'>{$this->issue->key}</a> " .
-                    $this->issue->summary . "\r\n" .
-                    //$this->issue->webhookEvent .
-                    "\r\n".
-                    $this->message
+                'text' => view('telegram.notification', [
+                    'issue' => $this->issue,
+                    'message_header' => $this->messageHeader,
+                    'message_body' => $this->messageBody
+                ])->render(),
+                                $this->issue->summary . "\r\n" .
+                //$this->issue->webhookEvent .
+                "\r\n" .
+                $this->message
             ]);
     }
 }

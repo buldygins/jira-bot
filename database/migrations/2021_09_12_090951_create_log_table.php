@@ -20,7 +20,8 @@ class CreateLogTable extends Migration
             $table->integer('issue_id')->nullable();
             $table->string('issue_key')->nullable();
             $table->string('webhook_event')->nullable();
-            $table->string('name')->nullable()->comment('Сообщение');
+            $table->string('name', 1000)->nullable()->comment('Заголовок');
+            $table->string('body', 1000)->nullable()->comment('Сообщение');
             $table->jsonb('src')->nullable()->comment('исходник события');
             $table->timestamps();
         });
