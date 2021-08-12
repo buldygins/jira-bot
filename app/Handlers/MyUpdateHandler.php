@@ -20,8 +20,28 @@ class MyUpdateHandler extends UpdateHandler
 
         $fn = str_replace('/', '', $cmd);
         if ($fn != $cmd) {
+            // команды
+
+            $cmd1=$cmd;
+
+            $r=$this->getLocalCommands();
+            $commandList = '';
+            foreach($r as $obj) {
+                $item=$obj->toArray();
+                //$commandList .= $item['command'] . ' ' . $item['description'] . "\r\n";
+                $cmd2=str_replace($item['command'],'',$cmd1);
+                if ($cmd2!=$cmd1)
+                {
+                    $this->sendMessage([
+                        'text' => $subscriber->waited_command . ' Команда: ' . $cmd //. $chat_id,
+                    ]);
+                }
+            }
+
             return true;
         }
+
+        //=== далее = ответы на команды
 
         if (!is_null($subscriber->waited_command)) {
             $this->sendMessage([
