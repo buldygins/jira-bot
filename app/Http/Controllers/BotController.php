@@ -110,28 +110,28 @@ class BotController extends BaseController
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
 
-        dd($json);
+        //dd($json);
 
         if (!$issue) {
-            if ($json->webhookEvent == 'worklog_created') {
-                return false;
-            }
+//            if ($json->webhookEvent == 'worklog_created') {
+//                return false;
+//            }
 
             $issue = JiraIssue::query()->create(
                 [
-                    'key' => $json->issue->key,
+                    'key' => $json->issue->key ?? null ,
                     'issue_id' => $issue_id,
                     'event_created' => Carbon::createFromTimestamp($json->timestamp)->toDateTimeString(),
                     //'updateAuthor' => $json->updateAuthor,
                     'webhookEvent' => $json->webhookEvent,
-                    'issue_url' => env('JIRA_URL') . 'browse/' . $json->issue->key,
-                    'summary' => $json->issue->fields->summary,
+                    'issue_url' => ($json->issue->key) ? env('JIRA_URL') . 'browse/' . $json->issue->key : null,
+                    'summary' => $json->issue->fields->summary ?? null,
                     'src' => $rawData,
                 ]);
 
             Log::create([
                 'issue_id' => $issue_id,
-                'issue_key' => $issue->key,
+                'issue_key' => $issue->key ?? null,
                 'webhook_event' => $json->webhookEvent,
                 'name' => $log_message,
                 'src' => $rawData,
