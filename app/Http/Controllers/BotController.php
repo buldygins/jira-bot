@@ -69,7 +69,7 @@ class BotController extends BaseController
 
         $log_message = '';
         if ($json->webhookEvent == 'comment_deleted') {
-            $log_message = "Комментарий #" . $json->comment->id . ' был удален ' . $json->comment->updateAuthor->dispayName . "\r\n\r\n" .
+            $log_message = "Комментарий #" . $json->comment->id . ' был удален ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
                 $json->comment->body;
         }
 
