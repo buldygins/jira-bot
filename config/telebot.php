@@ -49,6 +49,7 @@ return [
                 \App\Handlers\Command\StopCommand::class,
                 \App\Handlers\Command\ListCommand::class,
                 \App\Handlers\Command\SetPositionCommand::class,
+                \App\Handlers\Command\SetFioCommand::class,
                 \App\Handlers\MyUpdateHandler::class,
             ]
         ],
