@@ -68,14 +68,20 @@ class BotController extends BaseController
         }
 
         $log_message = '';
+
+        $comment_message = "Комментарий #" . $json->comment->id . ' {action} ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
+            "------\r\n".$json->comment->body;
+
         if ($json->webhookEvent == 'comment_created') {
-            $log_message = "Комментарий #" . $json->comment->id . ' был добавлен ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
-                "------\r\n".$json->comment->body;
+            $log_message = str_replace('{action}','был добавлен', $comment_message);
+        }
+
+        if ($json->webhookEvent == 'comment_updated') {
+            $log_message = str_replace('{action}','был изменен', $comment_message);
         }
 
         if ($json->webhookEvent == 'comment_deleted') {
-            $log_message = "Комментарий #" . $json->comment->id . ' был удален ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
-                "------\r\n".$json->comment->body;
+            $log_message = str_replace('{action}','был удален', $comment_message);
         }
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
@@ -137,7 +143,7 @@ class BotController extends BaseController
         if ($issue->event_created != $issue->event_processed) {
             $subscribers = Subscriber::where('is_active', '=', true)->get();
             foreach ($subscribers as $subscriber) {
-                Notification::send($subscriber, new MyTelegramNotification($issue));
+                Notification::send($subscriber, new MyTelegramNotification($issue, $log_message));
             }
         }
     }

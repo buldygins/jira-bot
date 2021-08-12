@@ -13,10 +13,15 @@ class MyTelegramNotification extends Notification
      * @var JiraIssue
      */
     private $issue;
+    /**
+     * @var string
+     */
+    private $message;
 
-    public function __construct(JiraIssue $issue)
+    public function __construct(JiraIssue $issue, string $message='')
     {
         $this->issue = $issue;
+        $this->message = $message;
     }
 
     public function via($notifiable)
@@ -69,9 +74,10 @@ class MyTelegramNotification extends Notification
                 //'reply_markup' => json_encode(array('inline_keyboard' => $keyboard)),
                 'chat_id' => $notifiable->chat_id,
                 'text' =>
-                    "<a href='{$this->issue->issue_url}'>{$this->issue->key}</a>" . "\r\n" .
-                    $this->issue->webhookEvent . "\r\n" .
-                    $this->issue->summary,
+                    "<a href='{$this->issue->issue_url}'>{$this->issue->key}</a>" .
+                    $this->issue->summary . "\r\n" .
+                    $this->issue->webhookEvent . "\r\n".
+                    $this->message
             ]);
     }
 }
