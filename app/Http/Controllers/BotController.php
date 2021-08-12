@@ -63,7 +63,7 @@ class BotController extends BaseController
 //----------
 
 
-        dd($json);
+        //dd($json);
         if ($json->webhookEvent == 'worklog_created') {
             $issue_id = $json->worklog->issueId;
         } else {
@@ -84,6 +84,20 @@ class BotController extends BaseController
 
         if ($json->webhookEvent == 'comment_deleted') {
             $log_message = str_replace('{action}','был удален', $comment_message);
+        }
+
+        $task_message = "Задача #" . $json->issue->key . ' {action} ' . $json->user->displayName ; //. "\r\n\r\n"
+            //"------\r\n".$json->comment->body;
+
+        if ($json->webhookEvent == 'jira:issue_created') {
+            $log_message = str_replace('{action}','была создана', $task_message);
+        }
+
+        if ($json->webhookEvent == 'jira:issue_updated') {
+            $log_message = str_replace('{action}','была изменена', $task_message);
+        }
+        if ($json->webhookEvent == 'jira:issue_deleted') {
+            $log_message = str_replace('{action}','была удалена', $task_message);
         }
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
