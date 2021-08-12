@@ -18,7 +18,7 @@ class StopCommand extends BaseCommand
         $this->sub->save();
 
         $this->sendMessage([
-            'text' => 'Вы отписаны от рассылки ' //. $chat_id,
+            'text' => 'Вы отписаны от рассылки '
         ]);
         return true;
     }

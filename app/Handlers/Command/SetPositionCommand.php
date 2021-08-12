@@ -7,16 +7,16 @@ use App\Models\Subscriber;
 use Illuminate\Support\Facades\DB;
 use WeStacks\TeleBot\Handlers\CommandHandler;
 
-class SetPositionCommand extends CommandHandler
+class SetPositionCommand extends BaseCommand
 {
     protected static $aliases = ['/set_position'];
     protected static $description = 'Задать мою должность';
 
     public function answer($text)
     {
-        Subscriber::query()
-            ->where('chat_id', '=', $this->update->message->chat->id)
-            ->update(['id_position'=>Position::find($text)->id]);
+
+        $this->sub->id_position=Position::find($text)->id;
+        $this->sub->save();
 
         $this->sendMessage([
             'text' => Position::find($text)->name,
@@ -41,9 +41,10 @@ class SetPositionCommand extends CommandHandler
 
     public function handle()
     {
-        $sub = Subscriber::query()
-            ->where('chat_id', '=', $this->update->message->chat->id)
-            ->update(['waited_command'=>'SetPositionCommand']);
+        parent::handle();
+
+        $this->sub->waited_command='SetPositionCommand';
+        $this->sub->save();
 
         $keyboard = [
             [ "Кнопка 1" ],
@@ -65,8 +66,6 @@ class SetPositionCommand extends CommandHandler
         $this->sendMessage([
             'text' => "Задайте свою должность \r\n".$list1,
             'chat_id'=>$this->update->message->chat->id,
-            //'reply_markup'=>$reply_markup
-            //$chat_id,
         ]);
         return true;
     }

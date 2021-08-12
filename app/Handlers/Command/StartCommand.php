@@ -5,17 +5,17 @@ namespace App\Handlers\Command;
 use App\Models\Subscriber;
 use WeStacks\TeleBot\Handlers\CommandHandler;
 
-class StartCommand extends CommandHandler
+class StartCommand extends BaseCommand
 {
     protected static $aliases = [ '/start'];
     protected static $description = 'Подписка на бота';
 
     public function handle()
     {
-        $chat_id = $this->update->message->chat->id;
-        Subscriber::query()
-            ->where('chat_id', '=', $chat_id)
-            ->update(['is_active' => true]);
+        parent::handle();
+
+        $this->sub->is_active=true;
+        $this->sub->save();
 
         $this->sendMessage([
             'text' => 'Вы подписаны' //. $chat_id,
