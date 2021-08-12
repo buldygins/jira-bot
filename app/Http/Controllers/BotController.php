@@ -83,15 +83,15 @@ class BotController extends BaseController
                 Carbon::createFromTimeString($json->worklog->created)->toDateString();
 
             if ($json->webhookEvent == 'worklog_created') {
-                $log_message = str_replace('{action}', 'был добавлен', $worklog_message);
+                $log_message = str_replace('{action}', 'была добавлена', $worklog_message);
             }
 
             if ($json->webhookEvent == 'worklog_updated') {
-                $log_message = str_replace('{action}', 'был изменен', $worklog_message);
+                $log_message = str_replace('{action}', 'была изменена', $worklog_message);
             }
 
             if ($json->webhookEvent == 'worklog_deleted') {
-                $log_message = str_replace('{action}', 'был удален', $worklog_message);
+                $log_message = str_replace('{action}', 'была удалена', $worklog_message);
             }
         }
 
@@ -130,7 +130,7 @@ class BotController extends BaseController
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
 
-        dd($log_message);
+        //dd($log_message);
 
         if (!$issue) {
 //            if ($json->webhookEvent == 'worklog_created') {
@@ -188,6 +188,8 @@ class BotController extends BaseController
         }
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
+
+        dd($issue);
 
         if ($issue->event_created != $issue->event_processed) {
             $subscribers = Subscriber::where('is_active', '=', true)->get();
