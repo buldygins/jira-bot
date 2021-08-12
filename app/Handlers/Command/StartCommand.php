@@ -14,8 +14,10 @@ class StartCommand extends BaseCommand
     {
         parent::handle();
 
-        $this->sub->is_active=true;
-        $this->sub->save();
+        if ($this->sub) {
+            $this->sub->is_active = true;
+            $this->sub->save();
+        }
 
         $this->sendMessage([
             'text' => 'Вы подписаны' //. $chat_id,
