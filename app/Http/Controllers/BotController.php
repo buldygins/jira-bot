@@ -79,7 +79,7 @@ class BotController extends BaseController
 //            $worklog_message = "Запись о работе #" . $json->worklog->id . ' {action} ' . $json->worklog->author->displayName . " " .
 //                Carbon::createFromTimeString($json->worklog->created)->toDateTimeString(). ' '.$json->worklog->timeSpent;
 
-            $worklog_message = $json->worklog->author->displayName. ' {action} запись о работе' . $json->worklog->timeSpent. " " .
+            $worklog_message = $json->worklog->author->displayName. ' {action} запись о работе '. $json->worklog->timeSpent. " " .
                 Carbon::createFromTimeString($json->worklog->created)->toDateString();
 
             if ($json->webhookEvent == 'worklog_created') {
@@ -130,7 +130,7 @@ class BotController extends BaseController
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
 
-        //dd($json);
+        dd($log_message);
 
         if (!$issue) {
 //            if ($json->webhookEvent == 'worklog_created') {
