@@ -33,7 +33,7 @@ class MyUpdateHandler extends UpdateHandler
                 if ($cmd2!=$cmd1)
                 {
                     $this->sendMessage([
-                        'text' => $subscriber->waited_command . ' Команда: ' . $cmd //. $chat_id,
+                        'text' => ' Команда: ' . $cmd //. $chat_id,
                     ]);
                 }
             }
