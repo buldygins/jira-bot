@@ -43,8 +43,11 @@ class SetPositionCommand extends CommandHandler
             "resize_keyboard"=>true
         ]);
 
+        $list1="/set_position 1 Фронт
+        /set_position 2 Бэк";
+
         $this->sendMessage([
-            'text' => 'Задайте свою должность ',
+            'text' => "Задайте свою должность \r\n".$list1,
             'chat_id'=>$this->update->message->chat->id,
             //'reply_markup'=>$reply_markup
             //$chat_id,
