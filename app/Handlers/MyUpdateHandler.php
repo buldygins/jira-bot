@@ -2,6 +2,7 @@
 
 namespace App\Handlers;
 
+use App\Handlers\Command\SetFioCommand;
 use App\Handlers\Command\SetPositionCommand;
 use App\Models\Subscriber;
 use WeStacks\TeleBot\Interfaces\UpdateHandler;
@@ -46,16 +47,21 @@ class MyUpdateHandler extends UpdateHandler
 
         //=== далее = ответы на команды
 
-//        if (!is_null($subscriber->waited_command)) {
-//            $this->sendMessage([
-//                'text' => $subscriber->waited_command . ' Команда: ' . $cmd //. $chat_id,
-//            ]);
-//
+        if (!is_null($subscriber->waited_command)) {
+            $this->sendMessage([
+                'text' => $subscriber->waited_command . ' Команда: ' . $cmd //. $chat_id,
+            ]);
+
 //            if ($subscriber->waited_command=='SetPositionCommand') {
 //                $commandHandler = new SetPositionCommand($this->bot, $this->update);
 //                $commandHandler->waited($cmd);
 //            }
-//        }
+
+            if ($subscriber->waited_command=='SetFioCommand') {
+                $commandHandler = new SetFioCommand($this->bot, $this->update);
+                $commandHandler->answer($cmd);
+            }
+        }
 
 
 //        try {
