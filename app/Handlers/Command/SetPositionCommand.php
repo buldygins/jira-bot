@@ -13,12 +13,12 @@ class SetPositionCommand extends BaseCommand
     protected static $description = 'Задать мою должность';
 
     public function answer($text)
-    {
+   {
+       Subscriber::query()
+           ->where('chat_id', '=', $this->update->message->chat->id)
+           ->update(['id_position'=>Position::find($text)->id]);
 
-        $this->sub->id_position=Position::find($text)->id;
-        $this->sub->save();
-
-        $this->sendMessage([
+       $this->sendMessage([
             'text' => Position::find($text)->name,
         ]);
     }
