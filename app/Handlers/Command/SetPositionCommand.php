@@ -15,7 +15,7 @@ class SetPositionCommand extends CommandHandler
     public function answer($text)
     {
         $this->sendMessage([
-            'text' => 'ANSWER ' . $text
+            'text' => 'ANSWER ' . Position::find($text)->name,
         ]);
     }
 
