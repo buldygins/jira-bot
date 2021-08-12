@@ -43,16 +43,18 @@ class MyUpdateHandler extends UpdateHandler
 
         //=== далее = ответы на команды
 
-        if (!is_null($subscriber->waited_command)) {
-            $this->sendMessage([
-                'text' => $subscriber->waited_command . ' Команда: ' . $cmd //. $chat_id,
-            ]);
+//        if (!is_null($subscriber->waited_command)) {
+//            $this->sendMessage([
+//                'text' => $subscriber->waited_command . ' Команда: ' . $cmd //. $chat_id,
+//            ]);
+//
+//            if ($subscriber->waited_command=='SetPositionCommand') {
+//                $commandHandler = new SetPositionCommand($this->bot, $this->update);
+//                $commandHandler->waited($cmd);
+//            }
+//        }
 
-            if ($subscriber->waited_command=='SetPositionCommand') {
-                $commandHandler = new SetPositionCommand($this->bot, $this->update);
-                $commandHandler->waited($cmd);
-            }
-        }
+
 //        try {
 //            $this->$fn();
 //        } catch (\Exception $exception) {
