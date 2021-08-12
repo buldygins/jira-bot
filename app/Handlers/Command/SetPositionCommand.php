@@ -11,6 +11,13 @@ class SetPositionCommand extends CommandHandler
     protected static $aliases = ['/set_position'];
     protected static $description = 'Задать мою должность';
 
+    public function answer($text)
+    {
+        $this->sendMessage([
+            'text' => 'ANSWER ' . $text
+        ]);
+    }
+
     public function waited($text)
     {
         $this->sendMessage([

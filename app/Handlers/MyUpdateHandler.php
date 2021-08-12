@@ -25,16 +25,21 @@ class MyUpdateHandler extends UpdateHandler
             $cmd1=$cmd;
 
             $r=$this->getLocalCommands();
-            $commandList = '';
             foreach($r as $obj) {
                 $item=$obj->toArray();
-                //$commandList .= $item['command'] . ' ' . $item['description'] . "\r\n";
                 $cmd2=str_replace($item['command'].'_','',$cmd1);
                 if ($cmd2!=$cmd1)
                 {
                     $this->sendMessage([
-                        'text' => ' Команда: ' . $cmd .' id '. $cmd2,
+                        'text' => ' Команда: ' . $item['command'] .' id '. $cmd2,
                     ]);
+
+                    if ($item['command'] == 'set_position') {
+                        $commandHandler = new SetPositionCommand($this->bot, $this->update);
+                        $commandHandler->answer($cmd2);
+
+                    }
+
                 }
             }
 
