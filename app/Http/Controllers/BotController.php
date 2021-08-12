@@ -196,7 +196,7 @@ class BotController extends BaseController
             $subscribers = Subscriber::where('is_active', '=', true)->get();
             foreach ($subscribers as $subscriber) {
                 //dd($subscriber);
-                Notification::send($subscriber, new MyTelegramNotification($issue, $log_message_header));
+                Notification::send($subscriber, new MyTelegramNotification($issue, $log_message_header, $log_message_body));
             }
         }
     }

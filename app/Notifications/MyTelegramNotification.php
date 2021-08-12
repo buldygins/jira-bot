@@ -16,12 +16,17 @@ class MyTelegramNotification extends Notification
     /**
      * @var string
      */
-    private $message;
+    private $message_body;
+    /**
+     * @var string
+     */
+    private $message_header;
 
-    public function __construct(JiraIssue $issue, string $message = '')
+    public function __construct(JiraIssue $issue, string $message_header = '', string $message_body = '')
     {
         $this->issue = $issue;
-        $this->message = $message;
+        $this->message_header = $message_header;
+        $this->message_body = $message_body;
     }
 
     public function via($notifiable)
@@ -75,13 +80,8 @@ class MyTelegramNotification extends Notification
                 'chat_id' => $notifiable->chat_id,
                 'text' => view('telegram.notification', [
                     'issue' => $this->issue,
-                    'message_header' => $this->messageHeader,
-                    'message_body' => $this->messageBody
-                ])->render(),
-                                $this->issue->summary . "\r\n" .
-                //$this->issue->webhookEvent .
-                "\r\n" .
-                $this->message
-            ]);
+                    'message_header' => $this->message_header,
+                    'message_body' => $this->message_body
+                ])->render()]);
     }
 }
