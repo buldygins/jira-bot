@@ -82,7 +82,7 @@ class BotController extends BaseController
         file_put_contents('1.txt', $rawData);
         file_put_contents('2.txt', $f);
         $jsonData = json_decode($rawData, true);
-        $json = json_decode($req->json);
+        $json = json_decode($rawData);
         $f2 = var_export($jsonData, true);
         file_put_contents('3.txt', $f2);
 //----------
@@ -208,7 +208,7 @@ class BotController extends BaseController
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
         //dd($issue);
-        
+
         //if ($issue->event_created != $issue->event_processed)
         {
             $subscribers = Subscriber::where('is_active', '=', true)->get();
