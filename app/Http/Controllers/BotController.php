@@ -20,6 +20,8 @@ use WeStacks\TeleBot\Objects\User;
 
 class BotController extends BaseController
 {
+    public $changelog;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function index()
@@ -80,7 +82,7 @@ class BotController extends BaseController
         file_put_contents('1.txt', $rawData);
         file_put_contents('2.txt', $f);
         $jsonData = json_decode($rawData, true);
-        $json = json_decode($rawData);
+        $json = json_decode($req->json);
         $f2 = var_export($jsonData, true);
         file_put_contents('3.txt', $f2);
 //----------
@@ -91,76 +93,58 @@ class BotController extends BaseController
 
         $log_message_header = '';
         $log_message_body = '';
+        $changelog = [];
 
         if (isset($json->issue_event_type_name)) {
             $log_message_body .= $this->getIssueEventTypeName($json->issue_event_type_name);
         }
+
+        $this->parseChangelog($json->changelog->items);
 
         if ($webhook_parts[0] == 'worklog') {
             $issue_id = $json->worklog->issueId;
 //            $worklog_message = "Запись о работе #" . $json->worklog->id . ' {action} ' . $json->worklog->author->displayName . " " .
 //                Carbon::createFromTimeString($json->worklog->created)->toDateTimeString(). ' '.$json->worklog->timeSpent;
 
-            $worklog_message = $json->worklog->author->displayName . ' {action} запись о работе ' . $json->worklog->timeSpent . " " .
+            $log_message_header = '{action} записи о работе от ' . $json->worklog->author->displayName . ' ' . $json->worklog->timeSpent . " " .
                 Carbon::createFromTimeString($json->worklog->created)->toDateString();
 
-            if ($json->webhookEvent == 'worklog_created') {
-                $log_message_header = str_replace('{action}', 'была добавлена', $worklog_message);
-            }
-
-            if ($json->webhookEvent == 'worklog_updated') {
-                $log_message_header = str_replace('{action}', 'была изменена', $worklog_message);
-            }
-
-            if ($json->webhookEvent == 'worklog_deleted') {
-                $log_message_header = str_replace('{action}', 'была удалена', $worklog_message);
-            }
+            $log_message_body .= "Комментарий к работе: {$json->worklog->comment}\n";
         }
 
         if ($webhook_parts[0] == 'comment') {
             $issue_id = $json->issue->id;
-            $comment_message = "Комментарий #" . $json->comment->id . ' {action} ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
+            $log_message_header = "{action} комментария #" . $json->comment->id . ' ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
                 "------\r\n" . $json->comment->body;
 
-            if ($json->webhookEvent == 'comment_created') {
-                $log_message_header = str_replace('{action}', 'был добавлен', $comment_message);
-            }
-
-            if ($json->webhookEvent == 'comment_updated') {
-                $log_message_header = str_replace('{action}', 'был изменен', $comment_message);
-            }
-
-            if ($json->webhookEvent == 'comment_deleted') {
-                $log_message_header = str_replace('{action}', 'был удален', $comment_message);
-            }
         }
 
         if ($webhook_parts[0] == 'jira:issue') {
             $issue_id = $json->issue->id;
-            $assignee = $json->issue->fields->assignee->displayName ?? 'Не назначен';
-            $status_name = $json->issue->fields->status->name ?? 'ERR';
-            $task_message = "Задача {action} {$json->user->displayName}.\n Исполнитель: {$assignee}.\nСтатус: {$status_name}"; //. "\r\n\r\n"
-            //"------\r\n".$json->comment->body;
+            $assignee = $this->getAssignee($json->issue->fields->assignee->displayName);
+            $status = $this->getStatus($json->issue->fields->status->name);
+            $log_message_header = "{action} задачи {$json->user->displayName}.\n{$assignee}{$status}";
 
-            if ($json->webhookEvent == 'jira:issue_created') {
-                $log_message_header = str_replace('{action}', 'была создана', $task_message);
-            }
+        }
 
-            if ($json->webhookEvent == 'jira:issue_updated') {
-                $log_message_header = str_replace('{action}', 'была изменена', $task_message);
-                if (isset($json->changelog)) {
-                    $log_message_body .= "Изменения: ";
-                    foreach ($json->changelog->items as $key => $item) {
-                        if (empty($item->fromString)) {
-                            $log_message_body .= "\nПоле {$item->field}\nНовое значение\n{$item->toString}\n";
-                        } else {
-                            $log_message_body .= "\nПоле {$item->field}\nfrom\n\"{$item->fromString}\"\nto\n\"{$item->toString}\"";
-                        }
-                    }
+        if ($webhook_parts[1] == 'created') {
+            $log_message_header = str_replace('{action}', '📌Создание', $log_message_header);
+        } elseif ($webhook_parts[1] == 'updated') {
+            $log_message_header = str_replace('{action}', '❗Изменение', $log_message_header);
+        } elseif ($webhook_parts[1] == 'deleted') {
+            $log_message_header = str_replace('{action}', '❌Удаление', $log_message_header);
+        } else {
+            $log_message_header = str_replace('{action}', $json->webhookEvent, $log_message_header);
+        }
+
+        if (!empty($this->changelog)) {
+            $log_message_body .= "Изменения: ";
+            foreach ($this->changelog as $field => $change) {
+                if (empty($this->changelog['from'])) {
+                    $log_message_body .= "\nПоле {$field}\nНовое значение\n{$change['to']}\n";
+                } else {
+                    $log_message_body .= "\nПоле {$field}\nfrom\n\"{$change['from']}\"\nto\n\"{$change['to']}\"";
                 }
-            }
-            if ($json->webhookEvent == 'jira:issue_deleted') {
-                $log_message_header = str_replace('{action}', 'была удалена', $task_message);
             }
         }
 
@@ -224,7 +208,7 @@ class BotController extends BaseController
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
         //dd($issue);
-
+        
         //if ($issue->event_created != $issue->event_processed)
         {
             $subscribers = Subscriber::where('is_active', '=', true)->get();
@@ -236,28 +220,60 @@ class BotController extends BaseController
         }
     }
 
+    public function parseChangelog($changelog)
+    {
+        foreach ($changelog as $key => $item) {
+            $this->changelog[$item->field]['to'] = $item->toString;
+            if (!empty($item->fromString)) {
+                $this->changelog[$item->field]['from'] = $item->toString;
+            }
+        }
+
+    }
+
+    public function getAssignee($displayname = 'Не назначен')
+    {
+        $assignee = "Исполнитель: ";
+        if (isset($this->changelog['assignee']['from'])) {
+            $assignee .= $this->changelog['assignee']['from'] . ' -> ';
+            unset($this->changelog['assignee']);
+        }
+        $assignee .= "{$displayname}.\n";
+        return $assignee;
+    }
+
+    public function getStatus($status = 'Нет статуса'){
+        $status = "Статус: ";
+        if (isset($this->changelog['status']['from'])) {
+            $status .= $this->changelog['status']['from'] . ' -> ';
+            unset($this->changelog['status']);
+        }
+        $status .= "{$status}.\n";
+        return $status;
+    }
+
     public function getIssueEventTypeName($eventTypeName)
     {
         $eventTypeNamesList = [
             "issue_created" => "Была создана задача.\n",
-            "issue_assigned" => "Задача была назначена новому пользователю.\n",
-            "issue_resolved" => "Задача была решена.\n",
-            "issue_closed" => "Задача была закрыта.\n",
+//            "issue_assigned" => "Задача была назначена новому пользователю.\n",
+//            "issue_resolved" => "Задача была решена.\n",
+//            "issue_closed" => "Задача была закрыта.\n",
             "issue_commented" => "В задаче добавлен комментарий.\n",
             "issue_comment_edited" => "Комментарий был изменён.\n",
-            "issue_reopened" => "Задача была вновь открыта\n",
+//            "issue_reopened" => "Задача была вновь открыта\n",
             "issue_deleted" => "Задача была удалена.\n",
             "issue_moved" => "Задачу была перемещена в другой проект.\n",
             "issue_worklogged" => "Добавлена запись о работе.\n",
             "work_logged_on_issue" => "Добавлена запись о работе.\n",
-            "issue_workstarted" => "Исполнитель начал работу над задачей.\n",
-            "work_started_on_issue" => "Исполнитель начал работу над задачей.\n",
-            "issue_workstopped"=>"Исполнитель закончил работу над задачей\n",
-            "issue_worklog_updated"=>"Изменена запись о работе в задаче.\n",
-            "issue_worklog_deleted"=>"Запись о работе была удалена.\n",
-            "issue_updated"=>"Обновление полей.\n",
-            "issue_generic"=>"Общее событие.\n",
-            "issue_comment_deleted"=>"Был удалён комментарий.\n",
+//            "issue_workstarted" => "Исполнитель начал работу над задачей.\n",
+//            "work_started_on_issue" => "Исполнитель начал работу над задачей.\n",
+//            "issue_workstopped" => "Исполнитель закончил работу над задачей\n",
+            "issue_worklog_updated" => "Изменена запись о работе в задаче.\n",
+            "issue_worklog_deleted" => "Запись о работе была удалена.\n",
+            "issue_updated" => "Обновление полей.\n",
+            "issue_generic" => "Общее событие.\n",
+            "issue_comment_deleted" => "Был удалён комментарий.\n",
         ];
 
         return $eventTypeNamesList[$eventTypeName] ?? 'Неизвестное действие';
