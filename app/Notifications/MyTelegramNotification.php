@@ -82,6 +82,11 @@ class MyTelegramNotification extends Notification
                     'issue' => $this->issue,
                     'message_header' => $this->message_header,
                     'message_body' => $this->message_body
-                ])->render()]);
+                ])->render()])->sendPhoto(
+                [
+                    'chat_id' => $notifiable->chat_id,
+                    'photo' => 'https://klienti.atlassian.net/secure/attachment/10194/1.png'
+                ]
+            );
     }
 }
