@@ -234,11 +234,11 @@ class BotController extends BaseController
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
 
-        dd(view('telegram.notification', [
-            'issue' => $issue,
-            'message_header' => $log_message_header,
-            'message_body' => $log_message_body
-        ])->render());
+//        dd(view('telegram.notification', [
+//            'issue' => $issue,
+//            'message_header' => $log_message_header,
+//            'message_body' => $log_message_body
+//        ])->render());
         $message_data = compact('log_message_body', 'log_message_header');
         $subscribers = Subscriber::where('is_active', '=', true)->get();
         foreach ($subscribers as $subscriber) {
