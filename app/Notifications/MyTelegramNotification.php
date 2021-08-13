@@ -29,8 +29,8 @@ class MyTelegramNotification extends Notification
     public function __construct(JiraIssue $issue, array $data = [])
     {
         $this->issue = $issue;
-        $this->message_header = $data['message_header'];
-        $this->message_body = $data['message_body'];
+        $this->message_header = $data['log_message_header'];
+        $this->message_body = $data['log_message_body'];
 
         $this->image = $data['image'] ?? [];
     }
