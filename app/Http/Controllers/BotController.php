@@ -49,6 +49,7 @@ class BotController extends BaseController
     {
         if (isset($json->user))
         {
+            dd($json->user);
             $jirauser=JiraUser::query()->firstOrCreate([
                 'key'=>$json->user->key,
                 'name'=>$json->user->name,
