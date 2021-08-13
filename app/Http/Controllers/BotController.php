@@ -49,13 +49,13 @@ class BotController extends BaseController
     {
         if (isset($json->user))
         {
-            dd($json->user);
+            //dd($json->user);
             $jirauser=JiraUser::query()->firstOrCreate([
-                'key'=>$json->user->key,
-                'name'=>$json->user->name,
-                'active'=>$json->user->active,
-                'timeZone'=>$json->user->timeZone,
-                'displayName'=>$json->user->displayName,
+                'key'=>$json->user->key ?? null,
+                'name'=>$json->user->name ?? null,
+                'active'=>$json->user->active ?? true,
+                'timeZone'=>$json->user->timeZone ?? 'Europe/Moscow',
+                'displayName'=>$json->user->displayName ?? null,
             ]);
         }
     }
