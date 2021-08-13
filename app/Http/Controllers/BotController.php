@@ -147,7 +147,7 @@ class BotController extends BaseController
         if ($webhook_parts[1] == 'created') {
             $log_message_header = str_replace('{action}', '📌Создание', $log_message_header);
         } elseif ($webhook_parts[1] == 'updated') {
-            $log_message_header = str_replace('{action}', '✏Изменение', $log_message_header);
+            $log_message_header = str_replace('{action}', 'Изменение', $log_message_header);
         } elseif ($webhook_parts[1] == 'deleted') {
             $log_message_header = str_replace('{action}', '❌Удаление', $log_message_header);
         } else {
