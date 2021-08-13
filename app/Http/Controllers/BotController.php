@@ -150,7 +150,7 @@ class BotController extends BaseController
                     $log_message_body .= "Изменения: ";
                     foreach ($json->changelog->items as $key => $item) {
                         if (empty($item->fromString)) {
-                            $log_message_body .= "\nПоле {$item->filed}\nНовое значение\n{$item->toString}\n";
+                            $log_message_body .= "\nПоле {$item->field}\nНовое значение\n{$item->toString}\n";
                         } else {
                             $log_message_body .= "\nПоле {$item->field}\nfrom\n\"{$item->fromString}\"\nto\n\"{$item->toString}\"";
                         }
