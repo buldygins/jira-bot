@@ -32,7 +32,7 @@ class MyTelegramNotification extends Notification
         $this->message_header = $data['message_header'];
         $this->message_body = $data['message_body'];
 
-        $this->image = $data['image'] ?? null;
+        $this->image = $data['image'] ?? [];
     }
 
     public function via($notifiable)
@@ -90,12 +90,14 @@ class MyTelegramNotification extends Notification
                     'message_body' => $this->message_body
                 ])->render()]);
         if (!empty($this->image)) {
-            $notification->sendPhoto(
-                [
-                    'chat_id' => $notifiable->chat_id,
-                    'photo' => 'https://picsum.photos/640'
-                ]
-            );
+            foreach ($this->image as $img) {
+                $notification->sendPhoto(
+                    [
+                        'chat_id' => $notifiable->chat_id,
+                        'photo' => fopen($img, 'r'),
+                    ]
+                );
+            }
         }
 
         return $notification;
