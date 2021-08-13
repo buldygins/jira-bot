@@ -18,6 +18,7 @@ class CreateJiraUsersTable extends Migration
         Schema::create('jira_users', function (Blueprint $table) {
             $table->id();
             $table->integer('key')->nullable();
+            $table->string('accountId')->nullable();
             $table->string('name')->nullable();
             $table->boolean('active')->nullable();
             $table->string('timeZone')->nullable();

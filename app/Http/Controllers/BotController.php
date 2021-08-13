@@ -53,6 +53,7 @@ class BotController extends BaseController
             $jirauser=JiraUser::query()->firstOrCreate([
                 'key'=>$json->user->key ?? null,
                 'name'=>$json->user->name ?? null,
+                'accountId'=>$json->user->accountId ?? null,
                 'active'=>$json->user->active ?? true,
                 'timeZone'=>$json->user->timeZone ?? 'Europe/Moscow',
                 'displayName'=>$json->user->displayName ?? null,
