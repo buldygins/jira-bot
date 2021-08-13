@@ -243,10 +243,10 @@ class BotController extends BaseController
             switch ($item->field) {
                 case 'Attachment':
                     $link = env('JIRA_URL') . "/secure/attachment/{$item->to}/{$item->toString}";
-                    $this->changelog[$item->field]['to'] = "<a href='{$link}'>{$item->toString}</a>";
+                    $this->changelog[$item->field]['to'] = "<a href='{$link}' style='margin-right: 5px;'>{$item->toString}</a>";
                     if (!empty($item->fromString)) {
                         $link_from = env('JIRA_URL') . "/secure/attachment/{$item->from}/{$item->fromString}";
-                        $this->changelog[$item->field]['from'] = "<a href='{$link_from}'>{$item->fromString}</a>";
+                        $this->changelog[$item->field]['from'] = "<a href='{$link_from}' style='margin-right: 5px;'>{$item->fromString}</a>";
                     }
                     break;
                 default:
