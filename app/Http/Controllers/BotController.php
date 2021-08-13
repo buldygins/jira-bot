@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JiraIssue;
+use App\Models\JiraUser;
 use App\Models\Log;
 use App\Models\Subscriber;
 use App\Notifications\MyTelegramNotification;
@@ -44,6 +45,20 @@ class BotController extends BaseController
         })->wait();
     }
 
+    public function parse_jira_users($json)
+    {
+        if (isset($json->user))
+        {
+            $jirauser=JiraUser::query()->firstOrCreate([
+                'key'=>$json->user->key,
+                'name'=>$json->user->name,
+                'active'=>$json->user->active,
+                'timeZone'=>$json->user->timeZone,
+                'displayName'=>$json->user->displayName,
+            ]);
+        }
+    }
+
     public function jira(Request $req)
     {
         file_put_contents('4.txt', var_export($req->getContent(), true));
@@ -64,6 +79,8 @@ class BotController extends BaseController
         $f2 = var_export($jsonData, true);
         file_put_contents('3.txt', $f2);
 //----------
+
+        $this->parse_jira_users($json);
 
         $webhook_parts = explode('_', $json->webhookEvent);
 
@@ -122,7 +139,7 @@ class BotController extends BaseController
             if ($json->webhookEvent == 'jira:issue_updated') {
                 $log_message_header = str_replace('{action}', 'была изменена', $task_message);
                 $log_message_body = "Изменения: ";
-                foreach ($json->changelog->items as $key => $item){
+                foreach ($json->changelog->items as $key => $item) {
                     $log_message_body .= "Поле {$item->field}\nfrom\n\"{$item->fromString}\"\nto\n\"{$item->toString}\"";
                 }
             }
