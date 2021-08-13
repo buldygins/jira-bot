@@ -135,7 +135,7 @@ class BotController extends BaseController
 
         if ($webhook_parts[0] == 'jira:issue') {
             $issue_id = $json->issue->id;
-            $assignee = $json->issue->fields->assignee->displayName ?? 'ERR';
+            $assignee = $json->issue->fields->assignee->displayName ?? 'Не назначен';
             $status_name = $json->issue->fields->status->name ?? 'ERR';
             $task_message = "Задача {action} {$json->user->displayName}.\n Исполнитель: {$assignee}.\nСтатус: {$status_name}"; //. "\r\n\r\n"
             //"------\r\n".$json->comment->body;
@@ -236,43 +236,28 @@ class BotController extends BaseController
 
     public function getIssueEventTypeName($eventTypeName)
     {
-        switch ($eventTypeName) {
-            case "issue_created":
-                return "Была создана задача.\n";
-            case "issue_assigned":
-                return "Задача была назначена новому пользователю.\n";
-            case "issue_resolved":
-                return "Задача была решена.\n";
-            case "issue_closed":
-                return "Задача была закрыта.\n";
-            case "issue_commented":
-                return "В задаче добавлен комментарий.\n";
-            case "issue_comment_edited":
-                return "Комментарий был изменён.\n";
-            case "issue_reopened":
-                return "Задача была вновь открыта\n";
-            case "issue_deleted":
-                return "Задача была удалена.\n";
-            case "issue_moved":
-                return "Задачу была перемещена в другой проект.\n";
-            case "issue_worklogged":
-            case "work_logged_on_issue":
-                return "Добавлена запись о работе.\n";
-            case "issue_workstarted":
-            case "work_started_on_issue":
-                return "Исполнитель начал работу над задачей.\n";
-            case "issue_workstopped":
-                return "Исполнитель закончил работу над задачей\n";
-            case "issue_worklog_updated":
-                return "Изменена запись о работе в задаче.\n";
-            case "issue_worklog_deleted":
-                return "Запись о работе была удалена.\n";
-            case "issue_updated":
-                return "Обновление полей.\n";
-            case "issue_generic":
-                return "Общее событие.\n";
-            case "issue_comment_deleted":
-                return "Был удалён комментарий.\n";
-        }
+        $eventTypeNamesList = [
+            "issue_created" => "Была создана задача.\n",
+            "issue_assigned" => "Задача была назначена новому пользователю.\n",
+            "issue_resolved" => "Задача была решена.\n",
+            "issue_closed" => "Задача была закрыта.\n",
+            "issue_commented" => "В задаче добавлен комментарий.\n",
+            "issue_comment_edited" => "Комментарий был изменён.\n",
+            "issue_reopened" => "Задача была вновь открыта\n",
+            "issue_deleted" => "Задача была удалена.\n",
+            "issue_moved" => "Задачу была перемещена в другой проект.\n",
+            "issue_worklogged" => "Добавлена запись о работе.\n",
+            "work_logged_on_issue" => "Добавлена запись о работе.\n",
+            "issue_workstarted" => "Исполнитель начал работу над задачей.\n",
+            "work_started_on_issue" => "Исполнитель начал работу над задачей.\n",
+            "issue_workstopped"=>"Исполнитель закончил работу над задачей\n",
+            "issue_worklog_updated"=>"Изменена запись о работе в задаче.\n",
+            "issue_worklog_deleted"=>"Запись о работе была удалена.\n",
+            "issue_updated"=>"Обновление полей.\n",
+            "issue_generic"=>"Общее событие.\n",
+            "issue_comment_deleted"=>"Был удалён комментарий.\n",
+        ];
+
+        return $eventTypeNamesList[$eventTypeName] ?? 'Неизвестное действие';
     }
 }
