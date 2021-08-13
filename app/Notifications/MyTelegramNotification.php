@@ -21,12 +21,18 @@ class MyTelegramNotification extends Notification
      * @var string
      */
     private $message_header;
+    /**
+     * @var mixed|null
+     */
+    private $image;
 
-    public function __construct(JiraIssue $issue, string $message_header = '', string $message_body = '')
+    public function __construct(JiraIssue $issue, array $data = [])
     {
         $this->issue = $issue;
-        $this->message_header = $message_header;
-        $this->message_body = $message_body;
+        $this->message_header = $data['message_header'];
+        $this->message_body = $data['message_body'];
+
+        $this->image = $data['image'] ?? null;
     }
 
     public function via($notifiable)
@@ -72,7 +78,7 @@ class MyTelegramNotification extends Notification
             )
         );
 
-        return (new TelegramNotification)->bot('bot')
+        $notification = (new TelegramNotification)->bot('bot')
             ->sendMessage([
                 'parse_mode' => 'HTML',
                 'disable_web_page_preview' => true,
@@ -82,11 +88,16 @@ class MyTelegramNotification extends Notification
                     'issue' => $this->issue,
                     'message_header' => $this->message_header,
                     'message_body' => $this->message_body
-                ])->render()])->sendPhoto(
+                ])->render()]);
+        if (!empty($this->image)) {
+            $notification->sendPhoto(
                 [
                     'chat_id' => $notifiable->chat_id,
-                    'photo' => 'https://klienti.atlassian.net/secure/attachment/10194/1.png'
+                    'photo' => 'https://picsum.photos/640'
                 ]
             );
+        }
+
+        return $notification;
     }
 }
