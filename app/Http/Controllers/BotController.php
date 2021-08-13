@@ -263,7 +263,11 @@ class BotController extends BaseController
         if (isset($this->changelog['assignee']['from'])) {
             $assignee .= $this->changelog['assignee']['from'] . ' ➡ ';
         }
-        $displayName = (isset($this->changelog['assignee']['to']) && $displayName == null) ? $this->changelog['assignee']['to'] : 'ERR';
+        if (isset($this->changelog['assignee']['to']) {
+            $displayName = $this->changelog['assignee']['to'];
+        } elseif ($displayName == null) {
+            $displayName = 'ERR';
+        }
         $assignee .= "{$displayName}.\n";
         unset($this->changelog['assignee']);
         return $assignee;
