@@ -126,7 +126,9 @@ class BotController extends BaseController
             $log_message_header = '{action} записи о работе от ' . $json->worklog->author->displayName . ' ' . $json->worklog->timeSpent . " " .
                 Carbon::createFromTimeString($json->worklog->created)->toDateString();
 
-            $log_message_body .= "Комментарий к работе: {$json->worklog->comment}\n";
+            if (isset($json->worklog->comment)){
+                $log_message_body .= "Комментарий к работе: {$json->worklog->comment}\n";
+            }
         }
 
         if ($webhook_parts[0] == 'comment') {
