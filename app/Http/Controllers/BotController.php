@@ -13,8 +13,10 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 use WeStacks\TeleBot\TeleBot;
 use WeStacks\TeleBot\Objects\User;
 
@@ -66,6 +68,14 @@ class BotController extends BaseController
 
     public function jira(Request $req)
     {
+//        $link = 'https://klienti.atlassian.net/6secure/attachment/10196/1.png';
+//        try {
+//            $image = fopen($link, 'r');
+//        } catch (\Exception $exception) {
+//            $image = $link;
+//        }
+//
+//        dd(is_string($image));
         file_put_contents('4.txt', var_export($req->getContent(), true));
         $rawData = file_get_contents("php://input");
         //$rawData = '{"timestamp":1628677146887,"webhookEvent":"comment_created","comment":{"self":"https://klienti.atlassian.net/rest/api/2/issue/10509/comment/10274","id":"10274","author":{"self":"https://klienti.atlassian.net/rest/api/2/user?accountId=557058%3Abf39af2f-2a15-473b-ba9b-fecfcab48e41","accountId":"557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41","avatarUrls":{"48x48":"https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41/381ac727-55c2-48db-ac74-24f7c412762e/48","24x24":"https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41/381ac727-55c2-48db-ac74-24f7c412762e/24","16x16":"https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41/381ac727-55c2-48db-ac74-24f7c412762e/16","32x32":"https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41/381ac727-55c2-48db-ac74-24f7c412762e/32"},"displayName":"Veniamin Smorodinsky","active":true,"timeZone":"Europe/Moscow","accountType":"atlassian"},"body":"ttt","updateAuthor":{"self":"https://klienti.atlassian.net/rest/api/2/user?accountId=557058%3Abf39af2f-2a15-473b-ba9b-fecfcab48e41","accountId":"557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41","avatarUrls":{"48x48":"https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41/381ac727-55c2-48db-ac74-24f7c412762e/48","24x24":"https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41/381ac727-55c2-48db-ac74-24f7c412762e/24","16x16":"https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41/381ac727-55c2-48db-ac74-24f7c412762e/16","32x32":"https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41/381ac727-55c2-48db-ac74-24f7c412762e/32"},"displayName":"Veniamin Smorodinsky","active":true,"timeZone":"Europe/Moscow","accountType":"atlassian"},"created":"2021-08-11T13:19:06.887+0300","updated":"2021-08-11T13:19:06.887+0300","jsdPublic":true},"issue":{"id":"10509","self":"https://klienti.atlassian.net/rest/api/2/10509","key":"TALK-132","fields":{"summary":"Разлогин на странице чатов","issuetype":{"self":"https://klienti.atlassian.net/rest/api/2/issuetype/10004","id":"10004","description":"Проблема или ошибка.","iconUrl":"https://klienti.atlassian.net/secure/viewavatar?size=medium&avatarId=10303&avatarType=issuetype","name":"Баг","subtask":false,"avatarId":10303,"hierarchyLevel":0},"project":{"self":"https://klienti.atlassian.net/rest/api/2/project/10031","id":"10031","key":"TALK","name":"MyTalking","projectTypeKey":"software","simplified":false,"avatarUrls":{"48x48":"https://klienti.atlassian.net/secure/projectavatar?pid=10031&avatarId=10421","24x24":"https://klienti.atlassian.net/secure/projectavatar?size=small&s=small&pid=10031&avatarId=10421","16x16":"https://klienti.atlassian.net/secure/projectavatar?size=xsmall&s=xsmall&pid=10031&avatarId=10421","32x32":"https://klienti.atlassian.net/secure/projectavatar?size=medium&s=medium&pid=10031&avatarId=10421"}},"assignee":{"self":"https://klienti.atlassian.net/rest/api/2/user?accountId=557058%3Abf39af2f-2a15-473b-ba9b-fecfcab48e41","accountId":"557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41","avatarUrls":{"48x48":"https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41/381ac727-55c2-48db-ac74-24f7c412762e/48","24x24":"https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41/381ac727-55c2-48db-ac74-24f7c412762e/24","16x16":"https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41/381ac727-55c2-48db-ac74-24f7c412762e/16","32x32":"https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557058:bf39af2f-2a15-473b-ba9b-fecfcab48e41/381ac727-55c2-48db-ac74-24f7c412762e/32"},"displayName":"Veniamin Smorodinsky","active":true,"timeZone":"Europe/Moscow","accountType":"atlassian"},"priority":{"self":"https://klienti.atlassian.net/rest/api/2/priority/3","iconUrl":"https://klienti.atlassian.net/images/icons/priorities/medium.svg","name":"Обычный","id":"3"},"status":{"self":"https://klienti.atlassian.net/rest/api/2/status/10003","description":"Выполненные задачи","iconUrl":"https://klienti.atlassian.net/","name":"Готово","id":"10003","statusCategory":{"self":"https://klienti.atlassian.net/rest/api/2/statuscategory/3","id":3,"key":"done","colorName":"green","name":"Готово"}}}}}';
@@ -139,7 +149,7 @@ class BotController extends BaseController
         if ($webhook_parts[0] == 'jira:issue') {
             $issue_id = $json->issue->id;
             $assignee = $this->getAssignee($json->issue->fields->assignee->displayName ?? null);
-            $status = $this->getStatus($json->issue->fields->status->name);
+            $status = $this->getStatus($json->issue->fields->status->name ?? null);
             $log_message_header = "{$assignee}{$status}{action} задачи пользователем {$json->user->displayName}.\n";
 
         }
@@ -239,7 +249,7 @@ class BotController extends BaseController
 //            'message_header' => $log_message_header,
 //            'message_body' => $log_message_body
 //        ])->render());
-        $message_data = compact('log_message_body','log_message_header');
+        $message_data = compact('log_message_body', 'log_message_header');
         $subscribers = Subscriber::where('is_active', '=', true)->get();
         foreach ($subscribers as $subscriber) {
             Notification::send($subscriber, new MyTelegramNotification($issue, $this->data));
@@ -251,12 +261,19 @@ class BotController extends BaseController
         foreach ($changelog as $key => $item) {
             switch ($item->field) {
                 case 'Attachment':
-                    $link = env('JIRA_URL') . "/secure/attachment/{$item->to}/{$item->toString}";
-                    preg_match('~^https?://\S+(?:jpg|jpeg|png)$~',$link,$match);
-                    if (!empty($match)){
-                        $this->data['image'][] = $link;
-                        break;
-                    }
+//                    $link = env('JIRA_URL') . "/secure/attachment/{$item->to}/{$item->toString}";
+//                    preg_match('~^https?://\S+(?:jpg|jpeg|png)$~', $link, $match);
+//                    if ($match) {
+//                        try {
+//                            $image = fopen($link, 'r');
+//                        } catch (\Exception $exception) {
+//                            $image = $link;
+//                        }
+//                    }
+//                    if (!empty($match)) {
+//                        $this->data['image'][] = $link;
+//                        break;
+//                    }
                     if (!empty($item->to)) {
                         $this->changelog[$item->field]['to'] = "<a href='{$link}' style='margin-right: 5px;'>{$item->toString}</a>";
                     }
@@ -280,6 +297,8 @@ class BotController extends BaseController
         $assignee = "Исполнитель: ";
         if (isset($this->changelog['assignee']['from'])) {
             $assignee .= $this->changelog['assignee']['from'] . ' -> ';
+        } else {
+            $assignee .= 'не назначено -> ';
         }
         if (isset($this->changelog['assignee']['to'])) {
             $displayName = $this->changelog['assignee']['to'];

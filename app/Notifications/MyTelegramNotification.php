@@ -89,16 +89,16 @@ class MyTelegramNotification extends Notification
                     'message_header' => $this->message_header,
                     'message_body' => $this->message_body
                 ])->render()]);
-        if (!empty($this->image)) {
-            foreach ($this->image as $img) {
-                $notification->sendPhoto(
-                    [
-                        'chat_id' => $notifiable->chat_id,
-                        'photo' => fopen($img, 'r'),
-                    ]
-                );
-            }
-        }
+//        if (!empty($this->image)) {
+//            foreach ($this->image as $img) {
+//                $notification->sendPhoto(
+//                    [
+//                        'chat_id' => $notifiable->chat_id,
+//                        'photo' => fopen($img, 'r'),
+//                    ]
+//                );
+//            }
+//        }
 
         return $notification;
     }
