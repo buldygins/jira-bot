@@ -261,7 +261,7 @@ class BotController extends BaseController
         foreach ($changelog as $key => $item) {
             switch ($item->field) {
                 case 'Attachment':
-//                    $link = env('JIRA_URL') . "/secure/attachment/{$item->to}/{$item->toString}";
+                    $link = env('JIRA_URL') . "/secure/attachment/{$item->to}/{$item->toString}";
 //                    preg_match('~^https?://\S+(?:jpg|jpeg|png)$~', $link, $match);
 //                    if ($match) {
 //                        try {
