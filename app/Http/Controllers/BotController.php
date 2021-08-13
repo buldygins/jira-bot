@@ -142,10 +142,11 @@ class BotController extends BaseController
 
             if ($json->webhookEvent == 'jira:issue_updated') {
                 $log_message_header = str_replace('{action}', 'была изменена', $task_message);
-                $log_message_body = "Изменения: ";
-                dd($json);
-                foreach ($json->changelog->items as $key => $item) {
-                    $log_message_body .= "Поле {$item->field}\nfrom\n\"{$item->fromString}\"\nto\n\"{$item->toString}\"";
+                if (isset($json->changelog)) {
+                    $log_message_body = "Изменения: ";
+                    foreach ($json->changelog->items as $key => $item) {
+                        $log_message_body .= "Поле {$item->field}\nfrom\n\"{$item->fromString}\"\nto\n\"{$item->toString}\"";
+                    }
                 }
             }
             if ($json->webhookEvent == 'jira:issue_deleted') {
