@@ -47,16 +47,15 @@ class BotController extends BaseController
 
     public function parse_jira_users($json)
     {
-        if (isset($json->user))
-        {
+        if (isset($json->user)) {
             //dd($json->user);
-            $jirauser=JiraUser::query()->firstOrCreate([
-                'key'=>$json->user->key ?? null,
-                'name'=>$json->user->name ?? null,
-                'accountId'=>$json->user->accountId ?? null,
-                'active'=>$json->user->active ?? true,
-                'timeZone'=>$json->user->timeZone ?? 'Europe/Moscow',
-                'displayName'=>$json->user->displayName ?? null,
+            $jirauser = JiraUser::query()->firstOrCreate([
+                'key' => $json->user->key ?? null,
+                'name' => $json->user->name ?? null,
+                'accountId' => $json->user->accountId ?? null,
+                'active' => $json->user->active ?? true,
+                'timeZone' => $json->user->timeZone ?? 'Europe/Moscow',
+                'displayName' => $json->user->displayName ?? null,
             ]);
         }
     }
@@ -90,6 +89,11 @@ class BotController extends BaseController
 
         $log_message_header = '';
         $log_message_body = '';
+
+        if (isset($json->issue_event_type_name)) {
+            $log_message_body .= $this->getIssueEventTypeName($json->issue_event_type_name);
+        }
+
         if ($webhook_parts[0] == 'worklog') {
             $issue_id = $json->worklog->issueId;
 //            $worklog_message = "Запись о работе #" . $json->worklog->id . ' {action} ' . $json->worklog->author->displayName . " " .
@@ -143,9 +147,13 @@ class BotController extends BaseController
             if ($json->webhookEvent == 'jira:issue_updated') {
                 $log_message_header = str_replace('{action}', 'была изменена', $task_message);
                 if (isset($json->changelog)) {
-                    $log_message_body = "Изменения: ";
+                    $log_message_body .= "Изменения: ";
                     foreach ($json->changelog->items as $key => $item) {
-                        $log_message_body .= "Поле {$item->field}\nfrom\n\"{$item->fromString}\"\nto\n\"{$item->toString}\"";
+                        if (empty($item->fromString)) {
+                            $log_message_body .= "\nПоле {$item->filed}\nНовое значение\n{$item->toString}\n";
+                        } else {
+                            $log_message_body .= "\nПоле {$item->field}\nfrom\n\"{$item->fromString}\"\nto\n\"{$item->toString}\"";
+                        }
                     }
                 }
             }
@@ -223,6 +231,48 @@ class BotController extends BaseController
 
                 Notification::send($subscriber, new MyTelegramNotification($issue, $log_message_header, $log_message_body));
             }
+        }
+    }
+
+    public function getIssueEventTypeName($eventTypeName)
+    {
+        switch ($eventTypeName) {
+            case "issue_created":
+                return "Была создана задача.\n";
+            case "issue_assigned":
+                return "Задача была назначена новому пользователю.\n";
+            case "issue_resolved":
+                return "Задача была решена.\n";
+            case "issue_closed":
+                return "Задача была закрыта.\n";
+            case "issue_commented":
+                return "В задаче добавлен комментарий.\n";
+            case "issue_comment_edited":
+                return "Комментарий был изменён.\n";
+            case "issue_reopened":
+                return "Задача была вновь открыта\n";
+            case "issue_deleted":
+                return "Задача была удалена.\n";
+            case "issue_moved":
+                return "Задачу была перемещена в другой проект.\n";
+            case "issue_worklogged":
+            case "work_logged_on_issue":
+                return "Добавлена запись о работе.\n";
+            case "issue_workstarted":
+            case "work_started_on_issue":
+                return "Исполнитель начал работу над задачей.\n";
+            case "issue_workstopped":
+                return "Исполнитель закончил работу над задачей\n";
+            case "issue_worklog_updated":
+                return "Изменена запись о работе в задаче.\n";
+            case "issue_worklog_deleted":
+                return "Запись о работе была удалена.\n";
+            case "issue_updated":
+                return "Обновление полей.\n";
+            case "issue_generic":
+                return "Общее событие.\n";
+            case "issue_comment_deleted":
+                return "Был удалён комментарий.\n";
         }
     }
 }
