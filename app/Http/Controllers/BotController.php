@@ -65,14 +65,9 @@ class BotController extends BaseController
 
     public function jira(Request $req)
     {
-//        $link = 'https://klienti.atlassian.net//secure/attachment/10199/321.png';
-//        try {
-//            $image = fopen($link, 'r');
-//        } catch (\Exception $exception) {
-//            $image = $link;
-//        }
-//
-//        dd(is_string($image));
+
+        Log::channel('telegram_request')->info($req->all());
+
         file_put_contents('4.txt', var_export($req->getContent(), true));
         $rawData = file_get_contents("php://input");
 
