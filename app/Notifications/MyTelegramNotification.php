@@ -84,6 +84,12 @@ class MyTelegramNotification extends Notification
                 'disable_web_page_preview' => true,
                 //'reply_markup' => json_encode(array('inline_keyboard' => $keyboard)),
                 'chat_id' => $notifiable->chat_id,
+                'reply_markup' => [
+                    'inline_keyboard' => [[[
+                        'text' => '/start',
+                        'callback_data' => '/start',
+                    ]]]
+                ],
                 'text' => view('telegram.notification', [
                     'issue' => $this->issue,
                     'message_header' => $this->message_header,
