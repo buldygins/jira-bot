@@ -2,8 +2,12 @@
 
 namespace App\Handlers\Command;
 
+
 use App\Models\Subscriber;
+use Illuminate\Support\Facades\Log;
 use WeStacks\TeleBot\Handlers\CommandHandler;
+use WeStacks\TeleBot\Objects\Update;
+use WeStacks\TeleBot\TeleBot;
 
 class ListCommand extends BaseCommand
 {
@@ -23,5 +27,13 @@ class ListCommand extends BaseCommand
             'text' => $commandList
         ]);
         return true;
+    }
+
+    public static function trigger(Update $update, TeleBot $bot): bool
+    {
+        if (in_array($update->callback_query->data, static::$aliases)) {
+            return true;
+        }
+        return false;
     }
 }
