@@ -28,12 +28,4 @@ class ListCommand extends BaseCommand
         ]);
         return true;
     }
-
-    public static function trigger(Update $update, TeleBot $bot): bool
-    {
-        if (in_array($update->callback_query->data, static::$aliases)) {
-            return true;
-        }
-        return false;
-    }
 }
