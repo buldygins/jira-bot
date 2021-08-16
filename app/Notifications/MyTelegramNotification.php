@@ -86,8 +86,8 @@ class MyTelegramNotification extends Notification
                 'chat_id' => $notifiable->chat_id,
                 'reply_markup' => [
                     'inline_keyboard' => [[[
-                        'text' => '/start',
-                        'callback_data' => '/start',
+                        'text' => 'List',
+                        'callback_data' => '/list',
                     ]]]
                 ],
                 'text' => view('telegram.notification', [
