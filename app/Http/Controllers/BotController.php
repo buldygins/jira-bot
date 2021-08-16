@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JiraIssue;
 use App\Models\JiraUser;
 use App\Models\Log;
+use Illuminate\Support\Facades\Log as Logger;
 use App\Models\Subscriber;
 use App\Notifications\MyTelegramNotification;
 use Carbon\Carbon;
@@ -66,7 +67,7 @@ class BotController extends BaseController
     public function jira(Request $req)
     {
 
-        Log::channel('telegram_request')->info($req->all());
+        Logger::channel('telegram_request')->info(json_encode($req->all()));
 
         file_put_contents('4.txt', var_export($req->getContent(), true));
         $rawData = file_get_contents("php://input");
