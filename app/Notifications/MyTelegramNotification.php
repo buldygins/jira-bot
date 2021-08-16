@@ -87,7 +87,7 @@ class MyTelegramNotification extends Notification
                 'reply_markup' => [
                     'inline_keyboard' => [[[
                         'text' => 'List',
-                        'callback_data' => '/list',
+                        'callback_data' => 'list',
                     ]]]
                 ],
                 'text' => view('telegram.notification', [
