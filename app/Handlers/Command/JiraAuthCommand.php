@@ -23,7 +23,7 @@ class JiraAuthCommand extends BaseCommand
     {
         parent::handle();
 
-        $this->sub->waited_command = 'AuthCommand::answerFio';
+        $this->sub->waited_command = get_class($this).'::answerFio';
         $this->sub->save();
 
         $this->sendMessage([
@@ -37,7 +37,7 @@ class JiraAuthCommand extends BaseCommand
     {
         parent::handle();
 
-        $this->sub->waited_command = 'AuthCommand::answerPosition';
+        $this->sub->waited_command = get_class($this).'::answerPosition';
         $this->sub->save();
 
         $keyboard_buttons = [];
@@ -77,7 +77,7 @@ class JiraAuthCommand extends BaseCommand
         }
 
         $this->sub->id_position = $position->id;
-        $this->sub->waited_command = 'AuthCommand::answerLogin';
+        $this->sub->waited_command = get_class($this).'::answerLogin';
         $this->sub->save();
 
         $keyboard = Keyboard::create([
@@ -101,7 +101,7 @@ class JiraAuthCommand extends BaseCommand
         parent::handle();
 
         $this->sub->jira_login = trim($text);
-        $this->sub->waited_command = 'AuthCommand::answerLoginAndToken';
+        $this->sub->waited_command = get_class($this).'::answerLoginAndToken';
         $this->sub->save();
 
         $link = env('JIRA_URL') . 'secure/ViewProfile.jspa?selectedTab=com.atlassian.pats.pats-plugin:jira-user-personal-access-tokens';
