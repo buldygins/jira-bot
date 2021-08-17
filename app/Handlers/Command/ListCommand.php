@@ -11,15 +11,15 @@ use WeStacks\TeleBot\TeleBot;
 
 class ListCommand extends BaseCommand
 {
-    protected static $aliases = [ '/list'];
+    protected static $aliases = ['/list'];
     protected static $description = 'Список команд';
 
     public function handle()
     {
-        $r=$this->getLocalCommands();
+        $r = $this->getLocalCommands();
         $commandList = '';
-        foreach($r as $obj) {
-            $item=$obj->toArray();
+        foreach ($r as $obj) {
+            $item = $obj->toArray();
             $commandList .= $item['command'] . ' ' . $item['description'] . "\r\n";
         }
 
@@ -31,9 +31,9 @@ class ListCommand extends BaseCommand
 
     public static function trigger(Update $update, TeleBot $bot): bool
     {
-        if (in_array($update->callback_query->data, static::$aliases)) {
+        if (isset($update->callback_query->data) && in_array($update->callback_query->data, static::$aliases)) {
             return true;
         }
-        return false;
+        return parent::trigger($update, $bot);
     }
 }
