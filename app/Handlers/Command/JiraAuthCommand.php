@@ -173,11 +173,19 @@ class JiraAuthCommand extends BaseCommand
 
 
     public function checkCancel($text){
+        
+        $removeKeyboard = Keyboard::create([
+            'remove_keyboard' => [
+                'remove_keyboard' => true,
+            ],
+        ]);
+
         if (strpos($text, self::$cancelAuth) !== false) {
             $this->sendMessage([
                 'parse_mode' => 'HTML',
                 'text' => "Регистрация завершена.",
                 'chat_id' => $this->update->message->chat->id,
+                'reply_markup' => $removeKeyboard,
             ]);
             exit();
         }
