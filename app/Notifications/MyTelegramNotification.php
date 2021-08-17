@@ -25,6 +25,7 @@ class MyTelegramNotification extends Notification
      * @var mixed|null
      */
     private $image;
+    private $notifiable;
 
     public function __construct(JiraIssue $issue, array $data = [])
     {
@@ -37,6 +38,7 @@ class MyTelegramNotification extends Notification
 
     public function via($notifiable)
     {
+        $this->notifiable=$notifiable;
         return ['telegram'];
     }
 
@@ -82,7 +84,6 @@ class MyTelegramNotification extends Notification
             ->sendMessage([
                 'parse_mode' => 'HTML',
                 'disable_web_page_preview' => true,
-                //'reply_markup' => json_encode(array('inline_keyboard' => $keyboard)),
                 'chat_id' => $notifiable->chat_id,
                 'reply_markup' => [
                     'inline_keyboard' => [[[
