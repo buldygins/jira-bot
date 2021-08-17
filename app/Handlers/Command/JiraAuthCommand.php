@@ -2,6 +2,7 @@
 
 namespace App\Handlers\Command;
 
+use App\Models\JiraUser;
 use App\Models\Position;
 use App\Models\Subscriber;
 use Illuminate\Support\Facades\DB;
@@ -130,13 +131,30 @@ class JiraAuthCommand extends BaseCommand
                 'jiraUser' => $this->sub->jira_login,
                 'jiraPassword' => $this->sub->api_token,
             ]));
-        } catch (JiraException $e) {
-            Log::channel('telegram_request')->alert("Trying to auth {$this->sub->jira_login} with token {$this->sub->api_token}" . $e->getMessage());
+            $myself = $userService->getMyself();
+            $data = [
+                'key' => $myself->key ?? null,
+                'name' => $myself->name ?? null,
+                'accountId' => $myself->accountId ?? null,
+                'active' => $myself->active ?? true,
+                'timeZone' => $myself->timeZone ?? 'Europe/Moscow',
+                'displayName' => $myself->displayName ?? null,
+            ];
+            $jira_user = JiraUser::query()->firstOrCreate($data);
+            if (!$jira_user){
+                throw new \Exception('User was not created. Data : ' . json_encode($data));
+            }
+        } catch (\Exception $e) {
+            $this->sendMessage([
+                'text' => "👎Регистрация не пройдена! Проверьте провильность данных!",
+                'chat_id' => $this->update->message->chat->id,
+            ]);
+            Log::channel('telegram_log')->alert($e->getMessage());
+            return true;
         }
 
         $this->sendMessage([
-            'parse_mode' => 'HTML',
-            'text' => "Регистрация успешна! Теперь вы можете выполнять действия из телеграм бота.",
+            'text' => "👍Регистрация успешна! Теперь вы можете выполнять действия из телеграм бота.",
             'chat_id' => $this->update->message->chat->id,
         ]);
         return true;

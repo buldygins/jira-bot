@@ -12,7 +12,7 @@ class SetFioCommand extends BaseCommand
     protected static $aliases = ['/set_my_name'];
     protected static $description = 'Задать ФИО';
 
-    public function answer($text)
+    public function answerFio($text)
     {
         $sub = Subscriber::query()->where('chat_id', '=', $this->update->message->chat->id)->first();
         $sub->fio = trim($text);
@@ -28,7 +28,7 @@ class SetFioCommand extends BaseCommand
     {
         parent::handle();
 
-        $this->sub->waited_command = 'SetFioCommand';
+        $this->sub->waited_command = get_class($this).'::answerFio';
         $this->sub->save();
 
         $this->sendMessage([

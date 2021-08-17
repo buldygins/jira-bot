@@ -24,4 +24,8 @@ class Subscriber extends Model
     public function user(){
         return $this->belongsTo(JiraUser::class);
     }
+
+    public function canSendCommands(){
+        return $this->jira_login && $this->api_token && $this->jira_user_id;
+    }
 }

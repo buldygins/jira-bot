@@ -47,7 +47,7 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
         ],
 
-        'telegram_request' => [
+        'telegram_log' => [
             'driver' => 'daily',
             'path' => storage_path('logs/telegram.log'),
             'level' => env('LOG_LEVEL', 'debug'),

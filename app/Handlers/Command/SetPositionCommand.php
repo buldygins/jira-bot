@@ -14,7 +14,7 @@ class SetPositionCommand extends BaseCommand
     protected static $aliases = ['/set_position'];
     protected static $description = 'Выберите должность';
 
-    public function answer($text)
+    public function answerPosition($text)
     {
         $position = Position::where('name', trim($text))->first();
         if (!$position) {
@@ -36,7 +36,7 @@ class SetPositionCommand extends BaseCommand
     {
         parent::handle();
 
-        $this->sub->waited_command = 'SetPositionCommand';
+        $this->sub->waited_command = get_class($this).'::answerPosition';
         $this->sub->save();
 
         $keyboard_buttons = [];
@@ -55,7 +55,7 @@ class SetPositionCommand extends BaseCommand
         ]);
 
         $this->sendMessage([
-            'text' => "Sp",
+            'text' => "Выберите свою должность.",
             'chat_id' => $this->update->message->chat->id,
             'disable_web_page_preview' => false,
             'reply_markup' => $keyboard,
