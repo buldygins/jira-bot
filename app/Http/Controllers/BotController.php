@@ -209,8 +209,11 @@ class BotController extends BaseController
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
 
+        $keyboardService = app(KeyboardService::class);
+
         $subscribers = Subscriber::where('is_active', '=', true)->get();
         foreach ($subscribers as $subscriber) {
+            $this->data['keyboard'] = $keyboardService->buildIssueKeyboard($subscriber);
             Notification::send($subscriber, new MyTelegramNotification($issue, $this->data));
         }
     }

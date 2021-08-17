@@ -32,7 +32,7 @@ class KeyboardService
         ]);
     }
 
-    public function buildIssueKeyboard()
+    public function buildIssueKeyboard($subscriber)
     {
 
     }
@@ -49,8 +49,8 @@ class KeyboardService
             if (isset($button['url'])) {
                 $data['url'] = $button['url'];
             }
-            if (isset($button['callback_query'])) {
-                $data['callback_query'] = $button['callback_query'];
+            if (isset($button['callback_data'])) {
+                $data['callback_data'] = $button['callback_data'];
             }
             $keyboard_buttons[$i][] = new InlineKeyboardButton($data);
         }

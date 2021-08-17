@@ -27,13 +27,10 @@ class MyTelegramNotification extends Notification
      */
     private $image;
 
-    private $keyboardService;
     private $notifiable;
 
     public function __construct(JiraIssue $issue, array $data = [])
     {
-        $this->keyboardService = app(KeyboardService::class);
-
         $this->issue = $issue;
         $this->message_header = $data['log_message_header'];
         $this->message_body = $data['log_message_body'];
