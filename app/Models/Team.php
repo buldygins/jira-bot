@@ -9,5 +9,18 @@ use Illuminate\Notifications\Notifiable;
 class Team extends Model
 {
     use HasFactory, Notifiable;
-    protected $guarded=['id'];
+
+    protected $guarded = ['id'];
+
+    public function projectList()
+    {
+        $arr = explode(',', $this->projects);
+        foreach ($arr as $k => $v) {
+            $arr[$k] = trim($v);
+            if (trim($v) == '') {
+                unset($arr[$k]);
+            }
+        }
+        return $arr;
+    }
 }
