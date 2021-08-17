@@ -118,11 +118,7 @@ class JiraAuthCommand extends BaseCommand
         $this->sub->save();
 
         try {
-            $userService = new UserService(new ArrayConfiguration([
-                'jiraHost' => env('JIRA_URL'),
-                'jiraUser' => $this->sub->jira_login,
-                'jiraPassword' => $this->sub->api_token,
-            ]));
+            $userService = new UserService(new ArrayConfiguration($this->getJiraArrayConfiguration()));
             $myself = $userService->getMyself();
             $data = [
                 'key' => $myself->key ?? null,

@@ -89,6 +89,8 @@ class BotController extends BaseController
         $changeLog = $json->changelog ?? null;
         $this->parseChangelog($changeLog->items ?? []);
 
+
+        $project_key = $json->issue->fields->project->key ?? null;
         if ($webhook_parts[0] == 'worklog') {
             $issue_id = $json->worklog->issueId;
 
@@ -102,7 +104,6 @@ class BotController extends BaseController
 
         if ($webhook_parts[0] == 'comment') {
             $issue_id = $json->issue->id;
-            $project_key = $json->issue->fields->project->key;
             $log_message_header = "{action} комментария #" . $json->comment->id . ' от пользователя ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
                 "------\r\n" . $json->comment->body;
 
@@ -110,7 +111,6 @@ class BotController extends BaseController
 
         if ($webhook_parts[0] == 'jira:issue') {
             $issue_id = $json->issue->id;
-            $project_key = $json->issue->fields->project->key;
             $assignee = $this->getAssignee($json->issue->fields->assignee->displayName ?? null);
             $status = $this->getStatus($json->issue->fields->status->name ?? null);
             $log_message_header = "{$assignee}{$status}{action} задачи пользователем {$json->user->displayName}.\n";
@@ -213,7 +213,7 @@ class BotController extends BaseController
 
         $subscribers = Subscriber::where('is_active', '=', true)->get();
         foreach ($subscribers as $subscriber) {
-            $this->data['keyboard'] = $keyboardService->buildIssueKeyboard($subscriber);
+            $this->data['keyboard'] = $keyboardService->buildIssueKeyboard($subscriber, $issue);
             Notification::send($subscriber, new MyTelegramNotification($issue, $this->data));
         }
     }

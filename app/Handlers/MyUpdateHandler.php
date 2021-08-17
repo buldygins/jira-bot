@@ -2,10 +2,8 @@
 
 namespace App\Handlers;
 
-use App\Handlers\Command\SetFioCommand;
 use App\Handlers\Command\SetPositionCommand;
 use App\Models\Subscriber;
-use Illuminate\Support\Facades\Log;
 use WeStacks\TeleBot\Interfaces\UpdateHandler;
 use WeStacks\TeleBot\Objects\Update;
 use WeStacks\TeleBot\TeleBot;
@@ -50,12 +48,6 @@ class MyUpdateHandler extends UpdateHandler
 
         if (!is_null($subscriber->waited_command)) {
 
-
-//            if ($subscriber->waited_command=='SetPositionCommand') {
-//                $commandHandler = new SetPositionCommand($this->bot, $this->update);
-//                $commandHandler->waited($cmd);
-//            };
-
             $waited_command = explode('::', $subscriber->waited_command);
             if (isset($waited_command[0]) && isset($waited_command[1])) {
                 $commandClass = $waited_command[0];
@@ -66,22 +58,8 @@ class MyUpdateHandler extends UpdateHandler
                     return true;
                 }
             }
-
-            if ($subscriber->waited_command == 'SetFioCommand') {
-                $commandHandler = new SetFioCommand($this->bot, $this->update);
-                $commandHandler->answer($cmd);
-            }
         }
 
-
-//        try {
-//            $this->$fn();
-//        } catch (\Exception $exception) {
-//            $this->sendMessage([
-//                'text' => 'Увы, такой команды нет: '.$cmd
-//            ]);
-//
-//        }
         return true;
     }
 

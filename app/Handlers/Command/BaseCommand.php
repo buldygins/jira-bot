@@ -15,4 +15,13 @@ class BaseCommand extends CommandHandler
         $this->sub = Subscriber::query()->where('chat_id', '=', $chat_id)->first();
         return true;
     }
+
+    public function getJiraArrayConfiguration()
+    {
+        return [
+            'jiraHost' => env('JIRA_URL'),
+            'jiraUser' => $this->sub->jira_login,
+            'jiraPassword' => $this->sub->api_token,
+        ];
+    }
 }

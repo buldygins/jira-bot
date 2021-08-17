@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Models\JiraIssue;
+use App\Models\Subscriber;
 use WeStacks\TeleBot\Objects\InlineKeyboardButton;
 use WeStacks\TeleBot\Objects\Keyboard;
 use WeStacks\TeleBot\Objects\KeyboardButton;
@@ -32,10 +34,15 @@ class KeyboardService
         ]);
     }
 
-    public function buildIssueKeyboard($subscriber)
+    public function buildIssueKeyboard(Subscriber $subscriber,JiraIssue $issue)
     {
         if ($subscriber->canSendCommands()){
-            return $this->makeInlineKeyBoard([['text'=> 'list','callback_data' => '/list']]);
+            switch ($subscriber->id_position){
+                case 1:
+                    return $this->makeInlineKeyBoard([[]]);
+                default:
+                    return $this->makeInlineKeyBoard([['text'=> 'list','callback_data' => '/list']]);
+            }
         }
         return null;
     }
