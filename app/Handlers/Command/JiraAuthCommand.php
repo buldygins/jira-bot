@@ -32,6 +32,7 @@ class JiraAuthCommand extends BaseCommand
 
     public function handle()
     {
+        parent::handle();
         if ($this->sub->canSendCommands()){
             $this->sendMessage([
                 'text' => "Вы уже зарегистрированы.",
@@ -39,7 +40,6 @@ class JiraAuthCommand extends BaseCommand
             ]);
             return true;
         }
-        parent::handle();
 
         $this->sub->waited_command = get_class($this) . '::answerFio';
         $this->sub->save();
