@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use WeStacks\TeleBot\Objects\InlineKeyboardButton;
 use WeStacks\TeleBot\Objects\Keyboard;
 use WeStacks\TeleBot\Objects\KeyboardButton;
 
@@ -51,7 +52,7 @@ class KeyboardService
             if (isset($button['callback_query'])) {
                 $data['callback_query'] = $button['callback_query'];
             }
-            $keyboard_buttons[$i][] = new KeyboardButton($data);
+            $keyboard_buttons[$i][] = new InlineKeyboardButton($data);
         }
         return Keyboard::create([
             'inline_keyboard' => $keyboard_buttons,
