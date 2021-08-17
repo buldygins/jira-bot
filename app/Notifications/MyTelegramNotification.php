@@ -74,8 +74,8 @@ class MyTelegramNotification extends Notification
                 'message_body' => $this->data['log_message_body'],
             ])->render()];
 
-        if (!empty($this->data['keyborad'])){
-            $message['keyboard'] = $this->data['keyborad'];
+        if (!empty($this->data['keyboard'])){
+            $message['keyboard'] = $this->data['keyboard'];
         }
 
         $notification = (new TelegramNotification)->bot('bot')
