@@ -26,6 +26,6 @@ class Subscriber extends Model
     }
 
     public function canSendCommands(){
-        return $this->jira_login && $this->api_token && $this->jira_user_id;
+        return !empty($this->jira_login) && !empty($this->api_token) && !empty($this->jira_user_id);
     }
 }
