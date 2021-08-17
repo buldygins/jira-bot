@@ -16,7 +16,7 @@ class MyInfoCommand extends BaseCommand
 
         $this->sendMessage([
             'text' => $this->sub->fio."\r\n".
-                $this->fio->team->name
+                $this->sub->team->name
         ]);
         return true;
     }
