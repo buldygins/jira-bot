@@ -32,7 +32,7 @@ class JiraAuthCommand extends BaseCommand
 
     public function handle()
     {
-        if ($this->sub->canSendCommands){
+        if ($this->sub->canSendCommands()){
             $this->sendMessage([
                 'text' => "Вы уже зарегистрированы.",
                 'chat_id' => $this->update->message->chat->id,
