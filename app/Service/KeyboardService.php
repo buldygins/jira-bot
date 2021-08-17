@@ -34,7 +34,10 @@ class KeyboardService
 
     public function buildIssueKeyboard($subscriber)
     {
-        return $this->makeInlineKeyBoard([['text'=> 'list','callback_data' => '/list']]);
+        if ($subscriber->canSendCommands()){
+            return $this->makeInlineKeyBoard([['text'=> 'list','callback_data' => '/list']]);
+        }
+        return null;
     }
 
     public function makeInlineKeyBoard($buttons, $buttons_per_row = 3)
