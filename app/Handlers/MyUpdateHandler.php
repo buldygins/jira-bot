@@ -5,6 +5,7 @@ namespace App\Handlers;
 use App\Handlers\Command\SetFioCommand;
 use App\Handlers\Command\SetPositionCommand;
 use App\Models\Subscriber;
+use Illuminate\Support\Facades\Log;
 use WeStacks\TeleBot\Interfaces\UpdateHandler;
 use WeStacks\TeleBot\Objects\Update;
 use WeStacks\TeleBot\TeleBot;
@@ -56,10 +57,14 @@ class MyUpdateHandler extends UpdateHandler
 //            };
 
             $waited_command = explode('::', $subscriber->waited_command);
-            if (class_exists($waited_command[0]) && method_exists($waited_command[0],$waited_command[1])){
-                $commandHandler = new $waited_command[0]($this->bot, $this->update);
-                $commandHandler->$waited_command[1]($cmd);
-                return true;
+            if (isset($waited_command[0]) && isset($waited_command[1])) {
+                $commandClass = $waited_command[0];
+                $methodName = $waited_command[1];
+                if (class_exists($commandClass) && method_exists($commandClass, $methodName)) {
+                    $commandHandler = new $commandClass($this->bot, $this->update);
+                    $commandHandler->$methodName($cmd);
+                    return true;
+                }
             }
 
             if ($subscriber->waited_command == 'SetFioCommand') {

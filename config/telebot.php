@@ -51,7 +51,7 @@ return [
                 \App\Handlers\Command\SetPositionCommand::class,
                 \App\Handlers\Command\SetFioCommand::class,
                 \App\Handlers\Command\MyInfoCommand::class,
-                \App\Handlers\Command\AuthCommand::class,
+                \App\Handlers\Command\JiraAuthCommand::class,
                 \App\Handlers\MyUpdateHandler::class,
             ]
         ],
