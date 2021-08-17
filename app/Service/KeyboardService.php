@@ -7,13 +7,15 @@ use WeStacks\TeleBot\Objects\KeyboardButton;
 
 class KeyboardService
 {
-    public function removeKeyboard(){
+    public function removeKeyboard()
+    {
         return Keyboard::create([
-            'remove_keyboard' =>  true,
+            'remove_keyboard' => true,
         ]);
     }
 
-    public function makeKeyboard($buttons, $buttons_per_row = 3){
+    public function makeKeyboard($buttons, $buttons_per_row = 3)
+    {
         $i = 0;
         $keyboard_buttons = [];
         foreach ($buttons as $button) {
@@ -26,6 +28,33 @@ class KeyboardService
             'keyboard' => $keyboard_buttons,
             'resize_keyboard' => true,
             'one_time_keyboard' => true,
+        ]);
+    }
+
+    public function buildIssueKeyboard()
+    {
+
+    }
+
+    public function makeInlineKeyBoard($buttons, $buttons_per_row = 3)
+    {
+        $i = 0;
+        $keyboard_buttons = [];
+        foreach ($buttons as $button) {
+            if (isset($keyboard_buttons[$i]) && count($keyboard_buttons[$i]) >= $buttons_per_row) {
+                $i++;
+            }
+            $data['text'] = $button['text'];
+            if (isset($button['url'])) {
+                $data['url'] = $button['url'];
+            }
+            if (isset($button['callback_query'])) {
+                $data['callback_query'] = $button['callback_query'];
+            }
+            $keyboard_buttons[$i][] = new KeyboardButton($data);
+        }
+        return Keyboard::create([
+            'inline_keyboard' => $keyboard_buttons,
         ]);
     }
 }

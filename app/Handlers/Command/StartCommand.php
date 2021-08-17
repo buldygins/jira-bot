@@ -14,7 +14,7 @@ class StartCommand extends BaseCommand
     {
         parent::handle();
 
-        
+
         if ($this->sub) {
             if ($this->sub->is_active){
                 $this->sendMessage([

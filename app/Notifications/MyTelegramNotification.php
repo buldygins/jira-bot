@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\JiraIssue;
+use App\Service\KeyboardService;
 use Illuminate\Notifications\Notification;
 use WeStacks\TeleBot\Laravel\TelegramNotification;
 
@@ -25,10 +26,14 @@ class MyTelegramNotification extends Notification
      * @var mixed|null
      */
     private $image;
+
+    private $keyboardService;
     private $notifiable;
 
     public function __construct(JiraIssue $issue, array $data = [])
     {
+        $this->keyboardService = app(KeyboardService::class);
+
         $this->issue = $issue;
         $this->message_header = $data['log_message_header'];
         $this->message_body = $data['log_message_body'];
@@ -52,12 +57,7 @@ class MyTelegramNotification extends Notification
 
     private function getKeyBoard($data)
     {
-        $keyboard = array(
-            "keyboard" => $data,
-            "one_time_keyboard" => false,
-            "resize_keyboard" => true
-        );
-        return json_encode($keyboard);
+        return $this->keyboardService->makeKeyboard($data);
     }
 
     public function toTelegram($notifiable)
@@ -70,27 +70,12 @@ class MyTelegramNotification extends Notification
             'event_processed' => $this->issue->event_created
         ]);
 
-        $keyboard = array(
-            array(
-                array('text' => ':like:', 'callback_data' => '{"action":"like","count":0,"text":":like:"}'),
-                array('text' => ':joy:', 'callback_data' => '{"action":"joy","count":0,"text":":joy:"}'),
-                array('text' => ':hushed:', 'callback_data' => '{"action":"hushed","count":0,"text":":hushed:"}'),
-                array('text' => ':cry:', 'callback_data' => '{"action":"cry","count":0,"text":":cry:"}'),
-                array('text' => ':rage:', 'callback_data' => '{"action":"rage","count":0,"text":":rage:"}')
-            )
-        );
-
         $notification = (new TelegramNotification)->bot('bot')
             ->sendMessage([
                 'parse_mode' => 'HTML',
                 'disable_web_page_preview' => true,
                 'chat_id' => $notifiable->chat_id,
-                'reply_markup' => [
-                    'inline_keyboard' => [[[
-                        'text' => 'List',
-                        'callback_data' => '/list',
-                    ]]]
-                ],
+                'reply_markup' => $this->keyboardService->makeInlineKeyBoard([['text' => 'list','callback_data' => '/list',]]),
                 'text' => view('telegram.notification', [
                     'issue' => $this->issue,
                     'message_header' => $this->message_header,
