@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "97b6f88ea30e6faef17ca181173e1755",
+    "content-hash": "23128ad67961d5b38084e8ee38a6d9e6",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1462,6 +1462,71 @@
             "time": "2021-01-18T20:58:21+00:00"
         },
         {
+            "name": "lesstif/php-jira-rest-client",
+            "version": "2.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lesstif/php-jira-rest-client.git",
+                "reference": "76ad64dd4a086498d2435341c0a38628a5bc84ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lesstif/php-jira-rest-client/zipball/76ad64dd4a086498d2435341c0a38628a5bc84ad",
+                "reference": "76ad64dd4a086498d2435341c0a38628a5bc84ad",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "monolog/monolog": "~1.12|^2.0",
+                "netresearch/jsonmapper": "^2.0|^3.0|^4.0",
+                "php": "^7.1|^8.0",
+                "vlucas/phpdotenv": "^3.0|^4.0|^5.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9.4",
+                "phpstan/phpstan": "^0.12.23",
+                "phpunit/phpunit": "^7.0 || ^8.0",
+                "symfony/var-dumper": "~2.8|~3.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "JiraRestApi\\JiraRestApiServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JiraRestApi\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "KwangSeob Jeong",
+                    "email": "lesstif@gmail.com",
+                    "homepage": "https://lesstif.com/"
+                }
+            ],
+            "description": "JIRA REST API Client for PHP Users.",
+            "keywords": [
+                "jira",
+                "jira-php",
+                "jira-rest",
+                "rest"
+            ],
+            "support": {
+                "issues": "https://github.com/lesstif/php-jira-rest-client/issues",
+                "source": "https://github.com/lesstif/php-jira-rest-client/tree/2.5.1"
+            },
+            "time": "2021-03-01T10:14:07+00:00"
+        },
+        {
             "name": "monolog/monolog",
             "version": "2.3.2",
             "source": {
@@ -1650,6 +1715,57 @@
                 }
             ],
             "time": "2021-07-28T13:16:28+00:00"
+        },
+        {
+            "name": "netresearch/jsonmapper",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cweiske/jsonmapper.git",
+                "reference": "8bbc021a8edb2e4a7ea2f8ad4fa9ec9dce2fcb8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cweiske/jsonmapper/zipball/8bbc021a8edb2e4a7ea2f8ad4fa9ec9dce2fcb8d",
+                "reference": "8bbc021a8edb2e4a7ea2f8ad4fa9ec9dce2fcb8d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-pcre": "*",
+                "ext-reflection": "*",
+                "ext-spl": "*",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~7.5 || ~8.0 || ~9.0",
+                "squizlabs/php_codesniffer": "~3.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JsonMapper": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OSL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Weiske",
+                    "email": "cweiske@cweiske.de",
+                    "homepage": "http://github.com/cweiske/jsonmapper/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Map nested JSON structures onto PHP classes",
+            "support": {
+                "email": "cweiske@cweiske.de",
+                "issues": "https://github.com/cweiske/jsonmapper/issues",
+                "source": "https://github.com/cweiske/jsonmapper/tree/v4.0.0"
+            },
+            "time": "2020-12-01T19:48:11+00:00"
         },
         {
             "name": "nette/schema",

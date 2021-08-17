@@ -6,66 +6,59 @@ use App\Models\Position;
 use App\Models\Subscriber;
 use Illuminate\Support\Facades\DB;
 use WeStacks\TeleBot\Handlers\CommandHandler;
+use WeStacks\TeleBot\Objects\Keyboard;
+use WeStacks\TeleBot\Objects\KeyboardButton;
 
 class SetPositionCommand extends BaseCommand
 {
     protected static $aliases = ['/set_position'];
-    protected static $description = 'Задать мою должность';
+    protected static $description = 'Выберите должность';
 
     public function answer($text)
-   {
-       Subscriber::query()
-           ->where('chat_id', '=', $this->update->message->chat->id)
-           ->update(['id_position'=>Position::find($text)->id]);
+    {
+        $position = Position::where('name', trim($text))->first();
+        if (!$position) {
+            $this->sendMessage([
+                'text' => 'Ошибка, попробуйте снова!',
+            ]);
+        } else {
+            $this->sub->waited_command = null;
+            $this->sub->id_position = $position->id;
+            $this->sub->save();
 
-       $this->sendMessage([
-            'text' => Position::find($text)->name,
-        ]);
+            $this->sendMessage([
+                'text' => "Ваша должность: {$position->name}",
+            ]);
+        }
     }
-
-//    public function waited($text)
-//    {
-//        $this->sendMessage([
-//            'text' => 'WAITED ' . $text
-//        ]);
-//
-//        $sub = Subscriber::query()
-//            ->where('chat_id', '=', $this->update->message->chat->id)
-//            ->first();
-//
-//        $sub->waited_command=null;
-//        $sub->save();
-//
-//        return true;
-//    }
 
     public function handle()
     {
         parent::handle();
 
-        $this->sub->waited_command='SetPositionCommand';
+        $this->sub->waited_command = 'SetPositionCommand';
         $this->sub->save();
 
-        $keyboard = [
-            [ "Кнопка 1" ],
-            [ "Кнопка 2" ],
-            [ "Кнопка 3" ]
-        ];
-        $reply_markup = json_encode([
-            "keyboard"=>$keyboard,
-            "resize_keyboard"=>true
+        $keyboard_buttons = [];
+        $positions = Position::query()->get();
+        $i = 0;
+        foreach ($positions as $position) {
+            if (isset($keyboard_buttons[$i]) && count($keyboard_buttons[$i]) >= 3) {
+                $i++;
+            }
+            $keyboard_buttons[$i][] = new KeyboardButton(['text' => $position->name]);
+        }
+        $keyboard = Keyboard::create([
+            'keyboard' => $keyboard_buttons,
+            'resize_keyboard' => true,
+            'one_time_keyboard' => true,
         ]);
 
-        $list1='';
-        $positions=Position::query()->get();
-        foreach($positions as $position)
-        {
-            $list1.="/set_position_".$position->id.' '.$position->name."\r\n";
-        }
-
         $this->sendMessage([
-            'text' => "Задайте свою должность \r\n".$list1,
-            'chat_id'=>$this->update->message->chat->id,
+            'text' => "Sp",
+            'chat_id' => $this->update->message->chat->id,
+            'disable_web_page_preview' => false,
+            'reply_markup' => $keyboard,
         ]);
         return true;
     }

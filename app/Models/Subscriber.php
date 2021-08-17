@@ -20,4 +20,8 @@ class Subscriber extends Model
     {
         return $this->belongsTo(Position::class, 'id_position');
     }
+
+    public function user(){
+        return $this->belongsTo(JiraUser::class);
+    }
 }

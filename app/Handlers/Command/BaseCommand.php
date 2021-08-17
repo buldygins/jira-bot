@@ -12,7 +12,7 @@ class BaseCommand extends CommandHandler
     public function handle()
     {
         $chat_id = $this->update->message->chat->id;
-        $this->sub=Subscriber::query()->where('chat_id', '=', $chat_id)->first();
+        $this->sub = Subscriber::query()->where('chat_id', '=', $chat_id)->first();
         return true;
     }
 }

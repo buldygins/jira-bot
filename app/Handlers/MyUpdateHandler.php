@@ -48,16 +48,21 @@ class MyUpdateHandler extends UpdateHandler
         //=== далее = ответы на команды
 
         if (!is_null($subscriber->waited_command)) {
-//            $this->sendMessage([
-//                'text' => $subscriber->waited_command . ' Команда: ' . $cmd //. $chat_id,
-//            ]);
+
 
 //            if ($subscriber->waited_command=='SetPositionCommand') {
 //                $commandHandler = new SetPositionCommand($this->bot, $this->update);
 //                $commandHandler->waited($cmd);
-//            }
+//            };
 
-            if ($subscriber->waited_command=='SetFioCommand') {
+            $waited_command = explode('::', $subscriber->waited_command);
+            if (class_exists($waited_command[0]) && method_exists($waited_command[0],$waited_command[1])){
+                $commandHandler = new $waited_command[0]($this->bot, $this->update);
+                $commandHandler->$waited_command[1]($cmd);
+                return true;
+            }
+
+            if ($subscriber->waited_command == 'SetFioCommand') {
                 $commandHandler = new SetFioCommand($this->bot, $this->update);
                 $commandHandler->answer($cmd);
             }
