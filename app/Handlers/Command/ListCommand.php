@@ -11,8 +11,24 @@ use WeStacks\TeleBot\TeleBot;
 
 class ListCommand extends BaseCommand
 {
+    protected static $commandsNotToShow = [
+        SetFioCommand::class,
+        SetPositionCommand::class,
+    ];
     protected static $aliases = ['/list'];
     protected static $description = 'Список команд';
+    protected $doNotShow = [];
+
+    public function __construct(TeleBot $bot, Update $update)
+    {
+        parent::__construct($bot, $update);
+
+        foreach (self::$commandsNotToShow as $commandClass) {
+            $commandClass = new $commandClass();
+            array_push($this->doNotShow, $commandClass::$aliases);
+        }
+        $this->doNotShow = array_unique($this->doNotShow);
+    }
 
     public function handle()
     {
@@ -20,6 +36,9 @@ class ListCommand extends BaseCommand
         $commandList = '';
         foreach ($r as $obj) {
             $item = $obj->toArray();
+            if (in_array($item['command'], $this->doNotShow)) {
+                continue;
+            }
             $commandList .= $item['command'] . ' ' . $item['description'] . "\r\n";
         }
 

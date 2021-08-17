@@ -4,16 +4,10 @@ namespace App\Handlers\Command;
 
 use App\Models\JiraUser;
 use App\Models\Position;
-use App\Models\Subscriber;
 use App\Service\KeyboardService;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use JiraRestApi\Configuration\ArrayConfiguration;
-use JiraRestApi\JiraException;
 use JiraRestApi\User\UserService;
-use WeStacks\TeleBot\Handlers\CommandHandler;
-use WeStacks\TeleBot\Objects\Keyboard;
-use WeStacks\TeleBot\Objects\KeyboardButton;
 use WeStacks\TeleBot\Objects\Update;
 use WeStacks\TeleBot\TeleBot;
 

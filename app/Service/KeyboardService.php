@@ -17,7 +17,7 @@ class KeyboardService
         $i = 0;
         $keyboard_buttons = [];
         foreach ($buttons as $button) {
-            if (isset($keyboard_buttons[$i]) && count($keyboard_buttons[$i]) >= 3) {
+            if (isset($keyboard_buttons[$i]) && count($keyboard_buttons[$i]) >= $buttons_per_row) {
                 $i++;
             }
             $keyboard_buttons[$i][] = new KeyboardButton(['text' => $button]);
