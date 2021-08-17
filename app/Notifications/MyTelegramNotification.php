@@ -17,7 +17,7 @@ class MyTelegramNotification extends Notification
     /**
      * @var string
      */
-    private $message_body;
+    private $data;
     /**
      * @var string
      */
@@ -32,10 +32,7 @@ class MyTelegramNotification extends Notification
     public function __construct(JiraIssue $issue, array $data = [])
     {
         $this->issue = $issue;
-        $this->message_header = $data['log_message_header'];
-        $this->message_body = $data['log_message_body'];
-
-        $this->image = $data['image'] ?? [];
+        $this->data = $data;
     }
 
     public function via($notifiable)
@@ -67,17 +64,22 @@ class MyTelegramNotification extends Notification
             'event_processed' => $this->issue->event_created
         ]);
 
+        $message = [
+            'parse_mode' => 'HTML',
+            'disable_web_page_preview' => true,
+            'chat_id' => $notifiable->chat_id,
+            'text' => view('telegram.notification', [
+                'issue' => $this->issue,
+                'message_header' => $this->data['message_header'],
+                'message_body' => $this->data['message_body'],
+            ])->render()];
+
+        if (!empty($this->data['keyborad'])){
+            $message['keyboard'] = $this->data['keyborad'];
+        }
+
         $notification = (new TelegramNotification)->bot('bot')
-            ->sendMessage([
-                'parse_mode' => 'HTML',
-                'disable_web_page_preview' => true,
-                'chat_id' => $notifiable->chat_id,
-                'reply_markup' => $this->keyboardService->makeInlineKeyBoard([['text' => 'list','callback_data' => '/list',]]),
-                'text' => view('telegram.notification', [
-                    'issue' => $this->issue,
-                    'message_header' => $this->message_header,
-                    'message_body' => $this->message_body
-                ])->render()]);
+            ->sendMessage($message);
 //        if (!empty($this->image)) {
 //            foreach ($this->image as $img) {
 //                $notification->sendPhoto(
