@@ -133,6 +133,7 @@ class BotController extends BaseController
 
         if ($webhook_parts[0] == 'comment') {
             $issue_id = $json->issue->id;
+            $project_key = $json->issue->fields->project->key;
             $log_message_header = "{action} комментария #" . $json->comment->id . ' от пользователя ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
                 "------\r\n" . $json->comment->body;
 
@@ -140,6 +141,7 @@ class BotController extends BaseController
 
         if ($webhook_parts[0] == 'jira:issue') {
             $issue_id = $json->issue->id;
+            $project_key = $json->issue->fields->project->key;
             $assignee = $this->getAssignee($json->issue->fields->assignee->displayName ?? null);
             $status = $this->getStatus($json->issue->fields->status->name ?? null);
             $log_message_header = "{$assignee}{$status}{action} задачи пользователем {$json->user->displayName}.\n";
@@ -193,6 +195,7 @@ class BotController extends BaseController
                 [
                     'key' => $issue_key,
                     'issue_id' => $issue_id,
+                    'project_key' => $project_key,
                     'event_created' => Carbon::createFromTimestamp($json->timestamp)->toDateTimeString(),
                     //'updateAuthor' => $json->updateAuthor,
                     'webhookEvent' => $json->webhookEvent,
@@ -204,6 +207,7 @@ class BotController extends BaseController
             Log::create([
                 'issue_id' => $issue_id,
                 'issue_key' => $issue_key,
+                'project_key' => $project_key,
                 'webhook_event' => $json->webhookEvent,
                 'name' => $log_message_header,
                 'body' => $log_message_body,
@@ -214,6 +218,7 @@ class BotController extends BaseController
             Log::create([
                 'issue_id' => $issue_id,
                 'issue_key' => $issue->key,
+                'project_key' => $project_key,
                 'webhook_event' => $json->webhookEvent,
                 'name' => $log_message_header,
                 'body' => $log_message_body,
