@@ -11,7 +11,7 @@ use WeStacks\TeleBot\Objects\KeyboardButton;
 
 class SetPositionCommand extends BaseCommand
 {
-    protected static $aliases = ['/set_position'];
+    public static $aliases = ['/set_position'];
     protected static $description = 'Выберать должность';
 
     public function answerPosition($text)

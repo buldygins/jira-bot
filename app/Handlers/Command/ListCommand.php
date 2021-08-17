@@ -15,7 +15,7 @@ class ListCommand extends BaseCommand
         SetFioCommand::class,
         SetPositionCommand::class,
     ];
-    protected static $aliases = ['/list'];
+    public static $aliases = ['/list'];
     protected static $description = 'Список команд';
     protected $doNotShow = [];
 

@@ -13,7 +13,7 @@ use WeStacks\TeleBot\TeleBot;
 
 class JiraAuthCommand extends BaseCommand
 {
-    protected static $aliases = ['/jira_auth'];
+    public static $aliases = ['/jira_auth'];
     protected static $description = 'Авторизоваться для совершения действий';
     protected static $cancelAuth = 'Закончить регистрацию.';
     protected $keyboardService;

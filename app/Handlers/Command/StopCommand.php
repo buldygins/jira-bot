@@ -7,7 +7,7 @@ use WeStacks\TeleBot\Handlers\CommandHandler;
 
 class StopCommand extends BaseCommand
 {
-    protected static $aliases = [ '/stop'];
+    public static $aliases = [ '/stop'];
     protected static $description = 'Отписка от бота';
 
     public function handle()

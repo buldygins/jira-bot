@@ -9,7 +9,7 @@ use WeStacks\TeleBot\Handlers\CommandHandler;
 
 class SetFioCommand extends BaseCommand
 {
-    protected static $aliases = ['/set_my_name'];
+    public static $aliases = ['/set_my_name'];
     protected static $description = 'Задать ФИО';
 
     public function answerFio($text)
