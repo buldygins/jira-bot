@@ -10,4 +10,8 @@ class Subscriber extends Model
 {
     use HasFactory, Notifiable;
     protected $guarded=['id'];
+
+    public function user(){
+        return $this->belongsTo(JiraUser::class);
+    }
 }
