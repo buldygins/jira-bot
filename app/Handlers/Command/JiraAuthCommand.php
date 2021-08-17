@@ -144,6 +144,8 @@ class JiraAuthCommand extends BaseCommand
             if (!$jira_user){
                 throw new \Exception('User was not created. Data : ' . json_encode($data));
             }
+            $this->sub->jira_user_id = $jira_user->id;
+            $this->sub->save();
         } catch (\Exception $e) {
             $this->sendMessage([
                 'text' => "👎Регистрация не пройдена! Проверьте провильность данных!",
