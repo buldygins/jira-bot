@@ -5,6 +5,7 @@ namespace App\Handlers\Command;
 use App\Models\JiraUser;
 use App\Models\Position;
 use App\Models\Subscriber;
+use App\Service\KeyboardService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use JiraRestApi\Configuration\ArrayConfiguration;
@@ -13,18 +14,27 @@ use JiraRestApi\User\UserService;
 use WeStacks\TeleBot\Handlers\CommandHandler;
 use WeStacks\TeleBot\Objects\Keyboard;
 use WeStacks\TeleBot\Objects\KeyboardButton;
+use WeStacks\TeleBot\Objects\Update;
+use WeStacks\TeleBot\TeleBot;
 
 class JiraAuthCommand extends BaseCommand
 {
     protected static $aliases = ['/jira_auth'];
     protected static $description = 'Авторизоваться для совершения действий';
     protected static $cancelAuth = 'Закончить регистрацию.';
+    protected $keyboardService;
+
+    public function __construct(TeleBot $bot, Update $update)
+    {
+        parent::__construct($bot, $update);
+        $this->keyboardService = new KeyboardService();
+    }
 
     public function handle()
     {
         parent::handle();
 
-        $this->sub->waited_command = get_class($this).'::answerFio';
+        $this->sub->waited_command = get_class($this) . '::answerFio';
         $this->sub->save();
 
         $this->sendMessage([
@@ -38,29 +48,16 @@ class JiraAuthCommand extends BaseCommand
     {
         parent::handle();
 
-        $this->sub->waited_command = get_class($this).'::answerPosition';
+        $this->sub->waited_command = get_class($this) . '::answerPosition';
         $this->sub->save();
 
-        $keyboard_buttons = [];
-        $positions = Position::query()->get();
-        $i = 0;
-        foreach ($positions as $position) {
-            if (isset($keyboard_buttons[$i]) && count($keyboard_buttons[$i]) >= 3) {
-                $i++;
-            }
-            $keyboard_buttons[$i][] = new KeyboardButton(['text' => $position->name]);
-        }
-        $keyboard = Keyboard::create([
-            'keyboard' => $keyboard_buttons,
-            'resize_keyboard' => true,
-            'one_time_keyboard' => true,
-        ]);
+        $positions = Position::all()->pluck('name');
 
         $this->sendMessage([
             'text' => "Выберите свою должность.",
             'chat_id' => $this->update->message->chat->id,
             'disable_web_page_preview' => false,
-            'reply_markup' => $keyboard,
+            'reply_markup' => $this->keyboardService->makeKeyboard($positions),
         ]);
         return true;
     }
@@ -78,19 +75,13 @@ class JiraAuthCommand extends BaseCommand
         }
 
         $this->sub->id_position = $position->id;
-        $this->sub->waited_command = get_class($this).'::answerLogin';
+        $this->sub->waited_command = get_class($this) . '::answerLogin';
         $this->sub->save();
-
-        $keyboard = Keyboard::create([
-            'keyboard' => [[new KeyboardButton(['text' => self::$cancelAuth])]],
-            'resize_keyboard' => true,
-            'one_time_keyboard' => true,
-        ]);
 
         $this->sendMessage([
             'text' => "Ваша должность: {$position->name}. Отправьте логин Jira.",
             'chat_id' => $this->update->message->chat->id,
-            'reply_markup' => $keyboard,
+            'reply_markup' => $this->keyboardService->makeKeyboard([self::$cancelAuth]),
         ]);
         return true;
     }
@@ -102,7 +93,7 @@ class JiraAuthCommand extends BaseCommand
         parent::handle();
 
         $this->sub->jira_login = trim($text);
-        $this->sub->waited_command = get_class($this).'::answerLoginAndToken';
+        $this->sub->waited_command = get_class($this) . '::answerLoginAndToken';
         $this->sub->save();
 
         $link = env('JIRA_URL') . 'secure/ViewProfile.jspa?selectedTab=com.atlassian.pats.pats-plugin:jira-user-personal-access-tokens';
@@ -125,12 +116,6 @@ class JiraAuthCommand extends BaseCommand
         $this->sub->waited_command = null;
         $this->sub->save();
 
-        $removeKeyboard = Keyboard::create([
-            'remove_keyboard' => [
-                'remove_keyboard' => true,
-            ],
-        ]);
-
         try {
             $userService = new UserService(new ArrayConfiguration([
                 'jiraHost' => env('JIRA_URL'),
@@ -147,7 +132,7 @@ class JiraAuthCommand extends BaseCommand
                 'displayName' => $myself->displayName ?? null,
             ];
             $jira_user = JiraUser::query()->firstOrCreate($data);
-            if (!$jira_user){
+            if (!$jira_user) {
                 throw new \Exception('User was not created. Data : ' . json_encode($data));
             }
             $this->sub->jira_user_id = $jira_user->id;
@@ -156,7 +141,7 @@ class JiraAuthCommand extends BaseCommand
             $this->sendMessage([
                 'text' => "👎Регистрация не пройдена! Проверьте провильность данных!",
                 'chat_id' => $this->update->message->chat->id,
-                'reply_markup' => $removeKeyboard,
+                'reply_markup' => $this->keyboardService->removeKeyboard(),
             ]);
             Log::channel('telegram_log')->alert($e->getMessage());
             return true;
@@ -165,27 +150,20 @@ class JiraAuthCommand extends BaseCommand
         $this->sendMessage([
             'text' => "👍Регистрация успешна! Теперь вы можете выполнять действия из телеграм бота.",
             'chat_id' => $this->update->message->chat->id,
-            'reply_markup' => $removeKeyboard,
+            'reply_markup' => $this->keyboardService->removeKeyboard(),
         ]);
         return true;
     }
 
 
-
-    public function checkCancel($text){
-        
-        $removeKeyboard = Keyboard::create([
-            'remove_keyboard' => [
-                'remove_keyboard' => true,
-            ],
-        ]);
-
+    public function checkCancel($text)
+    {
         if (strpos($text, self::$cancelAuth) !== false) {
             $this->sendMessage([
                 'parse_mode' => 'HTML',
                 'text' => "Регистрация завершена.",
                 'chat_id' => $this->update->message->chat->id,
-                'reply_markup' => $removeKeyboard,
+                'reply_markup' => $this->keyboardService->removeKeyboard(),
             ]);
             exit();
         }
