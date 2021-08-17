@@ -6,13 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Subscriber extends Model
+class Team extends Model
 {
     use HasFactory, Notifiable;
     protected $guarded=['id'];
-
-    public function team()
-    {
-        return $this->belongsTo(Team::class, 'team_id');
-    }
 }
