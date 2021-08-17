@@ -15,4 +15,9 @@ class Subscriber extends Model
     {
         return $this->belongsTo(Team::class, 'team_id');
     }
+
+    public function position()
+    {
+        return $this->belongsTo(Position::class, 'id_position');
+    }
 }
