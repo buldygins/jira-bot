@@ -12,7 +12,7 @@ class Team extends Model
 
     protected $guarded = ['id'];
 
-    public function getProjectsAttribute()
+    public function getProjectAttribute()
     {
         $arr = explode(',', $this->projects);
         foreach ($arr as $k => $v) {
