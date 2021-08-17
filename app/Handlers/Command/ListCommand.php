@@ -24,7 +24,7 @@ class ListCommand extends BaseCommand
         parent::__construct($bot, $update);
 
         foreach (self::$commandsNotToShow as $commandClass) {
-            $commandClass = new $commandClass();
+            $commandClass = new $commandClass($bot, $update);
             array_push($this->doNotShow, $commandClass::$aliases);
         }
         $this->doNotShow = array_unique($this->doNotShow);
