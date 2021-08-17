@@ -70,8 +70,8 @@ class MyTelegramNotification extends Notification
             'chat_id' => $notifiable->chat_id,
             'text' => view('telegram.notification', [
                 'issue' => $this->issue,
-                'message_header' => $this->data['message_header'],
-                'message_body' => $this->data['message_body'],
+                'message_header' => $this->data['log_message_header'],
+                'message_body' => $this->data['log_message_body'],
             ])->render()];
 
         if (!empty($this->data['keyborad'])){
