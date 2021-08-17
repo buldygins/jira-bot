@@ -18,7 +18,7 @@ class MyInfoCommand extends BaseCommand
             'text' => 'ФИО: '.$this->sub->fio."\r\n".
                 'Команда: '.$this->sub->team->first()->name."\r\n".
                 'Должность: '.$this->sub->position->first()->name."\r\n".
-                'Проекты: '.$this->sub->team->projects."\r\n"
+                'Проекты: '.$this->sub->team->projectList()[0]."\r\n"
         ]);
         return true;
     }
