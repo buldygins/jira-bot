@@ -125,6 +125,12 @@ class JiraAuthCommand extends BaseCommand
         $this->sub->waited_command = null;
         $this->sub->save();
 
+        $removeKeyboard = Keyboard::create([
+            'remove_keyboard' => [
+                'remove_keyboard' => true,
+            ],
+        ]);
+
         try {
             $userService = new UserService(new ArrayConfiguration([
                 'jiraHost' => env('JIRA_URL'),
@@ -150,6 +156,7 @@ class JiraAuthCommand extends BaseCommand
             $this->sendMessage([
                 'text' => "👎Регистрация не пройдена! Проверьте провильность данных!",
                 'chat_id' => $this->update->message->chat->id,
+                'reply_markup' => $removeKeyboard,
             ]);
             Log::channel('telegram_log')->alert($e->getMessage());
             return true;
@@ -158,6 +165,7 @@ class JiraAuthCommand extends BaseCommand
         $this->sendMessage([
             'text' => "👍Регистрация успешна! Теперь вы можете выполнять действия из телеграм бота.",
             'chat_id' => $this->update->message->chat->id,
+            'reply_markup' => $removeKeyboard,
         ]);
         return true;
     }
