@@ -58,7 +58,7 @@ class MyUpdateHandler extends UpdateHandler
 
             $waited_command = explode('::', $subscriber->waited_command);
             if (isset($waited_command[0]) && isset($waited_command[1])) {
-                $commandClass = 'App\Handlers\Command\\' . $waited_command[0];
+                $commandClass = $waited_command[0];
                 $methodName = $waited_command[1];
                 if (class_exists($commandClass) && method_exists($commandClass, $methodName)) {
                     $commandHandler = new $commandClass($this->bot, $this->update);
