@@ -135,6 +135,7 @@ class JiraAuthCommand extends BaseCommand
                 'displayName' => $myself->displayName ?? null,
             ];
             $jira_user = JiraUser::query()->firstOrCreate($data);
+            dd(1);
             if (!$jira_user) {
                 throw new \Exception('User was not created. Data : ' . json_encode($data));
             }
