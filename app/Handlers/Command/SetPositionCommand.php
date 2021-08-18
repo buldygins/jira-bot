@@ -16,7 +16,8 @@ class SetPositionCommand extends BaseCommand
 
     public function answerPosition($text)
     {
-        dd($this->sub);
+        parent::handle();
+
         $position = Position::where('name', trim($text))->first();
         if (!$position) {
             $this->sendMessage([
