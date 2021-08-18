@@ -18,7 +18,7 @@ class MyUpdateHandler extends UpdateHandler
     public function command($cmd, Subscriber $subscriber)
     {
 
-        if (strpos('/', $cmd) === 0) {
+        if (strpos($cmd,'/') === 0) {
             // команды
 
             $cmd1 = $cmd;
