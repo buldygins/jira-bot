@@ -122,7 +122,7 @@ class JiraAuthCommand extends BaseCommand
         $this->sub->api_token = trim($text);
         $this->sub->waited_command = null;
         $this->sub->save();
-        return true;
+
         try {
             $userService = new UserService(new ArrayConfiguration($this->getJiraArrayConfiguration()));
             $myself = $userService->getMyself();
