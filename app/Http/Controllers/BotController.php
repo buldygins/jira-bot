@@ -216,12 +216,12 @@ class BotController extends BaseController
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
 
+        $this->data['link'] = config('app.jira_host') . '/browse/' . $issue->key;
+
         $keyboardService = app(KeyboardService::class);
 
         $subscribers = Subscriber::where('is_active', '=', true)->get();
         foreach ($subscribers as $subscriber) {
-
-            //dd($subscriber->team->projectList());
 
             if (in_array($issue->project_key,$subscriber->team->projectList())) {
                 $this->data['keyboard'] = $keyboardService->buildIssueKeyboard($subscriber, $issue);

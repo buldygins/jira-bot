@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use App\Models\JiraIssue;
-use App\Service\KeyboardService;
 use Illuminate\Notifications\Notification;
 use WeStacks\TeleBot\Laravel\TelegramNotification;
 
@@ -64,14 +63,12 @@ class MyTelegramNotification extends Notification
             'event_processed' => $this->issue->event_created
         ]);
 
-        $link = config('jira_host') . '/browse/' . $this->issue->key;
-
         $message = [
             'parse_mode' => 'HTML',
             'disable_web_page_preview' => true,
             'chat_id' => $notifiable->chat_id,
             'text' => view('telegram.notification', [
-                'link' => $link,
+                'link' => $this->data['link'],
                 'issue' => $this->issue,
                 'message_header' => $this->data['log_message_header'],
                 'message_body' => $this->data['log_message_body'],
