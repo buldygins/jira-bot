@@ -96,7 +96,7 @@ class JiraAuthCommand extends BaseCommand
         if ($this->checkCancel($text)) {
             return true;
         }
-
+        dump('aswerLogin');
         $this->sub->jira_login = trim($text);
         $this->sub->waited_command = get_class($this) . '::answerLoginAndToken';
         $this->sub->save();
@@ -113,15 +113,23 @@ class JiraAuthCommand extends BaseCommand
 
     public function answerLoginAndToken($text)
     {
+        dump('aswerLoginAndToken');
+
         parent::handle();
+
+        dump('aswerLoginAndToken1');
 
         if ($this->checkCancel($text)) {
             return true;
         }
 
+        dump('aswerLoginAndToken2');
+
         $this->sub->api_token = trim($text);
         $this->sub->waited_command = null;
         $this->sub->save();
+
+        dump('aswerLoginAndToken3');
 
         try {
             dump(1);
