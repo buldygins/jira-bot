@@ -207,7 +207,9 @@ class BotController extends BaseController
 
             if ($webhook_parts[0] != 'worklog') {
                 $issue->key = $json->issue->key;
-                $issue->issue_url = env('JIRA_URL') . 'browse/' . $json->issue->key;
+                if (!isset($issue->issue_url)) {
+                    $issue->issue_url = config('app.jira_url') . 'browse/' . $json->issue->key;
+                }
                 $issue->summary = $json->issue->fields->summary;
             }
 
@@ -215,8 +217,6 @@ class BotController extends BaseController
         }
 
         $issue = JiraIssue::query()->where('issue_id', '=', $issue_id)->first();
-
-        $this->data['link'] = config('app.jira_host') . '/browse/' . $issue->key;
 
         $keyboardService = app(KeyboardService::class);
 

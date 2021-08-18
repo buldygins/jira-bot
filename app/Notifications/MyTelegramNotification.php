@@ -62,7 +62,7 @@ class MyTelegramNotification extends Notification
         JiraIssue::query()->where('id', '=', $this->issue->id)->update([
             'event_processed' => $this->issue->event_created
         ]);
-        
+
         $message = [
             'parse_mode' => 'HTML',
             'disable_web_page_preview' => true,
