@@ -74,6 +74,12 @@ class MyTelegramNotification extends Notification
                 'message_body' => $this->data['log_message_body'],
             ])->render()];
 
+        //if ($notifiable->team->projectList())
+        if (!in_array($this->issue->projeck_key,['TALK']))
+        {
+            $message='blocked';
+        }
+
         if (!empty($this->data['keyboard'])){
             $message['reply_markup'] = $this->data['keyboard'];
         }
