@@ -28,7 +28,7 @@ es:
 	env $(env) UID=$(user) docker-compose --file ./docker/fpm/docker-compose.yml exec laravel_echo_server sh
 
 listen:
-	env $(env) UID=$(user) docker-compose --file ./docker/fpm/docker-compose.yml exec fpm 'php artisan telebot:polling'
+	docker exec -it -u root fpm_fpm_1 'php artisan telebot:polling'
 
 exec:
 	env $(env) UID=$(user) docker-compose --file ./docker/fpm/docker-compose.yml run fpm $(COMMAND)

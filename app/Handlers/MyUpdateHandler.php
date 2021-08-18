@@ -69,7 +69,7 @@ class MyUpdateHandler extends UpdateHandler
         $bot = $this->bot;
 
         $chat_id = $this->update->message->chat->id;
-        $command = $this->update->message->text;
+        $command = $this->update->message->text ?? null;
 
         $subscriber = Subscriber::query()->where('chat_id', '=', $chat_id)->first();
         if (!$subscriber) {

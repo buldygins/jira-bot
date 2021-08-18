@@ -16,12 +16,14 @@ class SetPositionCommand extends BaseCommand
 
     public function answerPosition($text)
     {
+        parent::handle();
+
         $position = Position::where('name', trim($text))->first();
         if (!$position) {
             $this->sendMessage([
                 'text' => 'Ошибка, попробуйте снова!',
             ]);
-        } else {
+        } elseif($this->sub) {
             $this->sub->waited_command = null;
             $this->sub->id_position = $position->id;
             $this->sub->save();

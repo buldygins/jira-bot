@@ -223,14 +223,10 @@ class BotController extends BaseController
 
             //dd($subscriber->team->projectList());
 
-            if (!in_array($issue->project_key,$subscriber->team->projectList()))
-            {
-                //dd($issue);
-                return false;
+            if (in_array($issue->project_key,$subscriber->team->projectList())) {
+                $this->data['keyboard'] = $keyboardService->buildIssueKeyboard($subscriber, $issue);
+                Notification::send($subscriber, new MyTelegramNotification($issue, $this->data));
             }
-
-            $this->data['keyboard'] = $keyboardService->buildIssueKeyboard($subscriber, $issue);
-            Notification::send($subscriber, new MyTelegramNotification($issue, $this->data));
         }
     }
 
