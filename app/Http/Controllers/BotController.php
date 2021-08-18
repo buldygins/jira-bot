@@ -196,6 +196,7 @@ class BotController extends BaseController
             ]);
 
             $issue->issue_id = $issue_id;
+            $issue->project_key=$project_key;
             $issue->event_created = Carbon::createFromTimestamp($json->timestamp)->toDateTimeString();
             $issue->webhookEvent = $json->webhookEvent;
             $issue->src = $rawData;
