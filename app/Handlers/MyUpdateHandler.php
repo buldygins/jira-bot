@@ -18,31 +18,23 @@ class MyUpdateHandler extends UpdateHandler
     public function command($cmd, Subscriber $subscriber)
     {
 
-        $fn = str_replace('/', '', $cmd);
-        if ($fn != $cmd) {
-            // команды
-
-            $cmd1 = $cmd;
-
-            $r = $this->getLocalCommands();
-            foreach ($r as $obj) {
-                $item = $obj->toArray();
-                $cmd2 = str_replace($item['command'] . '_', '', $cmd1);
-                if ($cmd2 != $cmd1) {
+        $r = $this->getLocalCommands();
+        foreach ($r as $obj) {
+            $item = $obj->toArray();
+            $cmd1 = str_replace($item['command'] . '_', '', $cmd);
+            if ($cmd1 != $cmd) {
 //                    $this->sendMessage([
 //                        'text' => ' Команда: ' . $item['command'] .' id '. $cmd2,
 //                    ]);
 
-                    if ($item['command'] == '/set_position') {
-                        $commandHandler = new SetPositionCommand($this->bot, $this->update);
-                        $commandHandler->answer($cmd2);
-                    }
-
+                if ($item['command'] == '/set_position') {
+                    $commandHandler = new SetPositionCommand($this->bot, $this->update);
+                    $commandHandler->answer($cmd1);
                 }
-            }
 
-            return true;
+            }
         }
+
 
         //=== далее = ответы на команды
 
