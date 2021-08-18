@@ -41,7 +41,7 @@ class JiraAuthCommand extends BaseCommand
 
         $this->sendMessage([
             'text' => "Для того, чтобы совершать действия в jira через бота, вам необходимо авторизоваться.
- Для этого выполняйте все инструкции, пока не будет показано сообщение об успешной регистрации. \nЗадайте свои ФИО",
+Для этого выполняйте все инструкции, пока не будет показано сообщение об успешной регистрации. \nЗадайте свои ФИО",
             'chat_id' => $this->update->message->chat->id,
             'reply_markup' => $this->keyboardService->makeKeyboard([self::$cancelAuth]),
         ]);
@@ -63,10 +63,10 @@ class JiraAuthCommand extends BaseCommand
         $positions = Position::all()->pluck('name')->toArray();
 
         $this->sendMessage([
-            'text' => "Выберите свою должность.",
+            'text' => "Выберите свою должность ( из представленных вариантов ).",
             'chat_id' => $this->update->message->chat->id,
             'disable_web_page_preview' => false,
-            'reply_markup' => $this->keyboardService->makeKeyboard(array_merge($positions,[self::$cancelAuth])),
+            'reply_markup' => $this->keyboardService->makeKeyboard(array_merge($positions, [self::$cancelAuth])),
         ]);
         return true;
     }
@@ -91,8 +91,11 @@ class JiraAuthCommand extends BaseCommand
         $this->sub->waited_command = get_class($this) . '::answerLogin';
         $this->sub->save();
 
+        $link = env('JIRA_URL') . '/jira/secure/ViewProfile.jspa';
+
         $this->sendMessage([
-            'text' => "Ваша должность: {$position->name}. Отправьте логин Jira.",
+            'text' => "Ваша должность: {$position->name}. Отправьте логин Jira. Логин можно найти <a href='{$link}' style='margin-right: 5px;'>тут</a>
+ ( логин или почта )",
             'chat_id' => $this->update->message->chat->id,
             'reply_markup' => $this->keyboardService->makeKeyboard([self::$cancelAuth]),
         ]);

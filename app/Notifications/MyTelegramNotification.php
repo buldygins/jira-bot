@@ -64,7 +64,7 @@ class MyTelegramNotification extends Notification
             'event_processed' => $this->issue->event_created
         ]);
 
-        $link = env('JIRA_URL') . '/browse/' . $this->issue->key;
+        $link = config('jira_host') . '/browse/' . $this->issue->key;
 
         $message = [
             'parse_mode' => 'HTML',
