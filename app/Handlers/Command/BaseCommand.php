@@ -13,7 +13,7 @@ class BaseCommand extends CommandHandler
     {
         $chat_id = $this->update->message->chat->id;
         $this->sub = Subscriber::query()->where('chat_id', '=', $chat_id)->first();
-        dd($this->sub);
+
         return true;
     }
 
