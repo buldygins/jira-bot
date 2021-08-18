@@ -41,7 +41,7 @@ class JiraAuthCommand extends BaseCommand
 
         $this->sendMessage([
             'text' => "Для того, чтобы совершать действия в jira через бота, вам необходимо авторизоваться.
-             Для этого выполняйте все инструкции, пока не будет показано сообщение об успешной регистрации. \nЗадайте свои ФИО",
+ Для этого выполняйте все инструкции, пока не будет показано сообщение об успешной регистрации. \nЗадайте свои ФИО",
             'chat_id' => $this->update->message->chat->id,
             'reply_markup' => $this->keyboardService->makeKeyboard([self::$cancelAuth]),
         ]);
