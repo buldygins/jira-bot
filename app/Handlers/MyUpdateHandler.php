@@ -28,8 +28,7 @@ class MyUpdateHandler extends UpdateHandler
                 $methodName = $waited_command[1];
                 if (class_exists($commandClass) && method_exists($commandClass, $methodName)) {
                     $commandHandler = new $commandClass($this->bot, $this->update);
-                    $commandHandler->$methodName($cmd);
-                    return true;
+                    return $commandHandler->$methodName($cmd);
                 }
             }
         }
