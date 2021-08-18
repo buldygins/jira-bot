@@ -42,6 +42,7 @@ class JiraAuthCommand extends BaseCommand
         $this->sendMessage([
             'text' => "Задайте свои ФИО",
             'chat_id' => $this->update->message->chat->id,
+            'reply_markup' => $this->keyboardService->makeKeyboard([self::$cancelAuth]),
         ]);
         return true;
     }
@@ -49,6 +50,10 @@ class JiraAuthCommand extends BaseCommand
     public function answerFio($text)
     {
         parent::handle();
+
+        if ($this->checkCancel($text)) {
+            return true;
+        }
 
         $this->sub->fio = trim($text);
         $this->sub->waited_command = get_class($this) . '::answerPosition';
@@ -68,6 +73,10 @@ class JiraAuthCommand extends BaseCommand
     public function AnswerPosition($text)
     {
         parent::handle();
+
+        if ($this->checkCancel($text)) {
+            return true;
+        }
 
         $position = Position::where('name', trim($text))->first();
         if (!$position) {
