@@ -17,7 +17,7 @@ class ListCommand extends BaseCommand
     ];
     public static $aliases = ['/list'];
     protected static $description = 'Список команд';
-    //protected $doNotShow = [];
+    protected $doNotShow = [];
 
     public function __construct(TeleBot $bot, Update $update)
     {
