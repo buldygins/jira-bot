@@ -28,8 +28,10 @@ class SetFioCommand extends BaseCommand
     {
         parent::handle();
 
-        $this->sub->waited_command = 'SetFioCommand::answerFio';
-        $this->sub->save();
+        if (isset($this->sub)) {
+            $this->sub->waited_command = 'SetFioCommand::answerFio';
+            $this->sub->save();
+        }
 
         $this->sendMessage([
             'text' => "Задайте свои ФИО",
