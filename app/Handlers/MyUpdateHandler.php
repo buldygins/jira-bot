@@ -36,7 +36,7 @@ class MyUpdateHandler extends UpdateHandler
                 }
             }
         }
-        
+
         return true;
     }
 
