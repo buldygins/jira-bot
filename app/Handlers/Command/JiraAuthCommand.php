@@ -50,8 +50,8 @@ class JiraAuthCommand extends BaseCommand
     {
         parent::handle();
 
-        $this->sub->waited_command = get_class($this) . '::answerPosition';
         $this->sub->fio = trim($text);
+        $this->sub->waited_command = get_class($this) . '::answerPosition';
         $this->sub->save();
 
         $positions = Position::all()->pluck('name');
@@ -96,7 +96,6 @@ class JiraAuthCommand extends BaseCommand
         if ($this->checkCancel($text)) {
             return true;
         }
-        dump('aswerLogin');
         $this->sub->jira_login = trim($text);
         $this->sub->waited_command = get_class($this) . '::answerLoginAndToken';
         $this->sub->save();
@@ -113,30 +112,19 @@ class JiraAuthCommand extends BaseCommand
 
     public function answerLoginAndToken($text)
     {
-        dump('aswerLoginAndToken');
-
         parent::handle();
-
-        dump('aswerLoginAndToken1');
 
         if ($this->checkCancel($text)) {
             return true;
         }
 
-        dump('aswerLoginAndToken2');
-
         $this->sub->api_token = trim($text);
         $this->sub->waited_command = null;
         $this->sub->save();
 
-        dump('aswerLoginAndToken3');
-
         try {
-            dump(1);
             $userService = new UserService(new ArrayConfiguration($this->getJiraArrayConfiguration()));
-            dump(2);
             $myself = $userService->getMyself();
-            dump(3);
             $data = [
                 'key' => $myself->key ?? null,
                 'name' => $myself->name ?? null,
@@ -145,18 +133,13 @@ class JiraAuthCommand extends BaseCommand
                 'timeZone' => $myself->timeZone ?? 'Europe/Moscow',
                 'displayName' => $myself->displayName ?? null,
             ];
-            dump(4);
             $jira_user = JiraUser::query()->firstOrCreate($data);
-            dump(5);
             if (!$jira_user) {
                 throw new \Exception('User was not created. Data : ' . json_encode($data));
             }
-            dump(6);
             $this->sub->jira_user_id = $jira_user->id;
             $this->sub->save();
-            dump(7);
         } catch (\Exception $e) {
-            dump(8);
             $this->sendMessage([
                 'text' => "👎Регистрация не пройдена! Проверьте провильность данных!",
                 'chat_id' => $this->update->message->chat->id,
