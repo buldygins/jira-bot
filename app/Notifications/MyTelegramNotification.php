@@ -62,13 +62,12 @@ class MyTelegramNotification extends Notification
         JiraIssue::query()->where('id', '=', $this->issue->id)->update([
             'event_processed' => $this->issue->event_created
         ]);
-
+        
         $message = [
             'parse_mode' => 'HTML',
             'disable_web_page_preview' => true,
             'chat_id' => $notifiable->chat_id,
             'text' => view('telegram.notification', [
-                'link' => $this->data['link'],
                 'issue' => $this->issue,
                 'message_header' => $this->data['log_message_header'],
                 'message_body' => $this->data['log_message_body'],

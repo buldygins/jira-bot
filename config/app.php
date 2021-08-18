@@ -3,7 +3,7 @@
 return [
 
 
-    'jira_host' => env('JIRA_URL'),
+    'jira_url' => env('JIRA_URL'),
     /*
     |--------------------------------------------------------------------------
     | Application Name
