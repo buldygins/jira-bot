@@ -51,7 +51,7 @@ class JiraAuthCommand extends BaseCommand
         parent::handle();
 
         $this->sub->waited_command = get_class($this) . '::answerPosition';
-        $this->sub->fio = trim(text);
+        $this->sub->fio = trim($text);
         $this->sub->save();
 
         $positions = Position::all()->pluck('name');
