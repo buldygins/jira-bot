@@ -80,7 +80,7 @@ class BotController extends BaseController
         file_put_contents('3.txt', $f2);
 //----------
 
-        dd($json);
+        //dd($json);
         $this->parse_jira_users($json);
 
         $webhook_parts = explode('_', $json->webhookEvent);
@@ -215,6 +215,9 @@ class BotController extends BaseController
 
         $subscribers = Subscriber::where('is_active', '=', true)->get();
         foreach ($subscribers as $subscriber) {
+
+            dd($subscriber->team->projectList());
+
             if (!in_array($issue->projeck_key,$subscriber->team->projectList()))
             {
                 return false;
