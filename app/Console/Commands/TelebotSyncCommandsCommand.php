@@ -47,6 +47,8 @@ class TelebotSyncCommandsCommand extends Command
             'handlers' => []
         ]);
 
+        dd($bot);
+
         $bot->setMyCommands([
             'commands' => $bot->getLocalCommands()
         ]);

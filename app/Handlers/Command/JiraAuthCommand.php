@@ -27,6 +27,7 @@ class JiraAuthCommand extends BaseCommand
     public function handle()
     {
         parent::handle();
+
         if ($this->sub->canSendCommands()){
             $this->sendMessage([
                 'text' => "Вы уже зарегистрированы.",
@@ -89,9 +90,11 @@ class JiraAuthCommand extends BaseCommand
 
     public function answerLogin($text)
     {
-        $this->checkCancel($text);
-
         parent::handle();
+
+        if ($this->checkCancel($text)){
+            return true;
+        }
 
         $this->sub->jira_login = trim($text);
         $this->sub->waited_command = get_class($this) . '::answerLoginAndToken';
@@ -109,9 +112,11 @@ class JiraAuthCommand extends BaseCommand
 
     public function answerLoginAndToken($text)
     {
-        $this->checkCancel($text);
-
         parent::handle();
+
+        if ($this->checkCancel($text)){
+            return true;
+        }
 
         $this->sub->api_token = trim($text);
         $this->sub->waited_command = null;
@@ -162,7 +167,12 @@ class JiraAuthCommand extends BaseCommand
                 'chat_id' => $this->update->message->chat->id,
                 'reply_markup' => $this->keyboardService->removeKeyboard(),
             ]);
-            exit();
+
+            $this->sub->waited_command = null;
+            $this->sub->save();
+
+            return true;
         }
+        return false;
     }
 }
