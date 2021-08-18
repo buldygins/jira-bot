@@ -19,27 +19,6 @@ class MyUpdateHandler extends UpdateHandler
     {
 
         if (strpos($cmd,'/') === 0) {
-            // команды
-
-            $cmd1 = $cmd;
-
-            $r = $this->getLocalCommands();
-            foreach ($r as $obj) {
-                $item = $obj->toArray();
-                $cmd2 = str_replace($item['command'] . '_', '', $cmd1);
-                if ($cmd2 != $cmd1) {
-//                    $this->sendMessage([
-//                        'text' => ' Команда: ' . $item['command'] .' id '. $cmd2,
-//                    ]);
-
-                    if ($item['command'] == '/set_position') {
-                        $commandHandler = new SetPositionCommand($this->bot, $this->update);
-                        $commandHandler->answer($cmd2);
-                    }
-
-                }
-            }
-
             return true;
         }
 
@@ -57,9 +36,7 @@ class MyUpdateHandler extends UpdateHandler
                 }
             }
         }
-
-
-
+        
         return true;
     }
 
