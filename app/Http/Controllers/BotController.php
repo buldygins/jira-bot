@@ -213,6 +213,11 @@ class BotController extends BaseController
 
         $subscribers = Subscriber::where('is_active', '=', true)->get();
         foreach ($subscribers as $subscriber) {
+            if (!in_array($issue->projeck_key,$subscriber->team->projectList()))
+            {
+                return false;
+            }
+
             $this->data['keyboard'] = $keyboardService->buildIssueKeyboard($subscriber, $issue);
             Notification::send($subscriber, new MyTelegramNotification($issue, $this->data));
         }
