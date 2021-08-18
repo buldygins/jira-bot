@@ -21,7 +21,7 @@ class SetPositionCommand extends BaseCommand
             $this->sendMessage([
                 'text' => 'Ошибка, попробуйте снова!',
             ]);
-        } else {
+        } elseif($this->sub) {
             $this->sub->waited_command = null;
             $this->sub->id_position = $position->id;
             $this->sub->save();
