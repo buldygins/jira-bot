@@ -48,6 +48,10 @@ class BotController extends BaseController
         $bot->getMe()->then(function (User $user) {
             var_dump($user);
         })->wait();
+
+        $bot->setMyCommands([
+            'commands' => $bot->getLocalCommands()
+        ]);
     }
 
     public function parse_jira_users($json)
