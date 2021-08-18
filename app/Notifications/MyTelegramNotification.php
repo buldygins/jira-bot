@@ -74,6 +74,7 @@ class MyTelegramNotification extends Notification
                 'message_body' => $this->data['log_message_body'],
             ])->render()];
 
+        dd($notifiable->team->projectList());
         if (!in_array($this->issue->projeck_key,$notifiable->team->projectList()))
         {
             return false;
