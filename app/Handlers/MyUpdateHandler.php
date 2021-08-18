@@ -17,26 +17,20 @@ class MyUpdateHandler extends UpdateHandler
 
     public function command($cmd, Subscriber $subscriber)
     {
+        if (strpos($cmd, '/') !== 0) {
+            if (!is_null($subscriber->waited_command)) {
 
-        if (strpos($cmd,'/') === 0) {
-            return true;
-        }
-
-        //=== далее = ответы на команды
-
-        if (!is_null($subscriber->waited_command)) {
-
-            $waited_command = explode('::', $subscriber->waited_command);
-            if (isset($waited_command[0]) && isset($waited_command[1])) {
-                $commandClass = $waited_command[0];
-                $methodName = $waited_command[1];
-                if (class_exists($commandClass) && method_exists($commandClass, $methodName)) {
-                    $commandHandler = new $commandClass($this->bot, $this->update);
-                    return $commandHandler->$methodName($cmd);
+                $waited_command = explode('::', $subscriber->waited_command);
+                if (isset($waited_command[0]) && isset($waited_command[1])) {
+                    $commandClass = $waited_command[0];
+                    $methodName = $waited_command[1];
+                    if (class_exists($commandClass) && method_exists($commandClass, $methodName)) {
+                        $commandHandler = new $commandClass($this->bot, $this->update);
+                        return $commandHandler->$methodName($cmd);
+                    }
                 }
             }
         }
-
         return true;
     }
 
