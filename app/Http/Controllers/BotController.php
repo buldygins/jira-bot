@@ -80,6 +80,7 @@ class BotController extends BaseController
         file_put_contents('3.txt', $f2);
 //----------
 
+        dd($json);
         $this->parse_jira_users($json);
 
         $webhook_parts = explode('_', $json->webhookEvent);
