@@ -124,8 +124,11 @@ class JiraAuthCommand extends BaseCommand
         $this->sub->save();
 
         try {
+            dump(1);
             $userService = new UserService(new ArrayConfiguration($this->getJiraArrayConfiguration()));
+            dump(2);
             $myself = $userService->getMyself();
+            dump(3);
             $data = [
                 'key' => $myself->key ?? null,
                 'name' => $myself->name ?? null,
@@ -134,14 +137,18 @@ class JiraAuthCommand extends BaseCommand
                 'timeZone' => $myself->timeZone ?? 'Europe/Moscow',
                 'displayName' => $myself->displayName ?? null,
             ];
+            dump(4);
             $jira_user = JiraUser::query()->firstOrCreate($data);
-            dd(1);
+            dump(5);
             if (!$jira_user) {
                 throw new \Exception('User was not created. Data : ' . json_encode($data));
             }
+            dump(6);
             $this->sub->jira_user_id = $jira_user->id;
             $this->sub->save();
+            dump(7);
         } catch (\Exception $e) {
+            dump(8);
             $this->sendMessage([
                 'text' => "👎Регистрация не пройдена! Проверьте провильность данных!",
                 'chat_id' => $this->update->message->chat->id,
