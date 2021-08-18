@@ -218,7 +218,7 @@ class BotController extends BaseController
 
             dd($subscriber->team->projectList());
 
-            if (!in_array($issue->projeck_key,$subscriber->team->projectList()))
+            if (!in_array($issue->project_key,$subscriber->team->projectList()))
             {
                 return false;
             }
