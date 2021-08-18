@@ -60,7 +60,7 @@ class JiraAuthCommand extends BaseCommand
             'text' => "Выберите свою должность.",
             'chat_id' => $this->update->message->chat->id,
             'disable_web_page_preview' => false,
-            'reply_markup' => $this->keyboardService->makeKeyboard($positions),
+            'reply_markup' => $this->keyboardService->makeKeyboard(array_merge($positions,[self::$cancelAuth])),
         ]);
         return true;
     }

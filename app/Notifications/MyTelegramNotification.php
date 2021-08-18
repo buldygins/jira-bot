@@ -64,11 +64,14 @@ class MyTelegramNotification extends Notification
             'event_processed' => $this->issue->event_created
         ]);
 
+        $link = env('JIRA_URL') . '/browse/' . $this->issue->key;
+
         $message = [
             'parse_mode' => 'HTML',
             'disable_web_page_preview' => true,
             'chat_id' => $notifiable->chat_id,
             'text' => view('telegram.notification', [
+                'link' => $link,
                 'issue' => $this->issue,
                 'message_header' => $this->data['log_message_header'],
                 'message_body' => $this->data['log_message_body'],

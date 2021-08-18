@@ -18,8 +18,7 @@ class MyUpdateHandler extends UpdateHandler
     public function command($cmd, Subscriber $subscriber)
     {
 
-        $fn = str_replace('/', '', $cmd);
-        if ($fn != $cmd) {
+        if (strpos('/', $cmd) === 0) {
             // команды
 
             $cmd1 = $cmd;
