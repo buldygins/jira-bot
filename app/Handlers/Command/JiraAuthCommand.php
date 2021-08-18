@@ -54,13 +54,13 @@ class JiraAuthCommand extends BaseCommand
         $this->sub->waited_command = get_class($this) . '::answerPosition';
         $this->sub->save();
 
-        $positions = Position::all()->pluck('name');
+        $positions = Position::all()->pluck('name')->toArray();
 
         $this->sendMessage([
             'text' => "Выберите свою должность.",
             'chat_id' => $this->update->message->chat->id,
             'disable_web_page_preview' => false,
-            'reply_markup' => $this->keyboardService->makeKeyboard(array_merge($positions)),
+            'reply_markup' => $this->keyboardService->makeKeyboard(array_merge($positions,[self::$cancelAuth])),
         ]);
         return true;
     }
