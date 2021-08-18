@@ -28,7 +28,7 @@ class SetFioCommand extends BaseCommand
     {
         parent::handle();
 
-        $this->sub->waited_command = get_class($this).'::answerFio';
+        $this->sub->waited_command = 'SetFioCommand::answerFio';
         $this->sub->save();
 
         $this->sendMessage([
