@@ -136,11 +136,11 @@ class BotController extends BaseController
             $log_message_body .= "Изменения: ";
             foreach ($this->changelog as $field => $change) {
                 if (empty($change['from']) && !empty($change['to'])) {
-                    $log_message_body .= "\nПоле {$field}\nНовое значение\n{$change['to']}\n";
+                    $log_message_body .= "\nПоле {$field}\n**Новое значение**\n{$change['to']}\n";
                 } elseif (!empty($change['from'] && empty($change['to']))) {
-                    $log_message_body .= "\n❌Поле {$field} удалено\nБыло\n\"{$change['from']}\"";
+                    $log_message_body .= "\n❌Поле {$field} удалено\n**Было**\n\"{$change['from']}\"";
                 } else {
-                    $log_message_body .= "\nПоле {$field}\nБыло\n\"{$change['from']}\"\nСтало\n\"{$change['to']}\"";
+                    $log_message_body .= "\nПоле {$field}\n**Было**\n\"{$change['from']}\"\n**Стало**\n\"{$change['to']}\"";
                 }
             }
         }
