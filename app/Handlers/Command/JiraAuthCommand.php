@@ -28,7 +28,7 @@ class JiraAuthCommand extends BaseCommand
     {
         parent::handle();
 
-        if ($this->sub->canSendCommands()){
+        if ($this->sub->canSendCommands()) {
             $this->sendMessage([
                 'text' => "Вы уже зарегистрированы.",
                 'chat_id' => $this->update->message->chat->id,
@@ -51,6 +51,7 @@ class JiraAuthCommand extends BaseCommand
         parent::handle();
 
         $this->sub->waited_command = get_class($this) . '::answerPosition';
+        $this->sub->fio = trim(text);
         $this->sub->save();
 
         $positions = Position::all()->pluck('name');
@@ -92,7 +93,7 @@ class JiraAuthCommand extends BaseCommand
     {
         parent::handle();
 
-        if ($this->checkCancel($text)){
+        if ($this->checkCancel($text)) {
             return true;
         }
 
@@ -114,14 +115,14 @@ class JiraAuthCommand extends BaseCommand
     {
         parent::handle();
 
-        if ($this->checkCancel($text)){
+        if ($this->checkCancel($text)) {
             return true;
         }
 
         $this->sub->api_token = trim($text);
         $this->sub->waited_command = null;
         $this->sub->save();
-
+        return true;
         try {
             $userService = new UserService(new ArrayConfiguration($this->getJiraArrayConfiguration()));
             $myself = $userService->getMyself();
