@@ -216,7 +216,7 @@ class BotController extends BaseController
         $subscribers = Subscriber::where('is_active', '=', true)->get();
         foreach ($subscribers as $subscriber) {
 
-            dd($subscriber->team->projectList());
+            //dd($subscriber->team->projectList());
 
             if (!in_array($issue->project_key,$subscriber->team->projectList()))
             {
