@@ -74,18 +74,9 @@ class MyTelegramNotification extends Notification
                 'message_body' => $this->data['log_message_body'],
             ])->render()];
 
-        //if ($notifiable->team->projectList())
-        if (!in_array($this->issue->projeck_key,['TALK']))
+        if (!in_array($this->issue->projeck_key,$notifiable->team->projectList()))
         {
-            $message = [
-                'parse_mode' => 'HTML',
-                'disable_web_page_preview' => true,
-                'chat_id' => $notifiable->chat_id,
-                'text' => view('telegram.notification', [
-                    'issue' => $this->issue,
-                    'message_header' => $this->data['log_message_header'],
-                    'message_body' => 'blocked',
-                ])->render()];
+            return false;
         }
 
         if (!empty($this->data['keyboard'])){
