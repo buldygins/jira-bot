@@ -94,6 +94,7 @@ class JiraAuthCommand extends BaseCommand
         $link = env('JIRA_URL') . '/jira/secure/ViewProfile.jspa';
 
         $this->sendMessage([
+            'parse_mode' => 'HTML',
             'text' => "Ваша должность: {$position->name}. Отправьте логин Jira. Логин можно найти <a href='{$link}' style='margin-right: 5px;'>тут</a>
  ( логин или почта )",
             'chat_id' => $this->update->message->chat->id,
