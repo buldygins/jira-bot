@@ -19,7 +19,6 @@ class MyUpdateHandler extends UpdateHandler
     {
         if (strpos($cmd, '/') !== 0) {
             if (!is_null($subscriber->waited_command)) {
-
                 $waited_command = explode('::', $subscriber->waited_command);
                 if (isset($waited_command[0]) && isset($waited_command[1])) {
                     $commandClass = $waited_command[0];
