@@ -48,6 +48,7 @@ class JiraStatusesCommand extends Command
             'jiraHost' => config('app.jira_url'),
             'jiraUser' => $user->jira_login,
             'jiraPassword' => $user->api_token,
+            'useV3RestApi' => true,
         ]);
         dump($config);
         $projectService = new ProjectService($config);
