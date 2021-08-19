@@ -28,4 +28,8 @@ class Subscriber extends Model
     public function canSendCommands(){
         return !empty($this->jira_login) && !empty($this->api_token) && !empty($this->jira_user_id);
     }
+
+    public function wantsOnlyTagged(){
+        return (bool) $this->show_only_tagged;
+    }
 }

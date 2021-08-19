@@ -40,14 +40,14 @@ class TelebotSyncCommandsCommand extends Command
     public function handle()
     {
         $bot = new TeleBot([
-            'token' => env('TELEGRAM_BOT_TOKEN'),
+            'token' => config('telebot.bots.bot.token'),
             'api_url' => 'https://api.telegram.org',
             'exceptions' => true,
             'async' => false,
             'handlers' => []
         ]);
 
-        dd($bot);
+        dd($bot->getLocalCommands());
 
         $bot->setMyCommands([
             'commands' => $bot->getLocalCommands()
