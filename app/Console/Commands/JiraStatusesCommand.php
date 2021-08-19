@@ -43,7 +43,7 @@ class JiraStatusesCommand extends Command
     {
         $this->info('Start parsing statuses from Jira projects...');
 
-        $user = Subscriber::where('jira_login','!=',null)->where('api_token','!=',null)->where('jira_user_id','!=',null)->get()->first();
+        $user = Subscriber::where('jira_login', '!=', null)->where('api_token', '!=', null)->where('jira_user_id', '!=', null)->get()->first();
         $projectService = new ProjectService(new ArrayConfiguration([
             'jiraHost' => env('JIRA_URL'),
             'jiraUser' => $user->jira_login,
@@ -54,16 +54,16 @@ class JiraStatusesCommand extends Command
 
         $bar = $this->output->createProgressBar(count($projects));
 
-        foreach ($projects as $project){
+        foreach ($projects as $project) {
             $statuses = $projectService->getStatuses($project->id);
-            foreach ($statuses as $status_collection){
+            foreach ($statuses as $status_collection) {
                 foreach ($status_collection->statuses as $status) {
-                JiraIssueStatus::firstOrCreate(['jiraId' => $status->id, 'name' => $status->name]);
+                    JiraIssueStatus::firstOrCreate(['jiraId' => $status->id, 'name' => $status->name]);
                 }
             }
             $bar->advance();
         }
         $bar->finish();
-        $this->info('Successfully exported all statuses');
+        $this->info(PHP_EOL . 'Successfully exported all statuses');
     }
 }
