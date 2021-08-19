@@ -44,11 +44,14 @@ class JiraStatusesCommand extends Command
         $this->info('Start parsing statuses from Jira projects...');
 
         $user = Subscriber::where('jira_login', '!=', null)->where('api_token', '!=', null)->where('jira_user_id', '!=', null)->get()->first();
-        $projectService = new ProjectService(new ArrayConfiguration([
+        $config = new ArrayConfiguration([
             'jiraHost' => config('app.jira_url'),
             'jiraUser' => $user->jira_login,
             'jiraPassword' => $user->api_token,
-        ]));
+        ]);
+        dump($config);
+        $projectService = new ProjectService($config);
+
 
         $projects = $projectService->getAllProjects();
 
