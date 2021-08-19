@@ -14,10 +14,11 @@ class SetFioCommand extends BaseCommand
 
     public function answerFio($text)
     {
-        $sub = Subscriber::query()->where('chat_id', '=', $this->update->message->chat->id)->first();
-        $sub->fio = trim($text);
-        $sub->waited_command = null;
-        $sub->save();
+        parent::handle();
+
+        $this->sub->fio = trim($text);
+        $this->sub->waited_command = null;
+        $this->sub->save();
 
         $this->sendMessage([
             'text' => 'Ваше ФИО записано',
@@ -28,10 +29,8 @@ class SetFioCommand extends BaseCommand
     {
         parent::handle();
 
-        if (isset($this->sub)) {
-            $this->sub->waited_command = 'SetFioCommand::answerFio';
-            $this->sub->save();
-        }
+        $this->sub->waited_command = get_class($this) . '::answerFio';
+        $this->sub->save();
 
         $this->sendMessage([
             'text' => "Задайте свои ФИО",
