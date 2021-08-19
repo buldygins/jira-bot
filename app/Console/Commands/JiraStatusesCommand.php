@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 use JiraRestApi\Configuration\ArrayConfiguration;
 use JiraRestApi\Project\ProjectService;
 
-class ParseAllStatusesCommand extends Command
+class JiraStatusesCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -22,7 +22,7 @@ class ParseAllStatusesCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Parse statuses from Jira';
 
     /**
      * Create a new command instance.
@@ -41,7 +41,9 @@ class ParseAllStatusesCommand extends Command
      */
     public function handle()
     {
-        $user = Subscriber::where('jira_login','!=',null)->where('api_token','!=',null)->where('jira_user_id','!=',null)->get()->first();
+        $this->info('Start parsing statuses from Jira projects...');
+
+        $user = Subscriber::where('jira_login', '!=', null)->where('api_token', '!=', null)->where('jira_user_id', '!=', null)->get()->first();
         $projectService = new ProjectService(new ArrayConfiguration([
             'jiraHost' => config('app.jira_url'),
             'jiraUser' => $user->jira_login,
@@ -49,14 +51,19 @@ class ParseAllStatusesCommand extends Command
         ]));
 
         $projects = $projectService->getAllProjects();
-        foreach ($projects as $project){
+
+        $bar = $this->output->createProgressBar(count($projects));
+
+        foreach ($projects as $project) {
             $statuses = $projectService->getStatuses($project->id);
-            foreach ($statuses as $status_collection){
+            foreach ($statuses as $status_collection) {
                 foreach ($status_collection->statuses as $status) {
-                JiraIssueStatus::firstOrCreate(['jiraId' => $status->id, 'name' => $status->name]);
+                    JiraIssueStatus::firstOrCreate(['jiraId' => $status->id, 'name' => $status->name]);
                 }
             }
+            $bar->advance();
         }
-        $this->info('successfully exported all statuses');
+        $bar->finish();
+        $this->info(PHP_EOL . 'Successfully exported all statuses');
     }
 }
