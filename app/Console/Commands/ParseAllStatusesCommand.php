@@ -43,7 +43,7 @@ class ParseAllStatusesCommand extends Command
     {
         $user = Subscriber::where('jira_login','!=',null)->where('api_token','!=',null)->where('jira_user_id','!=',null)->get()->first();
         $projectService = new ProjectService(new ArrayConfiguration([
-            'jiraHost' => env('JIRA_URL'),
+            'jiraHost' => config('app.jira_url'),
             'jiraUser' => $user->jira_login,
             'jiraPassword' => $user->api_token,
         ]));
