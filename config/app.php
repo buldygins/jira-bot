@@ -4,6 +4,7 @@ return [
 
 
     'jira_url' => env('JIRA_URL'),
+    'jira_use_token' => env('JIRA_USE_TOKEN', false),
     /*
     |--------------------------------------------------------------------------
     | Application Name

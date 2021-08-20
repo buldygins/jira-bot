@@ -286,7 +286,7 @@ class BotController extends BaseController
         $assignee = "Исполнитель: ";
         if (isset($this->changelog['assignee']['from'])) {
             $assignee .= $this->changelog['assignee']['from'] . ' -> ';
-        } elseif (!isset($this->changelog['assignee']['from']) && $displayName == null) {
+        } elseif (isset($this->changelog['assignee']['to']) && $displayName == null) {
             $assignee .= 'не назначено -> ';
         }
         if (isset($this->changelog['assignee']['to'])) {
