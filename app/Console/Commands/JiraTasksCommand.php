@@ -73,7 +73,7 @@ class JiraTasksCommand extends Command
                         'issue_id' => $issue->id,
                         'project_key' => $issue->fields->project->key,
                         'old_wf_status_id' => $status->id,
-                        'src' => $issue,
+                        'src' => json_encode($issue),
                         'status_id' => $status->id,
                     ]);
                 } else {
