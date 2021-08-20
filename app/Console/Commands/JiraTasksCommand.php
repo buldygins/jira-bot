@@ -84,7 +84,7 @@ class JiraTasksCommand extends Command
             }
 
             $this->info("End {$i} iteration");
-            $search_result = $issueService->search($jql, 100 * $i, 100);
+            $search_result = $issueService->search($jql, 500 * $i, 500);
             $i++;
         }
 
