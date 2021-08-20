@@ -34,6 +34,7 @@ class JiraIssueEditCommand extends BaseCommand
     {
         if (isset($update->callback_query->data)) {
             foreach (self::$aliases as $alias) {
+                Log::channel('telegram_log')->info('Trying to match ' . $update->callback_query->data . ' with ' . $alias);
                 if (strpos($update->callback_query->data, $alias) !== false) {
                     return true;
                 }
@@ -45,7 +46,7 @@ class JiraIssueEditCommand extends BaseCommand
     public function handle()
     {
         $data = $this->parseData();
-        switch ($data['field']){
+        switch ($data['field']) {
             case 'status':
                 return $this->askStatus();
             default:
@@ -58,7 +59,8 @@ class JiraIssueEditCommand extends BaseCommand
         }
     }
 
-    public function askStatus(){
+    public function askStatus()
+    {
         $statuses = JiraIssueStatus::getClosestStatusesName($this->issue);
         $issue_link = $this->issue->getLink();
 
@@ -68,14 +70,15 @@ class JiraIssueEditCommand extends BaseCommand
         $this->sendMessage([
             'parse_mode' => 'HTML',
             'text' => "Выберите статус для задачи {$issue_link}.",
-            'reply_markup' => $this->keyboardService->makeKeyboard(array_merge($statuses,[static::$cancel]),2),
+            'reply_markup' => $this->keyboardService->makeKeyboard(array_merge($statuses, [static::$cancel]), 2),
         ]);
         return true;
     }
 
-    public function answerStatus($text){
+    public function answerStatus($text)
+    {
         $status = JiraIssueStatus::getStatusByFullName(trim($text));
-        if (!$status){
+        if (!$status) {
             $this->sendMessage([
                 'parse_mode' => 'HTML',
                 'text' => "Выбран неправильный статус. Попробуйте снова.",
@@ -83,7 +86,7 @@ class JiraIssueEditCommand extends BaseCommand
             ]);
             return true;
         }
-        $this->issue->previous_status_id =  $this->issue->status_id;
+        $this->issue->previous_status_id = $this->issue->status_id;
         $this->issue->status_id = $status->id;
         $this->issue->save();
 
@@ -93,7 +96,7 @@ class JiraIssueEditCommand extends BaseCommand
             'reply_markup' => $this->keyboardService->removeKeyboard(),
         ]);
 
-        if ($this->issue->previous_status->jiraId != $status->jiraId){
+        if ($this->issue->previous_status->jiraId != $status->jiraId) {
 
             $log_message_header = 'Задача';
             $log_message_body = 'Изменён статус';
@@ -108,7 +111,7 @@ class JiraIssueEditCommand extends BaseCommand
                 'src' => null,
             ]);
 
-            $data = compact('log_message_body','log_message_header');
+            $data = compact('log_message_body', 'log_message_header');
 
             $subscribers = Subscriber::where('is_active', '=', true)->get();
             foreach ($subscribers as $subscriber) {
@@ -125,15 +128,16 @@ class JiraIssueEditCommand extends BaseCommand
         return true;
     }
 
-    public function parseData(){
+    public function parseData()
+    {
         $data = $this->update->callback_query->data;
         foreach (self::$aliases as $alias) {
             $data = str_replace($alias, '', $data);
         }
-        parse_str($data,$data);
+        parse_str($data, $data);
         $issue_id = $data['issue_id'];
         $this->issue = JiraIssue::find($issue_id);
-        if (!$this->issue){
+        if (!$this->issue) {
             return [];
         }
         return $data;
