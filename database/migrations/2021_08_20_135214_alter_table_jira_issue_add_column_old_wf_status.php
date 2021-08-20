@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterTableJiraIssuesAddColumnStatusId extends Migration
+class AlterTableJiraIssueAddColumnOldWfStatus extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,7 @@ class AlterTableJiraIssuesAddColumnStatusId extends Migration
     public function up()
     {
         Schema::table('jira_issues', function (Blueprint $table) {
-            $table->integer('assignee_id')->comment('Id исполнителя (jira_users)');
-            $table->integer('status_id')->comment('Текущий статус');
-            $table->integer('previous_status_id')->comment('Предыдущий статус');
+            $table->integer('old_wf_status_id')->nullable()->default(null)->comment('Статус по старому workflow');
         });
     }
 
@@ -28,9 +26,7 @@ class AlterTableJiraIssuesAddColumnStatusId extends Migration
     public function down()
     {
         Schema::table('jira_issues', function (Blueprint $table) {
-            $table->dropColumn('assignee_id');
-            $table->dropColumn('status_id');
-            $table->dropColumn('previous_status_id');
+            $table->dropColumn('old_wf_status_id');
         });
     }
 }

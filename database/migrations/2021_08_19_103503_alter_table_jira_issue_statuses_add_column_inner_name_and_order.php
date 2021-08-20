@@ -14,8 +14,8 @@ class AlterTableJiraIssueStatusesAddColumnInnerNameAndOrder extends Migration
     public function up()
     {
         Schema::table('jira_issue_statuses', function (Blueprint $table) {
-            $table->string('inner_name')->nullable()->default(null);
-            $table->integer('order')->nullable()->default(null);
+            $table->string('inner_name')->nullable()->default(null)->comment('Внутреннее название статуса');
+            $table->integer('order')->nullable()->default(null)->comment('Порядок');
         });
     }
 

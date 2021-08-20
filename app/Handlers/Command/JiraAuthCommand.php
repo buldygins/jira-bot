@@ -118,7 +118,8 @@ class JiraAuthCommand extends BaseCommand
 
         $this->sendMessage([
             'parse_mode' => 'HTML',
-            'text' => "Отправьте  токен авторизации.\r\nТокен авторизации можно получить <a href='{$link}' style='margin-right: 5px;'>тут</a>.",
+//            'text' => "Отправьте  токен авторизации.\r\nТокен авторизации можно получить <a href='{$link}' style='margin-right: 5px;'>тут</a>.",
+            'text' => 'Отправьте пароль для входа в Jira.',
             'chat_id' => $this->update->message->chat->id,
         ]);
         return true;
@@ -169,24 +170,5 @@ class JiraAuthCommand extends BaseCommand
             'reply_markup' => $this->keyboardService->removeKeyboard(),
         ]);
         return true;
-    }
-
-
-    public function checkCancel($text)
-    {
-        if (strpos($text, self::$cancelAuth) !== false) {
-            $this->sendMessage([
-                'parse_mode' => 'HTML',
-                'text' => "Регистрация завершена.",
-                'chat_id' => $this->update->message->chat->id,
-                'reply_markup' => $this->keyboardService->removeKeyboard(),
-            ]);
-
-            $this->sub->waited_command = null;
-            $this->sub->save();
-
-            return true;
-        }
-        return false;
     }
 }

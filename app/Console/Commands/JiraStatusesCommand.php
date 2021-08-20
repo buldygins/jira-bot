@@ -49,7 +49,7 @@ class JiraStatusesCommand extends Command
             'jiraUser' => 'vsmorodinskiy',
             'jiraPassword' => '40SmsDkpLh',
         ]);
-        dump($config);
+
         $projectService = new ProjectService($config);
 
         $projects = $projectService->getAllProjects();

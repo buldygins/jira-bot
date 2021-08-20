@@ -15,4 +15,16 @@ class JiraIssue extends Model
     public function status(){
         return $this->belongsTo(JiraIssueStatus::class);
     }
+
+    public function assignee(){
+        return $this->belongsTo(JiraUser::class,'assignee_id');
+    }
+
+    public function previous_stauts(){
+        return $this->belongsTo(JiraIssueStatus::class,'previous_status_id');
+    }
+
+    public function getLink(){
+        return "<a href='{$this->issue_url}'>{$this->key}</a>";
+    }
 }

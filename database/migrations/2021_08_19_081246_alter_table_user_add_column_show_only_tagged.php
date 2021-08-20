@@ -14,7 +14,7 @@ class AlterTableUserAddColumnShowOnlyTagged extends Migration
     public function up()
     {
         Schema::table('subscribers', function (Blueprint $table) {
-            $table->boolean('show_only_tagged')->default(false);
+            $table->boolean('show_only_tagged')->default(false)->comment('Показывать только если меня тегнули');
         });
     }
 

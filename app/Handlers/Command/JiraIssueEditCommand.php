@@ -2,10 +2,15 @@
 
 namespace App\Handlers\Command;
 
+use App\Models\JiraIssue;
+use App\Models\JiraIssueStatus;
 use App\Models\JiraUser;
 use App\Models\Position;
+use App\Models\Subscriber;
+use App\Notifications\MyTelegramNotification;
 use App\Service\KeyboardService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use JiraRestApi\Configuration\ArrayConfiguration;
 use JiraRestApi\User\UserService;
 use WeStacks\TeleBot\Objects\Update;
@@ -17,6 +22,7 @@ class JiraIssueEditCommand extends BaseCommand
     protected static $description = 'Изменение полей задачи Jira';
     protected static $cancel = 'Отменить';
     protected $keyboardService;
+    public $issue;
 
     public function __construct(TeleBot $bot, Update $update)
     {
@@ -38,27 +44,86 @@ class JiraIssueEditCommand extends BaseCommand
 
     public function handle()
     {
-        parent::handle();
+        $data = $this->parseData();
+        switch ($data['field']){
+            case 'status':
+                return $this->askStatus();
+        }
+    }
 
+    public function askStatus(){
+        $statuses = JiraIssueStatus::getClosestStatusesName($this->issue);
+        $issue_link = $this->issue->getLink();
+
+        $this->sub->waited_command = get_class($this) . '::answerStatus';
+        $this->sub->save();
+
+        $this->sendMessage([
+            'parse_mode' => 'HTML',
+            'text' => "Выберите статус для задачи {$issue_link}.",
+            'reply_markup' => $this->keyboardService->makeKeyboard(array_merge($statuses,[static::$cancel]),2),
+        ]);
+        return true;
+    }
+
+    public function answerStatus($text){
+        $status = JiraIssueStatus::getStatusByFullName(trim($text));
+        if (!$status){
+            $this->sendMessage([
+                'parse_mode' => 'HTML',
+                'text' => "Выбран неправильный. Попробуйте снова.",
+                'reply_markup' => $this->keyboardService->removeKeyboard(),
+            ]);
+            return true;
+        }
+        $this->issue->previous_status_id =  $this->issue->status_id;
+        $this->issue->status_id = $status->id;
+        $this->issue->save();
+
+        $this->sendMessage([
+            'parse_mode' => 'HTML',
+            'text' => "Статус успешно изменён.",
+            'reply_markup' => $this->keyboardService->removeKeyboard(),
+        ]);
+
+        if ($this->issue->previous_status->jiraId != $status->jiraId){
+
+            $log_message_header = '';
+            $log_message_body = '';
+
+            \App\Models\Log::create([
+                'issue_id' => $this->issue->issue_id,
+                'issue_key' => $this->issue->key,
+                'project_key' => null,
+                'webhook_event' => 'telegram_update_issue',
+                'name' => $log_message_header,
+                'body' => $log_message_body,
+                'src' => null,
+            ]);
+
+            $subscribers = Subscriber::where('is_active', '=', true)->get();
+            foreach ($subscribers as $subscriber) {
+
+                if (
+                    in_array($this->issue->project_key, $subscriber->team->projectList()) && !$subscriber->wantsOnlyTagged()
+                    || $this->sub->isUserTagged($subscriber)
+                ) {
+                    Notification::send($subscriber, new MyTelegramNotification($this->issue, $this->data));
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public function parseData(){
         $data = $this->update->callback_query->data;
         foreach (self::$aliases as $alias) {
             $data = str_replace($alias, '', $data);
         }
         parse_str($data,$data);
-        $issueKey = $data['issue'];
-        unset($data['issue']);
-    }
-
-    public function checkCancel($text)
-    {
-        if (strpos($text, self::$cancel) !== false) {
-            $this->sendMessage([
-                'parse_mode' => 'HTML',
-                'text' => "Действие отменено.",
-                'chat_id' => $this->update->message->chat->id,
-                'reply_markup' => $this->keyboardService->removeKeyboard(),
-            ]);
-            exit();
-        }
+        $issue_id = $data['issue_id'];
+        $this->issue = JiraIssue::find($issue_id);
+        return $data;
     }
 }

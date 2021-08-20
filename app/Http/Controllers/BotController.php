@@ -28,6 +28,8 @@ class BotController extends BaseController
 
     public $issue;
 
+    private $assignee;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function index()
@@ -61,7 +63,7 @@ class BotController extends BaseController
     {
         if (isset($json->user)) {
             //dd($json->user);
-            $jirauser = JiraUser::query()->firstOrCreate([
+            $this->assignee = JiraUser::query()->firstOrCreate([
                 'key' => $json->user->key ?? null,
                 'name' => $json->user->name ?? null,
                 'accountId' => $json->user->accountId ?? null,
@@ -183,6 +185,7 @@ class BotController extends BaseController
                     'summary' => $json->issue->fields->summary ?? null,
                     'src' => $rawData,
                     'status_id' => $status->id ?? null,
+                    'assignee_id' => $this->assignee->id,
                 ]);
 
             Log::create([
@@ -227,12 +230,14 @@ class BotController extends BaseController
 
         $keyboardService = app(KeyboardService::class);
 
+        $msg = $this->data['log_message_header'] ?? '' . $this->data['log_message_body'] ?? '';
+
         $subscribers = Subscriber::where('is_active', '=', true)->get();
         foreach ($subscribers as $subscriber) {
 
             if (
                 in_array($issue->project_key, $subscriber->team->projectList()) && !$subscriber->wantsOnlyTagged()
-                || $this->isUserTagged($subscriber)
+                || $subscriber->isUserTagged($msg)
             ) {
                 $this->data['keyboard'] = $keyboardService->buildIssueKeyboard($subscriber, $issue);
                 Notification::send($subscriber, new MyTelegramNotification($issue, $this->data));
@@ -299,7 +304,7 @@ class BotController extends BaseController
         $status = "Статус: ";
         if ($this->issue) {
             if (isset($this->changelog['status']['to'])) {
-                $statusName = optional($this->issue->status->getStatus());
+                $statusName = optional($this->issue->status->getStatusFullName());
                 if (empty($statusName)) {
                     $statusName = $this->changelog['status']['to'];
                 }
@@ -344,13 +349,5 @@ class BotController extends BaseController
         ];
 
         return $eventTypeNamesList[$eventTypeName] ?? '';
-    }
-
-    public function isUserTagged(Subscriber $subscriber)
-    {
-        $msg = $this->data['log_message_header'] . $this->data['log_message_body'];
-        $jiraLogin = optional($subscriber->jira_login);
-        $userKey = optional($subscriber->user->getAccountKey());
-        return strpos($msg, $jiraLogin) !== false || strpos($msg, $userKey) !== false;
     }
 }

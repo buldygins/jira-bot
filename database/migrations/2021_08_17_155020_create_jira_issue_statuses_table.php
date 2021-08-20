@@ -15,8 +15,8 @@ class CreateJiraIssueStatusesTable extends Migration
     {
         Schema::create('jira_issue_statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('jiraId');
+            $table->string('name')->comment('Название статуса');
+            $table->integer('jiraId')->comment('Id статуса в jira');
         });
     }
 

@@ -32,4 +32,11 @@ class Subscriber extends Model
     public function wantsOnlyTagged(){
         return (bool) $this->show_only_tagged;
     }
+
+    // проверка, тегнут ли юзер
+    public function isUserTagged($msg){
+        $jiraLogin = optional($this->jira_login);
+        $userKey = optional($this->user->getAccountKey());
+        return (bool) (strpos($msg, $jiraLogin) !== false || strpos($msg, $userKey) !== false);
+    }
 }
