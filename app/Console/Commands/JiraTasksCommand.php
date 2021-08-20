@@ -59,15 +59,14 @@ class JiraTasksCommand extends Command
         $search_result = $issueService->search($jql, 0, 500);
         $i = 1;
         while (!empty($search_result->issues)) {
-
+            $this->info('Start 1 iteration');
             foreach ($search_result->issues as $issue) {
                 $status = JiraIssueStatus::where('jiraId', $issue->fields->status->id)->orderBy('order')->first();
                 if (!$status) {
                     throw new \Exception("Can't find status {$issue->fields->status->id}. Run artisan jira:statuses first!");
                 }
                 $jiraIssue = JiraIssue::where('key', $issue->key)->first();
-                dd($jiraIssue);
-                if (!$jiraIssue) {
+                if (empty($jiraIssue)) {
                     $jiraIssue = JiraIssue::create([
                         'key' => $issue->key,
                         'summary' => $issue->fields->summary,
@@ -84,6 +83,7 @@ class JiraTasksCommand extends Command
                 }
             }
 
+            $this->info('End 1 iteration');
             $search_result = $issueService->search($jql, 100 * $i, 100);
             $i++;
         }
