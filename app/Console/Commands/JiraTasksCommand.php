@@ -49,8 +49,8 @@ class JiraTasksCommand extends Command
 //        $user = Subscriber::where('jira_login', '!=', null)->where('api_token', '!=', null)->where('jira_user_id', '!=', null)->get()->first();
         $config = new ArrayConfiguration([
             'jiraHost' => config('app.jira_url'),
-            'jiraUser' => 'origamiv@gmail.com',
-            'jiraPassword' => 'HIVNRLqy7yjXcDTe3Vu72AF1',
+            'jiraUser' => 'vsmorodinskiy',
+            'jiraPassword' => '40SmsDkpLh',
         ]);
 
         $issueService = new IssueService($config);
