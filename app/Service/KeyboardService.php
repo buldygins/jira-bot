@@ -34,18 +34,18 @@ class KeyboardService
         ]);
     }
 
-    public function buildIssueKeyboard(Subscriber $subscriber,JiraIssue $issue)
+    public function buildIssueKeyboard(Subscriber $subscriber, JiraIssue $issue)
     {
-        if ($subscriber->canSendCommands()){
+        if ($subscriber->canSendCommands()) {
             $data['issue_id'] = $issue->issue_id;
-            switch ($subscriber->id_position){
+            switch ($subscriber->id_position) {
                 case 1:
                     $inlineKeyboard = [
-                        ['text'=>'Статус','callback_data' => '/jira_issue_edit'.http_build_query(array_merge($data,['field' => 'status']))]
+                        ['text' => '/jira_issue_edit' . http_build_query(array_merge($data, ['field' => 'status'])), 'callback_data' => '/jira_issue_edit' . http_build_query(array_merge($data, ['field' => 'status']))]
                     ];
                     return $this->makeInlineKeyBoard($inlineKeyboard);
                 default:
-                    return $this->makeInlineKeyBoard([['text'=> 'list','callback_data' => '/list']]);
+                    return $this->makeInlineKeyBoard([['text' => 'list', 'callback_data' => '/list']]);
             }
         }
         return null;
