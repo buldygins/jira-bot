@@ -56,16 +56,17 @@ class JiraTasksCommand extends Command
         $issueService = new IssueService($config);
 
         $jql = "project = \"{$projectKey}\"";
-
-        while ($search_result = $issueService->search($jql, 0, 500)) {
+        $search_result = $issueService->search($jql, 0, 500);
+        $i = 1;
+        while (!empty($search_result)) {
 
             foreach ($search_result->issues as $issue) {
-                $status = JiraIssueStatus::where('jiraId',$issue->fields->status->id)->orderBy('order')->first();
-                if (!$status){
+                $status = JiraIssueStatus::where('jiraId', $issue->fields->status->id)->orderBy('order')->first();
+                if (!$status) {
                     throw new \Exception("Can't find status {$issue->fields->status->id}. Run artisan jira:statuses first!");
                 }
                 $jiraIssue = JiraIssue::where('key', $issue->key)->first();
-                if (!$jiraIssue){
+                if (!$jiraIssue) {
                     $jiraIssue = JiraIssue::create([
                         'key' => $issue->key,
                         'summary' => $issue->fields->summary,
@@ -81,6 +82,9 @@ class JiraTasksCommand extends Command
                     $jiraIssue->save();
                 }
             }
+
+            $search_result = $issueService->search($jql, 500 * $i, 500);
+            $i++;
         }
 
         $this->info(PHP_EOL . 'Successfully exported all tasks');
