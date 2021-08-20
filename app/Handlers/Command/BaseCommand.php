@@ -16,8 +16,10 @@ class BaseCommand extends CommandHandler
     {
         parent::__construct($bot, $update);
         Log::channel('telegram_log')->info(json_encode($this->update));
-        $chat_id = $this->update->message->chat->id;
-        $this->sub = Subscriber::query()->where('chat_id', '=', $chat_id)->first();
+        if (isset($this->update->message)){
+            $chat_id = $this->update->message->chat->id;
+            $this->sub = Subscriber::query()->where('chat_id', '=', $chat_id)->first();
+        }
     }
 
     public function handle()

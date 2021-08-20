@@ -41,7 +41,7 @@ class KeyboardService
             switch ($subscriber->id_position) {
                 case 1:
                     $inlineKeyboard = [
-                        ['text' => '/jira_issue_edit' . http_build_query(array_merge($data, ['field' => 'status'])), 'callback_data' => '/jira_issue_edit' . http_build_query(array_merge($data, ['field' => 'status']))]
+                        ['text' => '/jira_issue_edit?' . http_build_query(array_merge($data, ['field' => 'status'])), 'callback_data' => '/jira_issue_edit?' . http_build_query(array_merge($data, ['field' => 'status']))]
                     ];
                     return $this->makeInlineKeyBoard($inlineKeyboard);
                 default:
