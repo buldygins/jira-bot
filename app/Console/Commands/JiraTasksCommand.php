@@ -58,7 +58,7 @@ class JiraTasksCommand extends Command
         $jql = "project = \"{$projectKey}\"";
         $search_result = $issueService->search($jql, 0, 500);
         $i = 1;
-        while (!empty($search_result)) {
+        while (!empty($search_result->issues)) {
             dump($search_result);
             foreach ($search_result->issues as $issue) {
                 $status = JiraIssueStatus::where('jiraId', $issue->fields->status->id)->orderBy('order')->first();
@@ -83,7 +83,7 @@ class JiraTasksCommand extends Command
                 }
             }
 
-            $search_result = $issueService->search($jql, 500 * $i, 500);
+            $search_result = $issueService->search($jql, 100 * $i, 100);
             $i++;
         }
 
