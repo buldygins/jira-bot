@@ -46,11 +46,11 @@ class JiraTasksCommand extends Command
         $projectKey = $this->argument('project');
         $this->info('Start parsing issues from Jira project ' . $projectKey);
 
-//        $user = Subscriber::where('jira_login', '!=', null)->where('api_token', '!=', null)->where('jira_user_id', '!=', null)->get()->first();
+        $user = Subscriber::where('jira_login', '!=', null)->where('api_token', '!=', null)->where('jira_user_id', '!=', null)->get()->first();
         $config = new ArrayConfiguration([
             'jiraHost' => config('app.jira_url'),
-            'jiraUser' => 'vsmorodinskiy',
-            'jiraPassword' => '40SmsDkpLh',
+            'jiraUser' => $user->jira_login,
+            'jiraPassword' => $user->api_token,
         ]);
 
         $issueService = new IssueService($config);
