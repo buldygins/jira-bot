@@ -59,7 +59,7 @@ class JiraTasksCommand extends Command
         $search_result = $issueService->search($jql, 0, 500);
         $i = 1;
         while (!empty($search_result)) {
-
+            dump($search_result);
             foreach ($search_result->issues as $issue) {
                 $status = JiraIssueStatus::where('jiraId', $issue->fields->status->id)->orderBy('order')->first();
                 if (!$status) {
