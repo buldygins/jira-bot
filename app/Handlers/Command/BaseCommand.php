@@ -3,6 +3,7 @@
 namespace App\Handlers\Command;
 
 use App\Models\Subscriber;
+use Illuminate\Support\Facades\Log;
 use WeStacks\TeleBot\Handlers\CommandHandler;
 use WeStacks\TeleBot\Objects\Update;
 use WeStacks\TeleBot\TeleBot;
@@ -14,6 +15,7 @@ class BaseCommand extends CommandHandler
     public function __construct(TeleBot $bot, Update $update)
     {
         parent::__construct($bot, $update);
+        Log::channel('telegram_log')->info(json_encode($this->update));
         $chat_id = $this->update->message->chat->id;
         $this->sub = Subscriber::query()->where('chat_id', '=', $chat_id)->first();
     }
