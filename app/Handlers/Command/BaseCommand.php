@@ -15,11 +15,8 @@ class BaseCommand extends CommandHandler
     public function __construct(TeleBot $bot, Update $update)
     {
         parent::__construct($bot, $update);
-        Log::channel('telegram_log')->info(json_encode($this->update));
-        if (isset($this->update->message)){
-            $chat_id = $this->update->message->chat->id;
-            $this->sub = Subscriber::query()->where('chat_id', '=', $chat_id)->first();
-        }
+        $chat_id = $update->message->chat->id;
+        $this->sub = Subscriber::query()->where('chat_id', '=', $chat_id)->first();
     }
 
     public function handle()
