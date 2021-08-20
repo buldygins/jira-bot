@@ -59,7 +59,7 @@ class JiraTasksCommand extends Command
         $search_result = $issueService->search($jql, 0, 500);
         $i = 1;
         while (!empty($search_result->issues)) {
-            $this->info('Start 1 iteration');
+            $this->info("Start {$i} iteration");
             foreach ($search_result->issues as $issue) {
                 $status = JiraIssueStatus::where('jiraId', $issue->fields->status->id)->orderBy('order')->first();
                 if (!$status) {
@@ -83,7 +83,7 @@ class JiraTasksCommand extends Command
                 }
             }
 
-            $this->info('End 1 iteration');
+            $this->info("End {$i} iteration");
             $search_result = $issueService->search($jql, 100 * $i, 100);
             $i++;
         }
