@@ -48,6 +48,13 @@ class JiraIssueEditCommand extends BaseCommand
         switch ($data['field']){
             case 'status':
                 return $this->askStatus();
+            default:
+                $this->sendMessage([
+                    'parse_mode' => 'HTML',
+                    'text' => "Произошла ошибка. Попробуйте снова.",
+                    'reply_markup' => $this->keyboardService->removeKeyboard(),
+                ]);
+                return true;
         }
     }
 
@@ -71,7 +78,7 @@ class JiraIssueEditCommand extends BaseCommand
         if (!$status){
             $this->sendMessage([
                 'parse_mode' => 'HTML',
-                'text' => "Выбран неправильный. Попробуйте снова.",
+                'text' => "Выбран неправильный статус. Попробуйте снова.",
                 'reply_markup' => $this->keyboardService->removeKeyboard(),
             ]);
             return true;
@@ -88,8 +95,8 @@ class JiraIssueEditCommand extends BaseCommand
 
         if ($this->issue->previous_status->jiraId != $status->jiraId){
 
-            $log_message_header = '';
-            $log_message_body = '';
+            $log_message_header = 'Задача';
+            $log_message_body = 'Изменён статус';
 
             \App\Models\Log::create([
                 'issue_id' => $this->issue->issue_id,
@@ -101,6 +108,8 @@ class JiraIssueEditCommand extends BaseCommand
                 'src' => null,
             ]);
 
+            $data = compact('log_message_body','log_message_header');
+
             $subscribers = Subscriber::where('is_active', '=', true)->get();
             foreach ($subscribers as $subscriber) {
 
@@ -108,7 +117,7 @@ class JiraIssueEditCommand extends BaseCommand
                     in_array($this->issue->project_key, $subscriber->team->projectList()) && !$subscriber->wantsOnlyTagged()
                     || $this->sub->isUserTagged($subscriber)
                 ) {
-                    Notification::send($subscriber, new MyTelegramNotification($this->issue, $this->data));
+                    Notification::send($subscriber, new MyTelegramNotification($this->issue, $data));
                 }
             }
         }
@@ -124,6 +133,9 @@ class JiraIssueEditCommand extends BaseCommand
         parse_str($data,$data);
         $issue_id = $data['issue_id'];
         $this->issue = JiraIssue::find($issue_id);
+        if (!$this->issue){
+            return [];
+        }
         return $data;
     }
 }

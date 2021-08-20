@@ -37,7 +37,7 @@ class KeyboardService
     public function buildIssueKeyboard(Subscriber $subscriber,JiraIssue $issue)
     {
         if ($subscriber->canSendCommands()){
-            $data['issueId'] = $issue->issue_id;
+            $data['issue_id'] = $issue->issue_id;
             switch ($subscriber->id_position){
                 case 1:
                     $inlineKeyboard = [

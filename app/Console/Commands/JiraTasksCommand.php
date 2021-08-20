@@ -8,7 +8,6 @@ use App\Models\Subscriber;
 use Illuminate\Console\Command;
 use JiraRestApi\Configuration\ArrayConfiguration;
 use JiraRestApi\Issue\IssueService;
-use JiraRestApi\Project\ProjectService;
 
 class JiraTasksCommand extends Command
 {

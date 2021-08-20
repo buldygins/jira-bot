@@ -114,11 +114,11 @@ class JiraAuthCommand extends BaseCommand
         $this->sub->waited_command = get_class($this) . '::answerLoginAndToken';
         $this->sub->save();
 
-        $link = env('JIRA_URL') . 'secure/ViewProfile.jspa?selectedTab=com.atlassian.pats.pats-plugin:jira-user-personal-access-tokens';
+//        $tokenLink = env('JIRA_URL') . 'secure/ViewProfile.jspa?selectedTab=com.atlassian.pats.pats-plugin:jira-user-personal-access-tokens';
 
         $this->sendMessage([
             'parse_mode' => 'HTML',
-//            'text' => "Отправьте  токен авторизации.\r\nТокен авторизации можно получить <a href='{$link}' style='margin-right: 5px;'>тут</a>.",
+//            'text' => "Отправьте  токен авторизации.\r\nТокен авторизации можно получить <a href='{$tokenLink}' style='margin-right: 5px;'>тут</a>.",
             'text' => 'Отправьте пароль для входа в Jira.',
             'chat_id' => $this->update->message->chat->id,
         ]);
