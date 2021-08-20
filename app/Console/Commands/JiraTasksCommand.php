@@ -56,7 +56,7 @@ class JiraTasksCommand extends Command
         $issueService = new IssueService($config);
 
         $jql = "project = \"{$projectKey}\"";
-        $search_result = $issueService->search($jql, 0, 500);
+        $search_result = $issueService->search($jql, 0, 100);
         $i = 1;
         while (!empty($search_result->issues)) {
             $this->info("Start {$i} iteration");
@@ -84,7 +84,7 @@ class JiraTasksCommand extends Command
             }
 
             $this->info("End {$i} iteration");
-            $search_result = $issueService->search($jql, 500 * $i, 500);
+            $search_result = $issueService->search($jql, 100 * $i, 100);
             $i++;
         }
 
