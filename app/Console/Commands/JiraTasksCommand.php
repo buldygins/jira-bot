@@ -59,7 +59,7 @@ class JiraTasksCommand extends Command
         $search_result = $issueService->search($jql, 0, 500);
         $i = 1;
         while (!empty($search_result->issues)) {
-            
+
             foreach ($search_result->issues as $issue) {
                 $status = JiraIssueStatus::where('jiraId', $issue->fields->status->id)->orderBy('order')->first();
                 if (!$status) {
@@ -87,6 +87,6 @@ class JiraTasksCommand extends Command
             $i++;
         }
 
-        $this->info(PHP_EOL . 'Successfully exported all tasks');
+        $this->info('Successfully exported all tasks');
     }
 }
