@@ -67,16 +67,8 @@ class JiraTasksCommand extends Command
                 }
                 $jiraIssue = JiraIssue::where('key', $issue->key)->first();
                 if (empty($jiraIssue)) {
-                    dump([
-                        'key' => $issue->key,
-                        'summary' => $issue->fields->summary,
-                        'issue_url' => config('app.jira_url') . '/browse/' . $issue->key,
-                        'issue_id' => $issue->id,
-                        'project_key' => $issue->fields->project->key,
-                        'old_wf_status_id' => $status->id,
-                        'src' => json_encode($issue),
-                        'status_id' => $status->id,
-                    ]);
+                    dump($jiraIssue);
+                    dump(empty($jiraIssue));
                     dd($issue->key);
                     $jiraIssue = JiraIssue::create([
                         'key' => $issue->key,
