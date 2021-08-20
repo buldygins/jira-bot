@@ -61,17 +61,25 @@ class JiraTasksCommand extends Command
 
             foreach ($search_result->issues as $issue) {
                 $status = JiraIssueStatus::where('jiraId',$issue->fields->status->id)->orderBy('order')->first();
-                $jiraIssue = JiraIssue::updateOrCreate(['key' => $issue->key], [
-                    'key' => $issue->key,
-                    'summary' => $issue->fields->summary,
-                    'issue_url' => config('app.jira_url') . '/browse/' . $issue->key,
-                    'issue_id' => $issue->id,
-                    'project_key' => $issue->fields->project->key,
-                    'old_wf_status_id' => $status->id,
-                ]);
-                $jiraIssue->src = (!empty($jiraIssue->src)) ? $jiraIssue->src : $issue;
-                $jiraIssue->status_id = (!empty($jiraIssue->status_id)) ? $jiraIssue->status_id : $status->id;
-                $jiraIssue->save();
+                if (!$status){
+                    throw new \Exception("Can't find status {$issue->fields->status->id}. Run artisan jira:statuses first!");
+                }
+                $jiraIssue = JiraIssue::where('key', $issue->key)->first();
+                if (!$jiraIssue){
+                    $jiraIssue = JiraIssue::create([
+                        'key' => $issue->key,
+                        'summary' => $issue->fields->summary,
+                        'issue_url' => config('app.jira_url') . '/browse/' . $issue->key,
+                        'issue_id' => $issue->id,
+                        'project_key' => $issue->fields->project->key,
+                        'old_wf_status_id' => $status->id,
+                        'src' => $issue,
+                        'status_id' => $status->id,
+                    ]);
+                } else {
+                    $jiraIssue->old_wf_status_id = $status->id;
+                    $jiraIssue->save();
+                }
             }
         }
 
