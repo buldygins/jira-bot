@@ -43,29 +43,31 @@ class JiraTasksCommand extends Command
      */
     public function handle()
     {
+        $maxResults = 500;
+
         $projectKey = $this->argument('project');
         $this->info('Start parsing issues from Jira project ' . $projectKey);
 
-//        $user = Subscriber::where('jira_login', '!=', null)->where('api_token', '!=', null)->where('jira_user_id', '!=', null)->get()->first();
+        $user = Subscriber::where('jira_login', '!=', null)->where('api_token', '!=', null)->where('jira_user_id', '!=', null)->get()->first();
         $config = new ArrayConfiguration([
             'jiraHost' => config('app.jira_url'),
-            'jiraUser' => 'origamiv@gmail.com',
-            'jiraPassword' => 'HIVNRLqy7yjXcDTe3Vu72AF1',
+            'jiraUser' => $user->jira_login,
+            'jiraPassword' => $user->api_token,
         ]);
 
         $issueService = new IssueService($config);
 
         $jql = "project = \"{$projectKey}\"";
-        $search_result = $issueService->search($jql, 0, 500);
+        $search_result = $issueService->search($jql, 0, $maxResults);
         $i = 1;
         while (!empty($search_result->issues)) {
-            
+            $this->info("Start {$i} iteration");
             foreach ($search_result->issues as $issue) {
                 $status = JiraIssueStatus::where('jiraId', $issue->fields->status->id)->orderBy('order')->first();
                 if (!$status) {
                     throw new \Exception("Can't find status {$issue->fields->status->id}. Run artisan jira:statuses first!");
                 }
-                $jiraIssue = JiraIssue::where('key', $issue->key)->first();
+                $jiraIssue = JiraIssue::where('issue_id', $issue->id)->get()->first();
                 if (!$jiraIssue) {
                     $jiraIssue = JiraIssue::create([
                         'key' => $issue->key,
@@ -83,10 +85,11 @@ class JiraTasksCommand extends Command
                 }
             }
 
-            $search_result = $issueService->search($jql, 100 * $i, 100);
+            $this->info("End {$i} iteration");
+            $search_result = $issueService->search($jql, $maxResults * $i, $maxResults);
             $i++;
         }
 
-        $this->info(PHP_EOL . 'Successfully exported all tasks');
+        $this->info('Successfully exported all tasks');
     }
 }
