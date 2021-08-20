@@ -16,8 +16,8 @@ class MyInfoCommand extends BaseCommand
 
         $this->sendMessage([
             'text' => 'ФИО: '.$this->sub->fio."\r\n".
-                'Команда: '.$this->sub->team->first()->name."\r\n".
-                'Должность: '.$this->sub->position->first()->name."\r\n"
+                'Команда: '.$this->sub->team->name."\r\n".
+                'Должность: '.$this->sub->position->name."\r\n"
         ]);
         return true;
     }

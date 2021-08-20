@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JiraIssue;
+use App\Models\JiraIssueStatus;
 use App\Models\JiraUser;
 use App\Models\Log;
 use App\Models\Position;
@@ -25,12 +26,14 @@ class BotController extends BaseController
 
     public $data = [];
 
+    public $issue;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function index()
     {
         $bot = new TeleBot([
-            'token' => env('TELEGRAM_BOT_TOKEN'),
+            'token' => config('telebot.bots.bot.token'),
             'api_url' => 'https://api.telegram.org',
             'exceptions' => true,
             'async' => false,
@@ -95,28 +98,26 @@ class BotController extends BaseController
         $changeLog = $json->changelog ?? null;
         $this->parseChangelog($changeLog->items ?? []);
 
+        $issue_id = $json->issue->id ?? $json->worklog->issueId;
+
+        $this->issue = JiraIssue::where('issue_id', $issue_id)->first();
 
         $project_key = $json->issue->fields->project->key ?? null;
         if ($webhook_parts[0] == 'worklog') {
-            $issue_id = $json->worklog->issueId;
-
             $log_message_header = '{action} записи о работе от ' . $json->worklog->author->displayName . ' ' . $json->worklog->timeSpent . " " .
                 Carbon::createFromTimeString($json->worklog->created)->toDateString();
 
-            if (isset($json->worklog->comment)){
+            if (isset($json->worklog->comment)) {
                 $log_message_body .= "Комментарий к работе: {$json->worklog->comment}\n";
             }
         }
 
         if ($webhook_parts[0] == 'comment') {
-            $issue_id = $json->issue->id;
             $log_message_header = "{action} комментария #" . $json->comment->id . ' от пользователя ' . $json->comment->updateAuthor->displayName . "\r\n\r\n" .
                 "------\r\n" . $json->comment->body;
-
         }
 
         if ($webhook_parts[0] == 'jira:issue') {
-            $issue_id = $json->issue->id;
             $assignee = $this->getAssignee($json->issue->fields->assignee->displayName ?? null);
             $status = $this->getStatus($json->issue->fields->status->name ?? null);
             $log_message_header = "{$assignee}{$status}{action} задачи пользователем {$json->user->displayName}.\n";
@@ -165,6 +166,11 @@ class BotController extends BaseController
                 $issue_key = "NOT-01";
             }
 
+            if (isset($json->issue->fields->status->id)) {
+                $jira_status_id = $json->issue->fields->status->id;
+                $status = JiraIssueStatus::where('jiraId', $jira_status_id)->orderBy('order')->get()->first();
+            }
+
             $issue = JiraIssue::query()->create(
                 [
                     'key' => $issue_key,
@@ -176,6 +182,7 @@ class BotController extends BaseController
                     'issue_url' => config('app.jira_url') . 'browse/' . $issue_key,
                     'summary' => $json->issue->fields->summary ?? null,
                     'src' => $rawData,
+                    'status_id' => $status->id ?? null,
                 ]);
 
             Log::create([
@@ -200,7 +207,7 @@ class BotController extends BaseController
             ]);
 
             $issue->issue_id = $issue_id;
-            $issue->project_key=$project_key;
+            $issue->project_key = $project_key;
             $issue->event_created = Carbon::createFromTimestamp($json->timestamp)->toDateTimeString();
             $issue->webhookEvent = $json->webhookEvent;
             $issue->src = $rawData;
@@ -223,7 +230,10 @@ class BotController extends BaseController
         $subscribers = Subscriber::where('is_active', '=', true)->get();
         foreach ($subscribers as $subscriber) {
 
-            if (in_array($issue->project_key,$subscriber->team->projectList())) {
+            if (
+                in_array($issue->project_key, $subscriber->team->projectList()) && !$subscriber->wantsOnlyTagged()
+                || $this->isUserTagged($subscriber)
+            ) {
                 $this->data['keyboard'] = $keyboardService->buildIssueKeyboard($subscriber, $issue);
                 Notification::send($subscriber, new MyTelegramNotification($issue, $this->data));
             }
@@ -287,13 +297,22 @@ class BotController extends BaseController
     public function getStatus($statusName = 'Нет статуса')
     {
         $status = "Статус: ";
-        if (isset($this->changelog['status']['from'])) {
-            $status .= $this->changelog['status']['from'] . ' -> ';
-        }
-        if (isset($this->changelog['status']['to'])) {
-            $statusName = $this->changelog['status']['to'];
-        } elseif ($statusName == null) {
-            $statusName = 'ERR';
+        if ($this->issue) {
+            if (isset($this->changelog['status']['to'])) {
+                $statusName = optional($this->issue->status->getStatus());
+                if (empty($statusName)) {
+                    $statusName = $this->changelog['status']['to'];
+                }
+            }
+        } else {
+            if (isset($this->changelog['status']['from'])) {
+                $status .= $this->changelog['status']['from'] . ' -> ';
+            }
+            if (isset($this->changelog['status']['to'])) {
+                $statusName = $this->changelog['status']['to'];
+            } elseif ($statusName == null) {
+                $statusName = 'ERR';
+            }
         }
         $status .= "{$statusName}.\n";
         unset($this->changelog['status']);
@@ -325,5 +344,13 @@ class BotController extends BaseController
         ];
 
         return $eventTypeNamesList[$eventTypeName] ?? '';
+    }
+
+    public function isUserTagged(Subscriber $subscriber)
+    {
+        $msg = $this->data['log_message_header'] . $this->data['log_message_body'];
+        $jiraLogin = optional($subscriber->jira_login);
+        $userKey = optional($subscriber->user->getAccountKey());
+        return strpos($msg, $jiraLogin) !== false || strpos($msg, $userKey) !== false;
     }
 }

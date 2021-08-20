@@ -11,4 +11,8 @@ class JiraUser extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function getAccountKey(){
+        return $this->key ?? $this->accountId;
+    }
 }

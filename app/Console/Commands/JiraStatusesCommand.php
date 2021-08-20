@@ -7,7 +7,6 @@ use App\Models\Subscriber;
 use Illuminate\Console\Command;
 use JiraRestApi\Configuration\ArrayConfiguration;
 use JiraRestApi\Project\ProjectService;
-use JiraRestApi\User\UserService;
 
 class JiraStatusesCommand extends Command
 {
@@ -51,10 +50,8 @@ class JiraStatusesCommand extends Command
             'jiraPassword' => '40SmsDkpLh',
         ]);
         dump($config);
-//        $projectService = new ProjectService($config);
+        $projectService = new ProjectService($config);
 
-        $userService = new UserService($config);
-        dd($userService->getMyself());
         $projects = $projectService->getAllProjects();
 
         $bar = $this->output->createProgressBar(count($projects));
