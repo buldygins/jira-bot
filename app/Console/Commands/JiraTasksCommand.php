@@ -65,7 +65,7 @@ class JiraTasksCommand extends Command
                 if (!$status) {
                     throw new \Exception("Can't find status {$issue->fields->status->id}. Run artisan jira:statuses first!");
                 }
-                $jiraIssue = JiraIssue::where('key', $issue->key)->first();
+                $jiraIssue = JiraIssue::where('key', $issue->key)->get()->first();
                 if (empty($jiraIssue)) {
                     dump($jiraIssue);
                     dump(empty($jiraIssue));
