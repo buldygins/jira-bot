@@ -36,6 +36,7 @@ class KeyboardService
 
     public function buildIssueKeyboard(Subscriber $subscriber, JiraIssue $issue)
     {
+        return $this->removeKeyboard();
         if ($subscriber->canSendCommands()) {
             $data['issue_id'] = $issue->issue_id;
             switch ($subscriber->id_position) {
